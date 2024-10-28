@@ -153,7 +153,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(3);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
-            writer.Write(value.Id);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum>(formatterResolver).Serialize(ref writer, value.PlayerType, options);
         }
 
@@ -168,7 +168,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
             var __Name__ = default(string);
-            var __Id__ = default(long);
+            var __Id__ = default(global::System.Guid);
             var __PlayerType__ = default(global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum);
 
             for (int i = 0; i < length; i++)
@@ -179,7 +179,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __Name__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 1:
-                        __Id__ = reader.ReadInt64();
+                        __Id__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 2:
                         __PlayerType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum>(formatterResolver).Deserialize(ref reader, options);
