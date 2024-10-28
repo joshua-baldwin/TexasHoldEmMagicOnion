@@ -15,13 +15,14 @@ namespace THE.MagicOnion.Shared.Entities
         [Key(2)]
         public PlayerTypeEnum PlayerType { get; private set; }
         [Key(3)]
-        public string RoomName { get; set; }
+        public string RoomName { get; private set; }
         
-        public PlayerEntity(string name, Guid id, PlayerTypeEnum type)
+        public PlayerEntity(string name, Guid id, PlayerTypeEnum type, string roomName)
         {
             Name = name;
             Id = id;
             PlayerType = type;
+            RoomName = roomName;
         }
     }
 }
