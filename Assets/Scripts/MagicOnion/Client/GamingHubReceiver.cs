@@ -16,7 +16,7 @@ namespace THE.MagicOnion.Client
         private GrpcChannelx channel;
         private IGamingHub client;
         private PlayerEntity[] players;
-        private Guid myId;
+        private PlayerEntity self;
 
         public Action<int> OnConnectSuccess;
         public Action OnConnectFailed;
@@ -26,7 +26,7 @@ namespace THE.MagicOnion.Client
         {
             if (client == null)
                 await InitializeClientAsync();
-            myId = await CallCreate();
+            self = await CallCreate();
             CallGetPlayers(() => OnConnectSuccess?.Invoke(players.Length));
         }
         
@@ -34,7 +34,7 @@ namespace THE.MagicOnion.Client
         {
             if (client == null)
                 await InitializeClientAsync();
-            myId = await CallJoin();
+            self = await CallJoin();
             CallGetPlayers(() => OnConnectSuccess?.Invoke(players.Length));
         }
 
@@ -49,19 +49,19 @@ namespace THE.MagicOnion.Client
             client.DisposeAsync();
         }
         
-        private async ValueTask<Guid> CallCreate()
+        private async ValueTask<PlayerEntity> CallCreate()
         {
             return await client.JoinRoomAsync("user1", true);
         }
         
-        private async ValueTask<Guid> CallJoin()
+        private async ValueTask<PlayerEntity> CallJoin()
         {
             return await client.JoinRoomAsync("user1", false);
         }
         
         private async ValueTask CallLeave()
         {
-            await client.LeaveRoomAsync(myId);
+            await client.LeaveRoomAsync(self.RoomName);
         }
         
         private async void CallSendMessage()
@@ -71,7 +71,7 @@ namespace THE.MagicOnion.Client
 
         private async void CallGetPlayers(Action callback)
         {
-            players = await client.GetAllPlayers(myId);
+            players = await client.GetAllPlayers(self.RoomName);
             callback?.Invoke();
         }
         

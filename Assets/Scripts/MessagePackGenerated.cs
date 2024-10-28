@@ -151,10 +151,11 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(3);
+            writer.WriteArrayHeader(4);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum>(formatterResolver).Serialize(ref writer, value.PlayerType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.RoomName, options);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -170,6 +171,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __Name__ = default(string);
             var __Id__ = default(global::System.Guid);
             var __PlayerType__ = default(global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum);
+            var __RoomName__ = default(string);
 
             for (int i = 0; i < length; i++)
             {
@@ -183,6 +185,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         break;
                     case 2:
                         __PlayerType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 3:
+                        __RoomName__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
