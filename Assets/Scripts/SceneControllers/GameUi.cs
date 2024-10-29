@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -28,7 +27,6 @@ namespace THE.SceneControllers
         {
             MySceneManager.Receiver.CallLeaveMethod(() =>
             {
-                
                 SceneManager.LoadScene("StartScene");
             });
         }

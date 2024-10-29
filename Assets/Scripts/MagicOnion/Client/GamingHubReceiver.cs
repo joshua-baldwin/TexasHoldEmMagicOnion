@@ -6,7 +6,6 @@ using MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace THE.MagicOnion.Client
 {
@@ -41,6 +40,7 @@ namespace THE.MagicOnion.Client
         public async void CallLeaveMethod(Action onFinish)
         {
             await CallLeave();
+            Disconnect();
             onFinish?.Invoke();
         }
 

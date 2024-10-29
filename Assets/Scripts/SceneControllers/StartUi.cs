@@ -2,14 +2,13 @@ using System;
 using System.Threading;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
-using THE.MagicOnion.Shared.Interfaces;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace THE.SceneControllers
 {
-    public class StartUi : MonoBehaviour, IGamingHubReceiver
+    public class StartUi : MonoBehaviour
     {
         [SerializeField] private InputField userName;
         [SerializeField] private Button createRoom;
@@ -38,13 +37,13 @@ namespace THE.SceneControllers
             MySceneManager.Receiver.OnCancel = () => SetRoomButtons(true);
         }
 
-        private async void CreateRoom()
+        private void CreateRoom()
         {
             SetRoomButtons(false);
             MySceneManager.Receiver.CallCreateRoom(userName.text);
         }
 
-        private async void JoinRoom()
+        private void JoinRoom()
         {
             SetRoomButtons(false);
             MySceneManager.Receiver.CallJoinRoom(userName.text, roomName.text);
@@ -71,54 +70,6 @@ namespace THE.SceneControllers
         {
             shutdownCancellation.Cancel();
             SetRoomButtons(true);
-        }
-        
-        public void OnJoinRoom(PlayerEntity player)
-        {
-            Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomName}");
-        }
-
-        public void OnLeaveRoom(PlayerEntity player)
-        {
-            Debug.Log($"{player.Name}:{player.Id} left");
-        }
-
-        public void SendMessage(string message)
-        {
-            Debug.Log(message);
-        }
-
-        public void OnGetAllPlayers(PlayerEntity[] playerEntities)
-        {
-            foreach (var player in playerEntities)
-                Debug.Log(player.Name);   
-        }
-        
-        private async void RegisterDisconnectEvent(IGamingHub streamingClient)
-        {
-            try
-            {
-                // you can wait disconnected event
-                await streamingClient.WaitForDisconnect();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
-            finally
-            {
-                // try-to-reconnect? logging event? close? etc...
-                Debug.Log($"disconnected from the server.");
-
-                // if (this.isSelfDisConnected)
-                // {
-                //     // there is no particular meaning
-                //     await Task.Delay(2000);
-                //
-                //     // reconnect
-                //     await this.ReconnectServerAsync();
-                // }
-            }
         }
     }
 }
