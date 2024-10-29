@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MagicOnion;
@@ -52,6 +54,8 @@ namespace THE.MagicOnion.Client
             Disconnect();
             onFinish?.Invoke();
         }
+
+        public List<PlayerEntity> GetAllPlayers() => players.ToList();
 
         private void Disconnect()
         {

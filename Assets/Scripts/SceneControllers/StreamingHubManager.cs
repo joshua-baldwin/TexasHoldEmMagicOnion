@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using THE.MagicOnion.Client;
+using THE.MagicOnion.Shared.Entities;
 
 namespace THE.SceneControllers
 {
