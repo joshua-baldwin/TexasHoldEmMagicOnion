@@ -11,8 +11,10 @@ namespace THE.SceneControllers
 {
     public class StartUi : MonoBehaviour, IGamingHubReceiver
     {
+        [SerializeField] private InputField userName;
         [SerializeField] private Button createRoom;
         [SerializeField] private Button joinRoom;
+        [SerializeField] private InputField roomName;
         [SerializeField] private Button cancelCreateRoom;
         [SerializeField] private Button cancelJoinRoom;
         
@@ -39,13 +41,13 @@ namespace THE.SceneControllers
         private async void CreateRoom()
         {
             SetRoomButtons(false);
-            MySceneManager.Receiver.CallCreateRoom();
+            MySceneManager.Receiver.CallCreateRoom(userName.text);
         }
 
         private async void JoinRoom()
         {
             SetRoomButtons(false);
-            MySceneManager.Receiver.CallJoinRoom();
+            MySceneManager.Receiver.CallJoinRoom(userName.text, roomName.text);
         }
 
         private void SetRoomButtons(bool isActive)
@@ -73,7 +75,7 @@ namespace THE.SceneControllers
         
         public void OnJoinRoom(PlayerEntity player)
         {
-            Debug.Log($"{player.Name}:{player.Id} joined");
+            Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomName}");
         }
 
         public void OnLeaveRoom(PlayerEntity player)

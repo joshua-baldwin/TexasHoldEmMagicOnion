@@ -22,19 +22,19 @@ namespace THE.MagicOnion.Client
         public Action OnConnectFailed;
         public Action OnCancel;
 
-        public async void CallCreateRoom()
+        public async void CallCreateRoom(string userName)
         {
             if (client == null)
                 await InitializeClientAsync();
-            self = await CallCreate();
+            self = await CallCreate(userName);
             CallGetPlayers(() => OnConnectSuccess?.Invoke(players.Length));
         }
         
-        public async void CallJoinRoom()
+        public async void CallJoinRoom(string userName, string roomName)
         {
             if (client == null)
                 await InitializeClientAsync();
-            self = await CallJoin();
+            self = await CallJoin(userName, roomName);
             CallGetPlayers(() => OnConnectSuccess?.Invoke(players.Length));
         }
 
@@ -49,14 +49,14 @@ namespace THE.MagicOnion.Client
             client.DisposeAsync();
         }
         
-        private async ValueTask<PlayerEntity> CallCreate()
+        private async ValueTask<PlayerEntity> CallCreate(string userName)
         {
-            return await client.JoinRoomAsync("user1", true);
+            return await client.JoinRoomAsync(userName, "");
         }
         
-        private async ValueTask<PlayerEntity> CallJoin()
+        private async ValueTask<PlayerEntity> CallJoin(string userName, string roomName)
         {
-            return await client.JoinRoomAsync("user1", false);
+            return await client.JoinRoomAsync(userName, roomName);
         }
         
         private async ValueTask CallLeave()
@@ -77,7 +77,7 @@ namespace THE.MagicOnion.Client
         
         public void OnJoinRoom(PlayerEntity player)
         {
-            Debug.Log($"{player.Name}:{player.Id} joined");
+            Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomName}");
         }
 
         public void OnLeaveRoom(PlayerEntity player)
