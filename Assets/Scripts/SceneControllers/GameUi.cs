@@ -20,6 +20,7 @@ namespace THE.SceneControllers
 
         private void UpdatePlayerCount(int count)
         {
+            Debug.Log("updating player count");
             currentPlayerCount.text = $"{count}/10";
         }
 

@@ -55,16 +55,19 @@ namespace THE.MagicOnion.Client
         
         private async ValueTask<PlayerEntity> CallCreate(string userName)
         {
+            Debug.Log("Calling JoinRoom");
             return await client.JoinRoomAsync(userName, "");
         }
         
         private async ValueTask<PlayerEntity> CallJoin(string userName, string roomName)
         {
+            Debug.Log("Calling JoinRoom");
             return await client.JoinRoomAsync(userName, roomName);
         }
         
         private async ValueTask CallLeave()
         {
+            Debug.Log("Calling LeaveRoom");
             await client.LeaveRoomAsync(self.RoomName);
         }
         
@@ -75,6 +78,7 @@ namespace THE.MagicOnion.Client
 
         private async void CallGetPlayers()
         {
+            Debug.Log("Calling GetAllPlayers");
             players = await client.GetAllPlayers(self.RoomName);
         }
         
@@ -83,9 +87,10 @@ namespace THE.MagicOnion.Client
             Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomName}");
         }
 
-        public void OnLeaveRoom(PlayerEntity player)
+        public void OnLeaveRoom(PlayerEntity player, int playerCount)
         {
             Debug.Log($"{player.Name}:{player.Id} left");
+            UpdatePlayerCount?.Invoke(playerCount);
         }
 
         public void SendMessage(string message)
@@ -95,9 +100,8 @@ namespace THE.MagicOnion.Client
 
         public void OnGetAllPlayers(PlayerEntity[] playerEntities)
         {
+            Debug.Log($"Player count: {playerEntities.Length}");
             UpdatePlayerCount?.Invoke(playerEntities.Length);
-            foreach (var player in playerEntities)
-                Debug.Log(player.Name);
         }
         
         public async Task InitializeClientAsync()
