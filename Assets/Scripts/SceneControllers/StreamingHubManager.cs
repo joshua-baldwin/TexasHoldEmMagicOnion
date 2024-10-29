@@ -2,9 +2,8 @@ using THE.MagicOnion.Client;
 
 namespace THE.SceneControllers
 {
-    public static class MySceneManager
+    public static class StreamingHubManager
     {
-        public static int PlayerCount { get; set; }
         public static GamingHubReceiver Receiver;
     }
 }

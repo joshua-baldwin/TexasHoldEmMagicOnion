@@ -27,26 +27,22 @@ namespace THE.SceneControllers
             joinRoom.onClick.AddListener(JoinRoom);
             cancelCreateRoom.onClick.AddListener(CancelCreateRoom);
             cancelJoinRoom.onClick.AddListener(CancelJoinRoom);
-            MySceneManager.Receiver = new GamingHubReceiver();
-            MySceneManager.Receiver.OnConnectSuccess = (playerCount) =>
-            {
-                MySceneManager.PlayerCount = playerCount;
-                SceneManager.LoadSceneAsync("GameScene");
-            };
-            MySceneManager.Receiver.OnConnectFailed = () => SetRoomButtons(true);
-            MySceneManager.Receiver.OnCancel = () => SetRoomButtons(true);
+            StreamingHubManager.Receiver = new GamingHubReceiver();
+            StreamingHubManager.Receiver.OnConnectSuccess = () => SceneManager.LoadSceneAsync("GameScene");
+            StreamingHubManager.Receiver.OnConnectFailed = () => SetRoomButtons(true);
+            StreamingHubManager.Receiver.OnCancel = () => SetRoomButtons(true);
         }
 
         private void CreateRoom()
         {
             SetRoomButtons(false);
-            MySceneManager.Receiver.CallCreateRoom(userName.text);
+            StreamingHubManager.Receiver.CallCreateRoom(userName.text);
         }
 
         private void JoinRoom()
         {
             SetRoomButtons(false);
-            MySceneManager.Receiver.CallJoinRoom(userName.text, roomName.text);
+            StreamingHubManager.Receiver.CallJoinRoom(userName.text, roomName.text);
         }
 
         private void SetRoomButtons(bool isActive)

@@ -17,16 +17,19 @@ namespace THE.MagicOnion.Client
         private PlayerEntity[] players;
         private PlayerEntity self;
 
-        public Action<int> OnConnectSuccess;
+        public Action OnConnectSuccess;
         public Action OnConnectFailed;
         public Action OnCancel;
+
+        public Action<int> UpdatePlayerCount;
 
         public async void CallCreateRoom(string userName)
         {
             if (client == null)
                 await InitializeClientAsync();
             self = await CallCreate(userName);
-            CallGetPlayers(() => OnConnectSuccess?.Invoke(players.Length));
+            OnConnectSuccess?.Invoke();
+            CallGetPlayers();
         }
         
         public async void CallJoinRoom(string userName, string roomName)
@@ -34,7 +37,8 @@ namespace THE.MagicOnion.Client
             if (client == null)
                 await InitializeClientAsync();
             self = await CallJoin(userName, roomName);
-            CallGetPlayers(() => OnConnectSuccess?.Invoke(players.Length));
+            OnConnectSuccess?.Invoke();
+            CallGetPlayers();
         }
 
         public async void CallLeaveMethod(Action onFinish)
@@ -44,7 +48,7 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke();
         }
 
-        public void Disconnect()
+        private void Disconnect()
         {
             client.DisposeAsync();
         }
@@ -69,10 +73,9 @@ namespace THE.MagicOnion.Client
             await client.SendMessageAsync("hello");
         }
 
-        private async void CallGetPlayers(Action callback)
+        private async void CallGetPlayers()
         {
             players = await client.GetAllPlayers(self.RoomName);
-            callback?.Invoke();
         }
         
         public void OnJoinRoom(PlayerEntity player)
@@ -92,8 +95,9 @@ namespace THE.MagicOnion.Client
 
         public void OnGetAllPlayers(PlayerEntity[] playerEntities)
         {
+            UpdatePlayerCount?.Invoke(playerEntities.Length);
             foreach (var player in playerEntities)
-                Debug.Log(player.Name);   
+                Debug.Log(player.Name);
         }
         
         public async Task InitializeClientAsync()

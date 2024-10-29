@@ -15,7 +15,12 @@ namespace THE.SceneControllers
         {
             startButton.onClick.AddListener(StartAction);
             leaveButton.onClick.AddListener(LeaveRoom);
-            currentPlayerCount.text = $"{MySceneManager.PlayerCount}/10";
+            StreamingHubManager.Receiver.UpdatePlayerCount = UpdatePlayerCount;
+        }
+
+        private void UpdatePlayerCount(int count)
+        {
+            currentPlayerCount.text = $"{count}/10";
         }
 
         private void StartAction()
@@ -25,10 +30,7 @@ namespace THE.SceneControllers
         
         private void LeaveRoom()
         {
-            MySceneManager.Receiver.CallLeaveMethod(() =>
-            {
-                SceneManager.LoadScene("StartScene");
-            });
+            StreamingHubManager.Receiver.CallLeaveMethod(() => SceneManager.LoadScene("StartScene"));
         }
     }
 }
