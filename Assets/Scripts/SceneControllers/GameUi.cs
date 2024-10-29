@@ -6,6 +6,8 @@ namespace THE.SceneControllers
 {
     public class GameUi : MonoBehaviour
     {
+        [SerializeField] private Text userName;
+        [SerializeField] private Text roomName;
         [SerializeField] private Text currentPlayerCount;
         [SerializeField] private Button startButton;
         [SerializeField] private Button leaveButton;
@@ -13,6 +15,8 @@ namespace THE.SceneControllers
 
         private void Awake()
         {
+            userName.text = $"UserName: {StreamingHubManager.UserName}";
+            roomName.text = $"Room name:\n{StreamingHubManager.RoomName}";
             startButton.onClick.AddListener(StartAction);
             leaveButton.onClick.AddListener(LeaveRoom);
             StreamingHubManager.Receiver.UpdatePlayerCount = UpdatePlayerCount;

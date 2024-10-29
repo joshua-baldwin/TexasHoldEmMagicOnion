@@ -5,6 +5,7 @@ using MagicOnion;
 using MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
+using THE.SceneControllers;
 using UnityEngine;
 
 namespace THE.MagicOnion.Client
@@ -28,6 +29,8 @@ namespace THE.MagicOnion.Client
             if (client == null)
                 await InitializeClientAsync();
             self = await CallCreate(userName);
+            StreamingHubManager.UserName = self.Name;
+            StreamingHubManager.RoomName = self.RoomName;
             OnConnectSuccess?.Invoke();
             CallGetPlayers();
         }
@@ -37,6 +40,8 @@ namespace THE.MagicOnion.Client
             if (client == null)
                 await InitializeClientAsync();
             self = await CallJoin(userName, roomName);
+            StreamingHubManager.UserName = self.Name;
+            StreamingHubManager.RoomName = self.RoomName;
             OnConnectSuccess?.Invoke();
             CallGetPlayers();
         }
