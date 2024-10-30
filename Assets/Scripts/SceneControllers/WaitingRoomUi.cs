@@ -22,6 +22,7 @@ namespace THE.SceneControllers
             startButton.onClick.AddListener(StartAction);
             leaveButton.onClick.AddListener(LeaveRoom);
             StreamingHubManager.Receiver.UpdatePlayerCount = UpdatePlayerCount;
+            StreamingHubManager.Receiver.CallGetPlayersMethod(UpdatePlayerCount);
         }
 
         private void UpdatePlayerCount(int count)

@@ -27,11 +27,7 @@ namespace THE.SceneControllers
             cancelJoinRoom.onClick.AddListener(CancelJoinRoom);
             SetCancelButtons(false);
             StreamingHubManager.Receiver = new GamingHubReceiver();
-            StreamingHubManager.Receiver.OnConnectSuccess = (callback) =>
-            {
-                SceneManager.LoadSceneAsync("WaitingRoomScene");
-                callback?.Invoke();
-            };
+            StreamingHubManager.Receiver.OnConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
             StreamingHubManager.Receiver.OnConnectFailed = () => SetRoomButtons(true);
             StreamingHubManager.Receiver.OnCancel = () => SetRoomButtons(true);
         }
