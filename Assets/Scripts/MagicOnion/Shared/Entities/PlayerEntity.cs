@@ -38,6 +38,7 @@ namespace THE.MagicOnion.Shared.Entities
             PlayerRole = role;
             RoomName = roomName;
             IsHost = isHost;
+            CardHand = new CardEntity[2];
         }
     }
 }
