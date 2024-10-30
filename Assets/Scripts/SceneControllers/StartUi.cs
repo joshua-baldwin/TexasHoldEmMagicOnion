@@ -59,6 +59,7 @@ namespace THE.SceneControllers
         private void SetCancelButtons(bool isActive)
         {
             cancelCreateRoom.interactable = isActive;
+            cancelJoinRoom.interactable = isActive;
         }
         
         private void CancelCreateRoom()
