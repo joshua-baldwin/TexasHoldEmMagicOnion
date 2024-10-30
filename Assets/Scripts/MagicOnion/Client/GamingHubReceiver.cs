@@ -154,6 +154,7 @@ namespace THE.MagicOnion.Client
         public void OnGameStart(PlayerEntity[] playerEntities)
         {
             Debug.Log("Game started");
+            OnGameStartAction?.Invoke(playerEntities);
         }
         
         public async Task InitializeClientAsync()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using THE.MagicOnion.Shared.Entities;
+using THE.SceneControllers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,21 +9,24 @@ namespace THE.Player
 {
     public class PlayerClass : MonoBehaviour
     {
-        [SerializeField] private Text userName;
         [SerializeField] private Text role;
         [SerializeField] private Text dealer;
         [SerializeField] private List<CardClass> cardList;
+        [SerializeField] private GameObject cover;
 
         public void Initialize(PlayerEntity player)
         {
-            userName.text = player.Name;
-            role.gameObject.SetActive(player.IsDealer);
+            cover.gameObject.SetActive(player.Name != StreamingHubManager.UserName);
+            dealer.gameObject.SetActive(player.IsDealer);
             if (player.PlayerRole != PlayerRoleEnum.None)
             {
                 role.text = player.PlayerRole == PlayerRoleEnum.SmallBlind
                     ? "SB"
                     : "BB";
             }
+            
+            cardList[0].Initialize(player.CardHand[0].Suit, player.CardHand[0].Rank);
+            cardList[1].Initialize(player.CardHand[1].Suit, player.CardHand[1].Rank);
             
         }
     }
