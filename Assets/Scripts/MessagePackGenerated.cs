@@ -151,12 +151,13 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(5);
+            writer.WriteArrayHeader(6);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.RoomName, options);
             writer.Write(value.IsHost);
+            writer.Write(value.IsDealer);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -174,6 +175,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __PlayerRole__ = default(global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum);
             var __RoomName__ = default(string);
             var __IsHost__ = default(bool);
+            var __IsDealer__ = default(bool);
 
             for (int i = 0; i < length; i++)
             {
@@ -194,6 +196,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                     case 4:
                         __IsHost__ = reader.ReadBoolean();
                         break;
+                    case 5:
+                        __IsDealer__ = reader.ReadBoolean();
+                        break;
                     default:
                         reader.Skip();
                         break;
@@ -201,6 +206,14 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             var ____result = new global::THE.MagicOnion.Shared.Entities.PlayerEntity(__Name__, __Id__, __PlayerRole__, __RoomName__, __IsHost__);
+            if (length <= 5)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.IsDealer = __IsDealer__;
+
+        MEMBER_ASSIGNMENT_END:
             reader.Depth--;
             return ____result;
         }

@@ -18,6 +18,8 @@ namespace THE.MagicOnion.Shared.Entities
         public string RoomName { get; private set; }
         [Key(4)]
         public bool IsHost { get; private set; }
+        [Key(5)]
+        public bool IsDealer { get; set; }
         
         public PlayerEntity(string name, Guid id, PlayerRoleEnum role, string roomName, bool isHost)
         {
