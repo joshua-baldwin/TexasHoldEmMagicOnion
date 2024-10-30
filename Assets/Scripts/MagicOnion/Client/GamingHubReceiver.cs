@@ -20,7 +20,7 @@ namespace THE.MagicOnion.Client
         private PlayerEntity[] players;
         private PlayerEntity self;
 
-        public Action OnConnectSuccess;
+        public Action<Action> OnConnectSuccess;
         public Action OnConnectFailed;
         public Action OnCancel;
 
@@ -39,8 +39,7 @@ namespace THE.MagicOnion.Client
             StreamingHubManager.UserName = self.Name;
             StreamingHubManager.RoomName = self.RoomName;
             StreamingHubManager.IsHost = true;
-            OnConnectSuccess?.Invoke();
-            CallGetPlayers();
+            OnConnectSuccess?.Invoke(CallGetPlayers);
         }
         
         public async void CallJoinRoom(string userName, string roomName)
@@ -54,8 +53,7 @@ namespace THE.MagicOnion.Client
             self = await CallJoin(userName, roomName);
             StreamingHubManager.UserName = self.Name;
             StreamingHubManager.RoomName = self.RoomName;
-            OnConnectSuccess?.Invoke();
-            CallGetPlayers();
+            OnConnectSuccess?.Invoke(CallGetPlayers);
         }
 
         public async void CallLeaveMethod(Action onFinish)
@@ -132,7 +130,7 @@ namespace THE.MagicOnion.Client
         public void OnGetAllPlayers(PlayerEntity[] playerEntities)
         {
             Debug.Log($"Player count: {playerEntities.Length}");
-            UpdatePlayerCount?.Invoke(playerEntities.Length);
+            UpdatePlayerCount.Invoke(playerEntities.Length);
         }
 
         public void OnUpdatePlayerRole(PlayerRoleEnum role)

@@ -153,6 +153,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3066682062083469556}
   - component: {fileID: 3664848504136731606}
+  - component: {fileID: 2893886885154601275}
+  - component: {fileID: 4986689118701128303}
   m_Layer: 5
   m_Name: Player
   m_TagString: Untagged
@@ -194,13 +196,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9d3d566592f4a3bbca2ba80741679a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userName: {fileID: 0}
   role: {fileID: 3261221781692458707}
   dealer: {fileID: 7440461338602190097}
   cardList:
   - {fileID: 4163150879589924796}
   - {fileID: 205114958489898255}
   cover: {fileID: 8757245075254645950}
+--- !u!222 &2893886885154601275
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326047928766313824}
+  m_CullTransparentMesh: 1
+--- !u!114 &4986689118701128303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326047928766313824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &5129020171580007379
 GameObject:
   m_ObjectHideFlags: 0

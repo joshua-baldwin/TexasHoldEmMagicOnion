@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using UnityEngine;
@@ -26,8 +25,13 @@ namespace THE.SceneControllers
             joinRoom.onClick.AddListener(JoinRoom);
             cancelCreateRoom.onClick.AddListener(CancelCreateRoom);
             cancelJoinRoom.onClick.AddListener(CancelJoinRoom);
+            SetCancelButtons(false);
             StreamingHubManager.Receiver = new GamingHubReceiver();
-            StreamingHubManager.Receiver.OnConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
+            StreamingHubManager.Receiver.OnConnectSuccess = (callback) =>
+            {
+                SceneManager.LoadSceneAsync("WaitingRoomScene");
+                callback?.Invoke();
+            };
             StreamingHubManager.Receiver.OnConnectFailed = () => SetRoomButtons(true);
             StreamingHubManager.Receiver.OnCancel = () => SetRoomButtons(true);
         }
@@ -35,12 +39,14 @@ namespace THE.SceneControllers
         private void CreateRoom()
         {
             SetRoomButtons(false);
+            SetCancelButtons(true);
             StreamingHubManager.Receiver.CallCreateRoom(userName.text);
         }
 
         private void JoinRoom()
         {
             SetRoomButtons(false);
+            SetCancelButtons(true);
             StreamingHubManager.Receiver.CallJoinRoom(userName.text, roomName.text);
         }
 
@@ -57,14 +63,16 @@ namespace THE.SceneControllers
         
         private void CancelCreateRoom()
         {
-            StreamingHubManager.Receiver.SetCancellation();
+            SetCancelButtons(false);
             SetRoomButtons(true);
+            StreamingHubManager.Receiver.SetCancellation();
         }
         
         private void CancelJoinRoom()
         {
-            StreamingHubManager.Receiver.SetCancellation();
+            SetCancelButtons(false);
             SetRoomButtons(true);
+            StreamingHubManager.Receiver.SetCancellation();
         }
     }
 }
