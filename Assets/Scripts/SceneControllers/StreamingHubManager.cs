@@ -9,5 +9,6 @@ namespace THE.SceneControllers
         public static GamingHubReceiver Receiver;
         public static string UserName;
         public static string RoomName;
+        public static bool IsHost;
     }
 }

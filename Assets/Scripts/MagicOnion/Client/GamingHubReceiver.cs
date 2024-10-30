@@ -38,6 +38,7 @@ namespace THE.MagicOnion.Client
             self = await CallCreate(userName);
             StreamingHubManager.UserName = self.Name;
             StreamingHubManager.RoomName = self.RoomName;
+            StreamingHubManager.IsHost = true;
             OnConnectSuccess?.Invoke();
             CallGetPlayers();
         }
@@ -61,12 +62,6 @@ namespace THE.MagicOnion.Client
         {
             await CallLeave();
             Disconnect();
-            onFinish?.Invoke();
-        }
-
-        public async void CallUpdatePlayerRoleMethod(string userName, string roomName, PlayerRoleEnum role, Action onFinish)
-        {
-            await CallUpdatePlayerRole(userName, roomName, role);
             onFinish?.Invoke();
         }
 
@@ -110,12 +105,6 @@ namespace THE.MagicOnion.Client
         {
             Debug.Log("Calling GetAllPlayers");
             players = await client.GetAllPlayers(self.RoomName);
-        }
-
-        private async ValueTask CallUpdatePlayerRole(string userName, string roomName, PlayerRoleEnum role)
-        {
-            Debug.Log("Calling UpdatePlayerRole");
-            await client.UpdatePlayerRole(userName, roomName, role);
         }
 
         private async ValueTask CallStartGame(string roomName)

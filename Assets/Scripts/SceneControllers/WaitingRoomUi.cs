@@ -17,6 +17,7 @@ namespace THE.SceneControllers
         {
             userName.text = $"UserName: {StreamingHubManager.UserName}";
             roomName.text = $"Room name:\n{StreamingHubManager.RoomName}";
+            startButton.gameObject.SetActive(StreamingHubManager.IsHost);
             startButton.onClick.AddListener(StartAction);
             leaveButton.onClick.AddListener(LeaveRoom);
             StreamingHubManager.Receiver.UpdatePlayerCount = UpdatePlayerCount;
