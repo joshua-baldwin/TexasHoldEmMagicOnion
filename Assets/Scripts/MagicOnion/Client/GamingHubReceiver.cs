@@ -14,7 +14,7 @@ namespace THE.MagicOnion.Client
 {
     public class GamingHubReceiver : IGamingHubReceiver
     {
-        private CancellationTokenSource shutdownCancellation = new();
+        private CancellationTokenSource shutdownCancellation;
         private GrpcChannelx channel;
         private IGamingHub client;
         private PlayerEntity[] players;
@@ -31,6 +31,10 @@ namespace THE.MagicOnion.Client
         {
             if (client == null)
                 await InitializeClientAsync();
+            
+            if (shutdownCancellation.IsCancellationRequested)
+                return;
+            
             self = await CallCreate(userName);
             StreamingHubManager.UserName = self.Name;
             StreamingHubManager.RoomName = self.RoomName;
@@ -42,6 +46,10 @@ namespace THE.MagicOnion.Client
         {
             if (client == null)
                 await InitializeClientAsync();
+            
+            if (shutdownCancellation.IsCancellationRequested)
+                return;
+            
             self = await CallJoin(userName, roomName);
             StreamingHubManager.UserName = self.Name;
             StreamingHubManager.RoomName = self.RoomName;
@@ -153,6 +161,8 @@ namespace THE.MagicOnion.Client
             // Initialize the Hub
             channel = GrpcChannelx.ForAddress("https://localhost:7007");
 
+            shutdownCancellation?.Dispose();
+            shutdownCancellation = new();
             while (!shutdownCancellation.IsCancellationRequested)
             {
                 try
@@ -172,8 +182,12 @@ namespace THE.MagicOnion.Client
                 Debug.Log("Failed to connect to the server. Retry after 5 seconds...");
                 await Task.Delay(5 * 1000);
             }
-            
-            OnCancel?.Invoke();
+
+            if (shutdownCancellation.IsCancellationRequested)
+            {
+                Debug.Log("Request cancelled");
+                OnCancel?.Invoke();
+            }
         }
         
         private async void RegisterDisconnectEvent(IGamingHub streamingClient)
@@ -201,6 +215,11 @@ namespace THE.MagicOnion.Client
                 //     await this.ReconnectServerAsync();
                 // }
             }
+        }
+
+        public void SetCancellation()
+        {
+            shutdownCancellation.Cancel();
         }
     }
 }

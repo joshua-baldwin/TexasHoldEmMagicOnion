@@ -17,7 +17,6 @@ namespace THE.SceneControllers
         [SerializeField] private Button cancelCreateRoom;
         [SerializeField] private Button cancelJoinRoom;
         
-        private CancellationTokenSource shutdownCancellation = new();
         private Guid myId;
         private PlayerEntity[] players;
 
@@ -58,13 +57,13 @@ namespace THE.SceneControllers
         
         private void CancelCreateRoom()
         {
-            shutdownCancellation.Cancel();
+            StreamingHubManager.Receiver.SetCancellation();
             SetRoomButtons(true);
         }
         
         private void CancelJoinRoom()
         {
-            shutdownCancellation.Cancel();
+            StreamingHubManager.Receiver.SetCancellation();
             SetRoomButtons(true);
         }
     }
