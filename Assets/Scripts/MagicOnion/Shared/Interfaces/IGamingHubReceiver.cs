@@ -9,5 +9,6 @@ namespace THE.MagicOnion.Shared.Interfaces
         void SendMessage(string message);
         void OnGetAllPlayers(PlayerEntity[] playerEntities);
         void OnUpdatePlayerRole(PlayerRoleEnum role);
+        void OnGameStart(PlayerEntity[] playerEntities);
     }
 }

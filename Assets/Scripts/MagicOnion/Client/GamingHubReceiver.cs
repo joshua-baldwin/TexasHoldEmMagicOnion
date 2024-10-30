@@ -55,9 +55,15 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke();
         }
 
-        public async void CallUpdatePlayerRoleMethod(PlayerRoleEnum role, Action onFinish)
+        public async void CallUpdatePlayerRoleMethod(string userName, string roomName, PlayerRoleEnum role, Action onFinish)
         {
-            await CallUpdatePlayerRole(role);
+            await CallUpdatePlayerRole(userName, roomName, role);
+            onFinish?.Invoke();
+        }
+
+        public async void CallStartGameMethod(string roomName, Action onFinish)
+        {
+            await CallStartGame(roomName);
             onFinish?.Invoke();
         }
 
@@ -97,10 +103,16 @@ namespace THE.MagicOnion.Client
             players = await client.GetAllPlayers(self.RoomName);
         }
 
-        private async ValueTask CallUpdatePlayerRole(PlayerRoleEnum role)
+        private async ValueTask CallUpdatePlayerRole(string userName, string roomName, PlayerRoleEnum role)
         {
             Debug.Log("Calling UpdatePlayerRole");
-            await client.UpdatePlayerRole(role);
+            await client.UpdatePlayerRole(userName, roomName, role);
+        }
+
+        private async ValueTask CallStartGame(string roomName)
+        {
+            Debug.Log("Calling StartGame");
+            await client.StartGame(roomName);
         }
         
         public void OnJoinRoom(PlayerEntity player)
@@ -128,6 +140,11 @@ namespace THE.MagicOnion.Client
         public void OnUpdatePlayerRole(PlayerRoleEnum role)
         {
             Debug.Log($"Player role is {role}");
+        }
+
+        public void OnGameStart(PlayerEntity[] playerEntities)
+        {
+            Debug.Log("Game started");
         }
         
         public async Task InitializeClientAsync()

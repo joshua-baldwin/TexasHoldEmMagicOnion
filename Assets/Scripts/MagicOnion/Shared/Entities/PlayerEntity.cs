@@ -13,7 +13,7 @@ namespace THE.MagicOnion.Shared.Entities
         public Guid Id { get; private set; }
         
         [Key(2)]
-        public PlayerRoleEnum PlayerRole { get; private set; }
+        public PlayerRoleEnum PlayerRole { get; set; }
         [Key(3)]
         public string RoomName { get; private set; }
         [Key(4)]
