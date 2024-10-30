@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using MagicOnion;
 using THE.MagicOnion.Shared.Entities;
@@ -11,5 +10,6 @@ namespace THE.MagicOnion.Shared.Interfaces
         ValueTask<PlayerEntity> LeaveRoomAsync(string roomName);
         ValueTask SendMessageAsync(string message);
         ValueTask<PlayerEntity[]> GetAllPlayers(string roomName);
+        ValueTask UpdatePlayerRole(PlayerRoleEnum playerRole);
     }
 }

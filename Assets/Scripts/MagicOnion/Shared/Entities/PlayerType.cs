@@ -1,6 +1,6 @@
 namespace THE.MagicOnion.Shared.Entities
 {
-    public enum PlayerTypeEnum
+    public enum PlayerRoleEnum
     {
         None,
         Dealer,

@@ -8,5 +8,6 @@ namespace THE.MagicOnion.Shared.Interfaces
         void OnLeaveRoom(PlayerEntity player, int playerCount);
         void SendMessage(string message);
         void OnGetAllPlayers(PlayerEntity[] playerEntities);
+        void OnUpdatePlayerRole(PlayerRoleEnum role);
     }
 }

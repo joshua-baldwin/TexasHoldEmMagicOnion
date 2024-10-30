@@ -13,16 +13,19 @@ namespace THE.MagicOnion.Shared.Entities
         public Guid Id { get; private set; }
         
         [Key(2)]
-        public PlayerTypeEnum PlayerType { get; private set; }
+        public PlayerRoleEnum PlayerRole { get; private set; }
         [Key(3)]
         public string RoomName { get; private set; }
+        [Key(4)]
+        public bool IsHost { get; private set; }
         
-        public PlayerEntity(string name, Guid id, PlayerTypeEnum type, string roomName)
+        public PlayerEntity(string name, Guid id, PlayerRoleEnum role, string roomName, bool isHost)
         {
             Name = name;
             Id = id;
-            PlayerType = type;
+            PlayerRole = role;
             RoomName = roomName;
+            IsHost = isHost;
         }
     }
 }

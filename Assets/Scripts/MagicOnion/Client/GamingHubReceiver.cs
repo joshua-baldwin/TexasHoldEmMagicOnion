@@ -55,6 +55,12 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke();
         }
 
+        public async void CallUpdatePlayerRoleMethod(PlayerRoleEnum role, Action onFinish)
+        {
+            await CallUpdatePlayerRole(role);
+            onFinish?.Invoke();
+        }
+
         public List<PlayerEntity> GetAllPlayers() => players.ToList();
 
         private void Disconnect()
@@ -90,6 +96,12 @@ namespace THE.MagicOnion.Client
             Debug.Log("Calling GetAllPlayers");
             players = await client.GetAllPlayers(self.RoomName);
         }
+
+        private async ValueTask CallUpdatePlayerRole(PlayerRoleEnum role)
+        {
+            Debug.Log("Calling UpdatePlayerRole");
+            await client.UpdatePlayerRole(role);
+        }
         
         public void OnJoinRoom(PlayerEntity player)
         {
@@ -111,6 +123,11 @@ namespace THE.MagicOnion.Client
         {
             Debug.Log($"Player count: {playerEntities.Length}");
             UpdatePlayerCount?.Invoke(playerEntities.Length);
+        }
+
+        public void OnUpdatePlayerRole(PlayerRoleEnum role)
+        {
+            Debug.Log($"Player role is {role}");
         }
         
         public async Task InitializeClientAsync()

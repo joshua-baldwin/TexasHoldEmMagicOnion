@@ -49,7 +49,7 @@ namespace MessagePack.Resolvers
         {
             lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(2)
             {
-                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum), 0 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum), 0 },
                 { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 1 },
             };
         }
@@ -97,16 +97,16 @@ namespace MessagePack.Resolvers
 namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
 {
 
-    public sealed class PlayerTypeEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum>
+    public sealed class PlayerTypeEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum>
     {
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum value, global::MessagePack.MessagePackSerializerOptions options)
         {
             writer.Write((global::System.Int32)value);
         }
 
-        public global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
-            return (global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum)reader.ReadInt32();
+            return (global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum)reader.ReadInt32();
         }
     }
 }
@@ -151,11 +151,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(4);
+            writer.WriteArrayHeader(5);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum>(formatterResolver).Serialize(ref writer, value.PlayerType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.RoomName, options);
+            writer.Write(value.IsHost);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -170,8 +171,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var length = reader.ReadArrayHeader();
             var __Name__ = default(string);
             var __Id__ = default(global::System.Guid);
-            var __PlayerType__ = default(global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum);
+            var __PlayerType__ = default(global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum);
             var __RoomName__ = default(string);
+            var __IsHost__ = default(bool);
 
             for (int i = 0; i < length; i++)
             {
@@ -184,10 +186,13 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __Id__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 2:
-                        __PlayerType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        __PlayerType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 3:
                         __RoomName__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 4:
+                        __IsHost__ = reader.ReadBoolean();
                         break;
                     default:
                         reader.Skip();
@@ -195,7 +200,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 }
             }
 
-            var ____result = new global::THE.MagicOnion.Shared.Entities.PlayerEntity(__Name__, __Id__, __PlayerType__, __RoomName__);
+            var ____result = new global::THE.MagicOnion.Shared.Entities.PlayerEntity(__Name__, __Id__, __PlayerType__, __RoomName__, __IsHost__);
             reader.Depth--;
             return ____result;
         }
