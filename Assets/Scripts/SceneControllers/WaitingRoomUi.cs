@@ -18,6 +18,7 @@ namespace THE.SceneControllers
             userName.text = $"UserName: {StreamingHubManager.UserName}";
             roomName.text = $"Room name:\n{StreamingHubManager.RoomName}";
             startButton.gameObject.SetActive(StreamingHubManager.IsHost);
+            startButton.interactable = playerCount > 1;
             startButton.onClick.AddListener(StartAction);
             leaveButton.onClick.AddListener(LeaveRoom);
             StreamingHubManager.Receiver.UpdatePlayerCount = UpdatePlayerCount;
@@ -27,6 +28,7 @@ namespace THE.SceneControllers
         {
             Debug.Log("updating player count");
             currentPlayerCount.text = $"{count}/10";
+            playerCount = count;
         }
 
         private void StartAction()
