@@ -25,6 +25,7 @@ namespace THE.MagicOnion.Client
         public Action OnCancel;
 
         public Action<int> UpdatePlayerCount;
+        public Action<PlayerEntity[]> OnGameStartAction;
 
         public async void CallCreateRoom(string userName)
         {
