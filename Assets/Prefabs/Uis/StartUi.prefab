@@ -520,8 +520,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userName: {fileID: 5414411351091441712}
-  joinRoom: {fileID: 0}
-  cancelJoinRoom: {fileID: 0}
+  joinRoom: {fileID: 5663050103225312675}
+  cancelJoinRoom: {fileID: 6956803515080141228}
 --- !u!114 &5491515024804713961
 MonoBehaviour:
   m_ObjectHideFlags: 0
