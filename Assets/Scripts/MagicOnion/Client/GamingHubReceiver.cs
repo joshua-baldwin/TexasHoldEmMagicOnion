@@ -31,7 +31,7 @@ namespace THE.MagicOnion.Client
 
         public Action<int> UpdatePlayerCount;
 
-        public async void CallCreateRoom(string userName)
+        public async void CreateRoom(string userName)
         {
             if (client == null)
                 await InitializeClientAsync();
@@ -39,74 +39,51 @@ namespace THE.MagicOnion.Client
             if (shutdownCancellation.IsCancellationRequested)
                 return;
             
-            self = await CallCreate(userName);
+            self = await CallCreateRoom(userName);
             UserName = self.Name;
             RoomName = self.RoomName;
             IsHost = true;
             OnRoomConnectSuccess?.Invoke();
         }
-        
-        public async void CallJoinRoom(string userName)
-        {
-            if (client == null)
-                await InitializeClientAsync();
-            
-            if (shutdownCancellation.IsCancellationRequested)
-                return;
-            
-            self = await CallJoin(userName);
-            UserName = self.Name;
-            RoomName = self.RoomName;
-            OnRoomConnectSuccess?.Invoke();
-        }
 
-        public async void CallLeaveMethod(Action onFinish)
+        public async void LeaveRoom(Action onFinish)
         {
-            await CallLeave();
+            await CallLeaveRoom();
             Disconnect();
             onFinish?.Invoke();
         }
 
-        public void CallGetPlayersMethod(Action<int> onFinish)
+        public void GetPlayers(Action<int> onFinish)
         {
             CallGetPlayers(onFinish);
         }
 
-        public async void CallStartGameMethod(string roomName, Action onFinish)
+        public async void StartGame(string roomName, Action onFinish)
         {
             await CallStartGame(roomName);
             onFinish?.Invoke();
         }
 
-        public List<PlayerEntity> GetAllPlayers() => players.ToList();
+        public List<PlayerEntity> GetPlayerList() => players.ToList();
 
         private void Disconnect()
         {
             client.DisposeAsync();
             client = null;
         }
+
+        #region RPC calls
         
-        private async ValueTask<PlayerEntity> CallCreate(string userName)
+        private async ValueTask<PlayerEntity> CallCreateRoom(string userName)
         {
             Debug.Log("Calling JoinRoom");
             return await client.JoinRoomAsync(userName);
         }
         
-        private async ValueTask<PlayerEntity> CallJoin(string userName)
-        {
-            Debug.Log("Calling JoinRoom");
-            return await client.JoinRoomAsync(userName);
-        }
-        
-        private async ValueTask CallLeave()
+        private async ValueTask CallLeaveRoom()
         {
             Debug.Log("Calling LeaveRoom");
             await client.LeaveRoomAsync(self.RoomName);
-        }
-        
-        private async void CallSendMessage()
-        {
-            await client.SendMessageAsync("hello");
         }
 
         private async void CallGetPlayers(Action<int> onFinish)
@@ -122,6 +99,10 @@ namespace THE.MagicOnion.Client
             await client.StartGame(roomName);
         }
         
+        #endregion
+        
+        #region RPC callbacks
+        
         public void OnJoinRoom(PlayerEntity player, int playerCount)
         {
             Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomName}");
@@ -134,19 +115,9 @@ namespace THE.MagicOnion.Client
             UpdatePlayerCount?.Invoke(playerCount);
         }
 
-        public void SendMessage(string message)
-        {
-            Debug.Log(message);
-        }
-
         public void OnGetAllPlayers(PlayerEntity[] playerEntities)
         {
             Debug.Log($"Player count: {playerEntities.Length}");
-        }
-
-        public void OnUpdatePlayerRole(PlayerRoleEnum role)
-        {
-            Debug.Log($"Player role is {role}");
         }
 
         public void OnGameStart(PlayerEntity[] playerEntities)
@@ -156,6 +127,8 @@ namespace THE.MagicOnion.Client
             players = playerEntities;
             //OnGameStartAction?.Invoke(playerEntities);
         }
+        
+        #endregion
         
         public async Task InitializeClientAsync()
         {

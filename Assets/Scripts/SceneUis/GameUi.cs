@@ -11,7 +11,7 @@ namespace THE.SceneControllers
 
         public void Initialize()
         {
-            foreach (var player in GamingHubReceiver.Instance.GetAllPlayers())
+            foreach (var player in GamingHubReceiver.Instance.GetPlayerList())
             {
                 var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
                 playerObject.Initialize(player);

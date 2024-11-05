@@ -10,10 +10,7 @@ namespace THE.SceneControllers
     public class StartUi : MonoBehaviour
     {
         [SerializeField] private InputField userName;
-        [SerializeField] private Button createRoom;
         [SerializeField] private Button joinRoom;
-        [SerializeField] private InputField roomName;
-        [SerializeField] private Button cancelCreateRoom;
         [SerializeField] private Button cancelJoinRoom;
         
         private Guid myId;
@@ -21,10 +18,8 @@ namespace THE.SceneControllers
 
         private void Awake()
         {
-            createRoom.onClick.AddListener(CreateRoom);
-            joinRoom.onClick.AddListener(JoinRoom);
-            cancelCreateRoom.onClick.AddListener(CancelCreateRoom);
-            cancelJoinRoom.onClick.AddListener(CancelJoinRoom);
+            joinRoom.onClick.AddListener(CreateRoom);
+            cancelJoinRoom.onClick.AddListener(CancelCreateRoom);
             SetCancelButtons(false);
             GamingHubReceiver.Instance.OnRoomConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
             GamingHubReceiver.Instance.OnRoomConnectFailed = () => SetRoomButtons(true);
@@ -40,36 +35,20 @@ namespace THE.SceneControllers
         {
             SetRoomButtons(false);
             SetCancelButtons(true);
-            GamingHubReceiver.Instance.CallCreateRoom(userName.text);
-        }
-
-        private void JoinRoom()
-        {
-            SetRoomButtons(false);
-            SetCancelButtons(true);
-            GamingHubReceiver.Instance.CallJoinRoom(userName.text);
+            GamingHubReceiver.Instance.CreateRoom(userName.text);
         }
 
         private void SetRoomButtons(bool isActive)
         {
-            createRoom.interactable = isActive;
             joinRoom.interactable = isActive;
         }
 
         private void SetCancelButtons(bool isActive)
         {
-            cancelCreateRoom.interactable = isActive;
             cancelJoinRoom.interactable = isActive;
         }
         
         private void CancelCreateRoom()
-        {
-            SetCancelButtons(false);
-            SetRoomButtons(true);
-            GamingHubReceiver.Instance.SetCancellation();
-        }
-        
-        private void CancelJoinRoom()
         {
             SetCancelButtons(false);
             SetRoomButtons(true);

@@ -8,7 +8,6 @@ namespace THE.MagicOnion.Shared.Interfaces
     {
         ValueTask<PlayerEntity> JoinRoomAsync(string name);
         ValueTask<PlayerEntity> LeaveRoomAsync(string roomName);
-        ValueTask SendMessageAsync(string message);
         ValueTask<PlayerEntity[]> GetAllPlayers(string roomName);
         ValueTask StartGame(string roomName);
     }

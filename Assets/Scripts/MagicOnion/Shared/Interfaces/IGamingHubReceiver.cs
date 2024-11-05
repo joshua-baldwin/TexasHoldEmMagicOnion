@@ -6,9 +6,7 @@ namespace THE.MagicOnion.Shared.Interfaces
     {
         void OnJoinRoom(PlayerEntity player, int playerCount);
         void OnLeaveRoom(PlayerEntity player, int playerCount);
-        void SendMessage(string message);
         void OnGetAllPlayers(PlayerEntity[] playerEntities);
-        void OnUpdatePlayerRole(PlayerRoleEnum role);
         void OnGameStart(PlayerEntity[] playerEntities);
     }
 }

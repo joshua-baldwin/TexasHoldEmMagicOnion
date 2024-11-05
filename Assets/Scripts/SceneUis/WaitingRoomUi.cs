@@ -1,4 +1,3 @@
-using System;
 using THE.MagicOnion.Client;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,7 +27,7 @@ namespace THE.SceneControllers
 
         public void Initialize()
         {
-            GamingHubReceiver.Instance.CallGetPlayersMethod(UpdatePlayerCount);
+            GamingHubReceiver.Instance.GetPlayers(UpdatePlayerCount);
         }
 
         private void UpdatePlayerCount(int count)
@@ -40,13 +39,12 @@ namespace THE.SceneControllers
 
         private void StartAction()
         {
-            GamingHubReceiver.Instance.CallStartGameMethod(GamingHubReceiver.Instance.RoomName, null);
-            //SceneManager.LoadSceneAsync("GameScene");
+            GamingHubReceiver.Instance.StartGame(GamingHubReceiver.Instance.RoomName, null);
         }
         
         private void LeaveRoom()
         {
-            GamingHubReceiver.Instance.CallLeaveMethod(() => SceneManager.LoadScene("StartScene"));
+            GamingHubReceiver.Instance.LeaveRoom(() => SceneManager.LoadScene("StartScene"));
         }
     }
 }
