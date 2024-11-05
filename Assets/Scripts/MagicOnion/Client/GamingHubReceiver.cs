@@ -15,13 +15,12 @@ namespace THE.MagicOnion.Client
 {
     public class GamingHubReceiver : Singleton<GamingHubReceiver>, IGamingHubReceiver
     {
+        private const int MaxRetry = 5;
         private CancellationTokenSource shutdownCancellation;
         private GrpcChannelx channel;
         private IGamingHub client;
         private PlayerEntity[] players;
         private PlayerEntity self;
-
-        
         
         public Action OnRoomConnectSuccess;
         public Action OnRoomConnectFailed;
@@ -165,7 +164,8 @@ namespace THE.MagicOnion.Client
 
             shutdownCancellation?.Dispose();
             shutdownCancellation = new();
-            while (!shutdownCancellation.IsCancellationRequested)
+            var retryCount = 0;
+            while (!shutdownCancellation.IsCancellationRequested && retryCount < MaxRetry)
             {
                 try
                 {
@@ -177,11 +177,11 @@ namespace THE.MagicOnion.Client
                 }
                 catch (Exception e)
                 {
-                    OnRoomConnectFailed?.Invoke();
                     Debug.LogError(e);
                 }
 
                 Debug.Log("Failed to connect to the server. Retry after 5 seconds...");
+                retryCount++;
                 await Task.Delay(5 * 1000);
             }
 
@@ -189,6 +189,12 @@ namespace THE.MagicOnion.Client
             {
                 Debug.Log("Request cancelled");
                 OnCancelRoomConnect?.Invoke();
+            }
+
+            if (retryCount >= MaxRetry)
+            {
+                Debug.LogError("Failed to connect to the server. Retry after 5 seconds...");
+                OnRoomConnectFailed?.Invoke();
             }
         }
         
