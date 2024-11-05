@@ -50,6 +50,7 @@ namespace THE.SceneControllers
         {
             startButton.interactable = true;
             cancelButton.interactable = false;
+            GamingHubReceiver.Instance.CancelStartGame();
         }
         
         private void LeaveRoom()

@@ -63,6 +63,16 @@ namespace THE.MagicOnion.Client
             await CallStartGame();
         }
 
+        public async void CancelStartGame()
+        {
+            await CallCancelGame();
+        }
+
+        public async void QuitGame()
+        {
+            await CallQuitGame();
+        }
+
         public List<PlayerEntity> GetPlayerList() => players.ToList();
 
         private void Disconnect()
