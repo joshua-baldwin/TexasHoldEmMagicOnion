@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
-using THE.SceneControllers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +15,7 @@ namespace THE.Player
 
         public void Initialize(PlayerEntity player)
         {
-            cover.gameObject.SetActive(player.Name != GamingHubReceiver.Instance.UserName);
+            cover.gameObject.SetActive(player.Name != GamingHubReceiver.Instance.GetSelf().Name);
             dealer.gameObject.SetActive(player.IsDealer);
             if (player.PlayerRole != PlayerRoleEnum.None)
             {

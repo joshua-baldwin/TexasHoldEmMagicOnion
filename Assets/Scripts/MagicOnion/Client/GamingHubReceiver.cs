@@ -21,9 +21,7 @@ namespace THE.MagicOnion.Client
         private PlayerEntity[] players;
         private PlayerEntity self;
 
-        public string UserName;
-        public string RoomName;
-        public bool IsHost;
+        
         
         public Action OnRoomConnectSuccess;
         public Action OnRoomConnectFailed;
@@ -31,6 +29,8 @@ namespace THE.MagicOnion.Client
 
         public Action<int> UpdatePlayerCount;
 
+        public PlayerEntity GetSelf() => self;
+        
         public async void CreateRoom(string userName)
         {
             if (client == null)
@@ -40,9 +40,6 @@ namespace THE.MagicOnion.Client
                 return;
             
             self = await CallCreateRoom(userName);
-            UserName = self.Name;
-            RoomName = self.RoomName;
-            IsHost = true;
             OnRoomConnectSuccess?.Invoke();
         }
 

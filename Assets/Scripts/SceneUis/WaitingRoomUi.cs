@@ -17,10 +17,10 @@ namespace THE.SceneControllers
 
         private void Awake()
         {
-            userName.text = $"UserName: {GamingHubReceiver.Instance.UserName}";
-            roomName.text = $"Room name:\n{GamingHubReceiver.Instance.RoomName}";
-            startButton.gameObject.SetActive(GamingHubReceiver.Instance.IsHost);
+            userName.text = $"Name: {GamingHubReceiver.Instance.GetSelf().Name}";
+            roomName.text = $"Room id:\n{GamingHubReceiver.Instance.GetSelf().RoomName}";
             startButton.interactable = playerCount > 1;
+            cancelButton.interactable = false;
             startButton.onClick.AddListener(StartAction);
             cancelButton.onClick.AddListener(CancelAction);
             leaveButton.onClick.AddListener(LeaveRoom);

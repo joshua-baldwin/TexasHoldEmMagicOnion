@@ -1,6 +1,4 @@
-using System;
 using THE.MagicOnion.Client;
-using THE.MagicOnion.Shared.Entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,18 +10,15 @@ namespace THE.SceneControllers
         [SerializeField] private InputField userName;
         [SerializeField] private Button joinRoom;
         [SerializeField] private Button cancelJoinRoom;
-        
-        private Guid myId;
-        private PlayerEntity[] players;
 
         private void Awake()
         {
             joinRoom.onClick.AddListener(CreateRoom);
             cancelJoinRoom.onClick.AddListener(CancelCreateRoom);
-            SetCancelButtons(false);
+            SetCancelButton(false);
             GamingHubReceiver.Instance.OnRoomConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
-            GamingHubReceiver.Instance.OnRoomConnectFailed = () => SetRoomButtons(true);
-            GamingHubReceiver.Instance.OnCancelRoomConnect = () => SetRoomButtons(true);
+            GamingHubReceiver.Instance.OnRoomConnectFailed = () => SetRoomButton(true);
+            GamingHubReceiver.Instance.OnCancelRoomConnect = () => SetRoomButton(true);
         }
 
         public void Initialize()
@@ -33,25 +28,25 @@ namespace THE.SceneControllers
 
         private void CreateRoom()
         {
-            SetRoomButtons(false);
-            SetCancelButtons(true);
+            SetRoomButton(false);
+            SetCancelButton(true);
             GamingHubReceiver.Instance.CreateRoom(userName.text);
         }
 
-        private void SetRoomButtons(bool isActive)
+        private void SetRoomButton(bool isActive)
         {
             joinRoom.interactable = isActive;
         }
 
-        private void SetCancelButtons(bool isActive)
+        private void SetCancelButton(bool isActive)
         {
             cancelJoinRoom.interactable = isActive;
         }
         
         private void CancelCreateRoom()
         {
-            SetCancelButtons(false);
-            SetRoomButtons(true);
+            SetCancelButton(false);
+            SetRoomButton(true);
             GamingHubReceiver.Instance.SetCancellation();
         }
     }
