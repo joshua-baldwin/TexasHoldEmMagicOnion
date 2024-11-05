@@ -39,7 +39,7 @@ namespace THE.SceneControllers
 
         private void StartAction()
         {
-            GamingHubReceiver.Instance.StartGame(GamingHubReceiver.Instance.RoomName, null);
+            GamingHubReceiver.Instance.StartGame();
         }
         
         private void LeaveRoom()

@@ -58,10 +58,9 @@ namespace THE.MagicOnion.Client
             CallGetPlayers(onFinish);
         }
 
-        public async void StartGame(string roomName, Action onFinish)
+        public async void StartGame()
         {
-            await CallStartGame(roomName);
-            onFinish?.Invoke();
+            await CallStartGame();
         }
 
         public List<PlayerEntity> GetPlayerList() => players.ToList();
@@ -83,7 +82,7 @@ namespace THE.MagicOnion.Client
         private async ValueTask CallLeaveRoom()
         {
             Debug.Log("Calling LeaveRoom");
-            await client.LeaveRoomAsync(self.RoomName);
+            await client.LeaveRoomAsync();
         }
 
         private async void CallGetPlayers(Action<int> onFinish)
@@ -93,10 +92,10 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke(players.Length);
         }
 
-        private async ValueTask CallStartGame(string roomName)
+        private async ValueTask CallStartGame()
         {
             Debug.Log("Calling StartGame");
-            await client.StartGame(roomName);
+            await client.StartGame(self.Id);
         }
         
         #endregion
