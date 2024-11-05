@@ -11,6 +11,7 @@ namespace THE.SceneControllers
         [SerializeField] private Text roomName;
         [SerializeField] private Text currentPlayerCount;
         [SerializeField] private Button startButton;
+        [SerializeField] private Button cancelButton;
         [SerializeField] private Button leaveButton;
         private int playerCount;
 
@@ -21,6 +22,7 @@ namespace THE.SceneControllers
             startButton.gameObject.SetActive(GamingHubReceiver.Instance.IsHost);
             startButton.interactable = playerCount > 1;
             startButton.onClick.AddListener(StartAction);
+            cancelButton.onClick.AddListener(CancelAction);
             leaveButton.onClick.AddListener(LeaveRoom);
             GamingHubReceiver.Instance.UpdatePlayerCount = UpdatePlayerCount;
         }
@@ -39,7 +41,15 @@ namespace THE.SceneControllers
 
         private void StartAction()
         {
+            startButton.interactable = false;
+            cancelButton.interactable = true;
             GamingHubReceiver.Instance.StartGame();
+        }
+
+        private void CancelAction()
+        {
+            startButton.interactable = true;
+            cancelButton.interactable = false;
         }
         
         private void LeaveRoom()

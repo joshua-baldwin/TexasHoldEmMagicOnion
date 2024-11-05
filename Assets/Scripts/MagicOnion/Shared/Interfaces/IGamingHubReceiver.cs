@@ -8,5 +8,7 @@ namespace THE.MagicOnion.Shared.Interfaces
         void OnLeaveRoom(PlayerEntity player, int playerCount);
         void OnGetAllPlayers(PlayerEntity[] playerEntities);
         void OnGameStart(PlayerEntity[] playerEntities);
+        void OnCancelGameStart();
+        void OnQuitGame();
     }
 }

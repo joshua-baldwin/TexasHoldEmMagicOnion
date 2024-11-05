@@ -97,6 +97,18 @@ namespace THE.MagicOnion.Client
             Debug.Log("Calling StartGame");
             await client.StartGame(self.Id);
         }
+
+        private async ValueTask CallCancelGame()
+        {
+            Debug.Log("Calling CancelGame");
+            await client.CancelStart(self.Id);
+        }
+
+        private async ValueTask CallQuitGame()
+        {
+            Debug.Log("Calling QuitGame");
+            await client.QuitGame(self.Id);
+        }
         
         #endregion
         
@@ -125,6 +137,16 @@ namespace THE.MagicOnion.Client
             SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities;
             //OnGameStartAction?.Invoke(playerEntities);
+        }
+
+        public void OnCancelGameStart()
+        {
+            Debug.Log("Cancelled");
+        }
+
+        public void OnQuitGame()
+        {
+            Debug.Log("Game quit");
         }
         
         #endregion

@@ -11,5 +11,7 @@ namespace THE.MagicOnion.Shared.Interfaces
         ValueTask<PlayerEntity> LeaveRoomAsync();
         ValueTask<PlayerEntity[]> GetAllPlayers(string roomName);
         ValueTask StartGame(Guid playerId);
+        ValueTask CancelStart(Guid playerId);
+        ValueTask QuitGame(Guid playerId);
     }
 }
