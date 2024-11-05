@@ -20,24 +20,19 @@ namespace THE.MagicOnion.Shared.Entities
         public string RoomName { get; private set; }
         
         [Key(4)]
-        public bool IsHost { get; private set; }
-        
-        [Key(5)]
         public bool IsDealer { get; set; }
         
-        [Key(6)]
+        [Key(5)]
         public CardEntity[] CardHand { get; set; }
         
-        [Key(7)]
+        [Key(6)]
         public List<CardEntity> CardPool { get; set; }
         
-        public PlayerEntity(string name, Guid id, PlayerRoleEnum role, string roomName, bool isHost)
+        public PlayerEntity(string name, Guid id, PlayerRoleEnum role)
         {
             Name = name;
             Id = id;
             PlayerRole = role;
-            RoomName = roomName;
-            IsHost = isHost;
             CardHand = new CardEntity[2];
         }
     }

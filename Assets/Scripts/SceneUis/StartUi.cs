@@ -26,24 +26,28 @@ namespace THE.SceneControllers
             cancelCreateRoom.onClick.AddListener(CancelCreateRoom);
             cancelJoinRoom.onClick.AddListener(CancelJoinRoom);
             SetCancelButtons(false);
-            StreamingHubManager.Receiver = new GamingHubReceiver();
-            StreamingHubManager.Receiver.OnConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
-            StreamingHubManager.Receiver.OnConnectFailed = () => SetRoomButtons(true);
-            StreamingHubManager.Receiver.OnCancel = () => SetRoomButtons(true);
+            GamingHubReceiver.Instance.OnConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
+            GamingHubReceiver.Instance.OnConnectFailed = () => SetRoomButtons(true);
+            GamingHubReceiver.Instance.OnCancel = () => SetRoomButtons(true);
+        }
+
+        public void Initialize()
+        {
+            
         }
 
         private void CreateRoom()
         {
             SetRoomButtons(false);
             SetCancelButtons(true);
-            StreamingHubManager.Receiver.CallCreateRoom(userName.text);
+            GamingHubReceiver.Instance.CallCreateRoom(userName.text);
         }
 
         private void JoinRoom()
         {
             SetRoomButtons(false);
             SetCancelButtons(true);
-            StreamingHubManager.Receiver.CallJoinRoom(userName.text, roomName.text);
+            GamingHubReceiver.Instance.CallJoinRoom(userName.text);
         }
 
         private void SetRoomButtons(bool isActive)
@@ -62,14 +66,14 @@ namespace THE.SceneControllers
         {
             SetCancelButtons(false);
             SetRoomButtons(true);
-            StreamingHubManager.Receiver.SetCancellation();
+            GamingHubReceiver.Instance.SetCancellation();
         }
         
         private void CancelJoinRoom()
         {
             SetCancelButtons(false);
             SetRoomButtons(true);
-            StreamingHubManager.Receiver.SetCancellation();
+            GamingHubReceiver.Instance.SetCancellation();
         }
     }
 }

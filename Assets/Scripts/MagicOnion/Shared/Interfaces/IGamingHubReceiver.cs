@@ -4,7 +4,7 @@ namespace THE.MagicOnion.Shared.Interfaces
 {
     public interface IGamingHubReceiver
     {
-        void OnJoinRoom(PlayerEntity player);
+        void OnJoinRoom(PlayerEntity player, int playerCount);
         void OnLeaveRoom(PlayerEntity player, int playerCount);
         void SendMessage(string message);
         void OnGetAllPlayers(PlayerEntity[] playerEntities);

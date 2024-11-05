@@ -1,3 +1,5 @@
+using System;
+using THE.MagicOnion.Client;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,14 +17,18 @@ namespace THE.SceneControllers
 
         private void Awake()
         {
-            userName.text = $"UserName: {StreamingHubManager.UserName}";
-            roomName.text = $"Room name:\n{StreamingHubManager.RoomName}";
-            startButton.gameObject.SetActive(StreamingHubManager.IsHost);
+            userName.text = $"UserName: {GamingHubReceiver.Instance.UserName}";
+            roomName.text = $"Room name:\n{GamingHubReceiver.Instance.RoomName}";
+            startButton.gameObject.SetActive(GamingHubReceiver.Instance.IsHost);
             startButton.interactable = playerCount > 1;
             startButton.onClick.AddListener(StartAction);
             leaveButton.onClick.AddListener(LeaveRoom);
-            StreamingHubManager.Receiver.UpdatePlayerCount = UpdatePlayerCount;
-            StreamingHubManager.Receiver.CallGetPlayersMethod(UpdatePlayerCount);
+            GamingHubReceiver.Instance.UpdatePlayerCount = UpdatePlayerCount;
+        }
+
+        public void Initialize()
+        {
+            GamingHubReceiver.Instance.CallGetPlayersMethod(UpdatePlayerCount);
         }
 
         private void UpdatePlayerCount(int count)
@@ -34,12 +40,13 @@ namespace THE.SceneControllers
 
         private void StartAction()
         {
-            SceneManager.LoadSceneAsync("GameScene");
+            GamingHubReceiver.Instance.CallStartGameMethod(GamingHubReceiver.Instance.RoomName, null);
+            //SceneManager.LoadSceneAsync("GameScene");
         }
         
         private void LeaveRoom()
         {
-            StreamingHubManager.Receiver.CallLeaveMethod(() => SceneManager.LoadScene("StartScene"));
+            GamingHubReceiver.Instance.CallLeaveMethod(() => SceneManager.LoadScene("StartScene"));
         }
     }
 }

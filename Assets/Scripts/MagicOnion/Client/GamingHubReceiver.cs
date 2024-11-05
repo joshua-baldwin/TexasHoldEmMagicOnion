@@ -7,12 +7,13 @@ using MagicOnion;
 using MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
-using THE.SceneControllers;
+using THE.Utilities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace THE.MagicOnion.Client
 {
-    public class GamingHubReceiver : IGamingHubReceiver
+    public class GamingHubReceiver : Singleton<GamingHubReceiver>, IGamingHubReceiver
     {
         private CancellationTokenSource shutdownCancellation;
         private GrpcChannelx channel;
@@ -20,6 +21,10 @@ namespace THE.MagicOnion.Client
         private PlayerEntity[] players;
         private PlayerEntity self;
 
+        public string UserName;
+        public string RoomName;
+        public bool IsHost;
+        
         public Action OnConnectSuccess;
         public Action OnConnectFailed;
         public Action OnCancel;
@@ -36,13 +41,13 @@ namespace THE.MagicOnion.Client
                 return;
             
             self = await CallCreate(userName);
-            StreamingHubManager.UserName = self.Name;
-            StreamingHubManager.RoomName = self.RoomName;
-            StreamingHubManager.IsHost = true;
+            UserName = self.Name;
+            RoomName = self.RoomName;
+            IsHost = true;
             OnConnectSuccess?.Invoke();
         }
         
-        public async void CallJoinRoom(string userName, string roomName)
+        public async void CallJoinRoom(string userName)
         {
             if (client == null)
                 await InitializeClientAsync();
@@ -50,9 +55,9 @@ namespace THE.MagicOnion.Client
             if (shutdownCancellation.IsCancellationRequested)
                 return;
             
-            self = await CallJoin(userName, roomName);
-            StreamingHubManager.UserName = self.Name;
-            StreamingHubManager.RoomName = self.RoomName;
+            self = await CallJoin(userName);
+            UserName = self.Name;
+            RoomName = self.RoomName;
             OnConnectSuccess?.Invoke();
         }
 
@@ -84,13 +89,13 @@ namespace THE.MagicOnion.Client
         private async ValueTask<PlayerEntity> CallCreate(string userName)
         {
             Debug.Log("Calling JoinRoom");
-            return await client.JoinRoomAsync(userName, "");
+            return await client.JoinRoomAsync(userName);
         }
         
-        private async ValueTask<PlayerEntity> CallJoin(string userName, string roomName)
+        private async ValueTask<PlayerEntity> CallJoin(string userName)
         {
             Debug.Log("Calling JoinRoom");
-            return await client.JoinRoomAsync(userName, roomName);
+            return await client.JoinRoomAsync(userName);
         }
         
         private async ValueTask CallLeave()
@@ -117,9 +122,10 @@ namespace THE.MagicOnion.Client
             await client.StartGame(roomName);
         }
         
-        public void OnJoinRoom(PlayerEntity player)
+        public void OnJoinRoom(PlayerEntity player, int playerCount)
         {
             Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomName}");
+            UpdatePlayerCount?.Invoke(playerCount);
         }
 
         public void OnLeaveRoom(PlayerEntity player, int playerCount)
@@ -146,7 +152,9 @@ namespace THE.MagicOnion.Client
         public void OnGameStart(PlayerEntity[] playerEntities)
         {
             Debug.Log("Game started");
-            OnGameStartAction?.Invoke(playerEntities);
+            SceneManager.LoadSceneAsync("GameScene");
+            players = playerEntities;
+            //OnGameStartAction?.Invoke(playerEntities);
         }
         
         public async Task InitializeClientAsync()

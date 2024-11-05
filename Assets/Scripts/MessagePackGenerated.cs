@@ -239,12 +239,11 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(8);
+            writer.WriteArrayHeader(7);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.RoomName, options);
-            writer.Write(value.IsHost);
             writer.Write(value.IsDealer);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Serialize(ref writer, value.CardHand, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.CardPool, options);
@@ -264,7 +263,6 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __Id__ = default(global::System.Guid);
             var __PlayerRole__ = default(global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum);
             var __RoomName__ = default(string);
-            var __IsHost__ = default(bool);
             var __IsDealer__ = default(bool);
             var __CardHand__ = default(global::THE.MagicOnion.Shared.Entities.CardEntity[]);
             var __CardPool__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
@@ -286,15 +284,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __RoomName__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 4:
-                        __IsHost__ = reader.ReadBoolean();
-                        break;
-                    case 5:
                         __IsDealer__ = reader.ReadBoolean();
                         break;
-                    case 6:
+                    case 5:
                         __CardHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Deserialize(ref reader, options);
                         break;
-                    case 7:
+                    case 6:
                         __CardPool__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
@@ -303,20 +298,20 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 }
             }
 
-            var ____result = new global::THE.MagicOnion.Shared.Entities.PlayerEntity(__Name__, __Id__, __PlayerRole__, __RoomName__, __IsHost__);
-            if (length <= 5)
+            var ____result = new global::THE.MagicOnion.Shared.Entities.PlayerEntity(__Name__, __Id__, __PlayerRole__);
+            if (length <= 4)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
             ____result.IsDealer = __IsDealer__;
-            if (length <= 6)
+            if (length <= 5)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
             ____result.CardHand = __CardHand__;
-            if (length <= 7)
+            if (length <= 6)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
