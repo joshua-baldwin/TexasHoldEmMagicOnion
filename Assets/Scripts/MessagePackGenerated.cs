@@ -239,7 +239,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(7);
+            writer.WriteArrayHeader(8);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
@@ -247,6 +247,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.IsDealer);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Serialize(ref writer, value.CardHand, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.CardPool, options);
+            writer.Write(value.IsReady);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -266,6 +267,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __IsDealer__ = default(bool);
             var __CardHand__ = default(global::THE.MagicOnion.Shared.Entities.CardEntity[]);
             var __CardPool__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
+            var __IsReady__ = default(bool);
 
             for (int i = 0; i < length; i++)
             {
@@ -292,6 +294,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                     case 6:
                         __CardPool__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
+                    case 7:
+                        __IsReady__ = reader.ReadBoolean();
+                        break;
                     default:
                         reader.Skip();
                         break;
@@ -317,6 +322,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             ____result.CardPool = __CardPool__;
+            if (length <= 7)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.IsReady = __IsReady__;
 
         MEMBER_ASSIGNMENT_END:
             reader.Depth--;

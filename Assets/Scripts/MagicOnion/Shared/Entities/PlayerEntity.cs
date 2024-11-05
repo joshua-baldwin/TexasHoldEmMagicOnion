@@ -28,6 +28,9 @@ namespace THE.MagicOnion.Shared.Entities
         [Key(6)]
         public List<CardEntity> CardPool { get; set; }
         
+        [Key(7)]
+        public bool IsReady { get; set; }
+        
         public PlayerEntity(string name, Guid id, PlayerRoleEnum role)
         {
             Name = name;
