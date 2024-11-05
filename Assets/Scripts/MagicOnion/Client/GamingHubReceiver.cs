@@ -95,7 +95,7 @@ namespace THE.MagicOnion.Client
         private async void CallGetPlayers(Action<int> onFinish)
         {
             Debug.Log("Calling GetAllPlayers");
-            players = await client.GetAllPlayers(self.RoomName);
+            players = await client.GetAllPlayers();
             onFinish?.Invoke(players.Length);
         }
 
@@ -123,7 +123,7 @@ namespace THE.MagicOnion.Client
         
         public void OnJoinRoom(PlayerEntity player, int playerCount)
         {
-            Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomName}");
+            Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomId}");
             UpdatePlayerCount?.Invoke(playerCount);
         }
 

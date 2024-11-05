@@ -17,7 +17,7 @@ namespace THE.MagicOnion.Shared.Entities
         public PlayerRoleEnum PlayerRole { get; set; }
         
         [Key(3)]
-        public string RoomName { get; private set; }
+        public Guid RoomId { get; set; }
         
         [Key(4)]
         public bool IsDealer { get; set; }

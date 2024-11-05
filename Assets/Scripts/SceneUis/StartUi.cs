@@ -1,6 +1,5 @@
 using THE.MagicOnion.Client;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace THE.SceneControllers
@@ -16,9 +15,6 @@ namespace THE.SceneControllers
             joinRoom.onClick.AddListener(CreateRoom);
             cancelJoinRoom.onClick.AddListener(CancelCreateRoom);
             SetCancelButton(false);
-            GamingHubReceiver.Instance.OnRoomConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
-            GamingHubReceiver.Instance.OnRoomConnectFailed = () => SetRoomButton(true);
-            GamingHubReceiver.Instance.OnCancelRoomConnect = () => SetRoomButton(true);
         }
 
         public void Initialize()
@@ -33,7 +29,7 @@ namespace THE.SceneControllers
             GamingHubReceiver.Instance.CreateRoom(userName.text);
         }
 
-        private void SetRoomButton(bool isActive)
+        public void SetRoomButton(bool isActive)
         {
             joinRoom.interactable = isActive;
         }

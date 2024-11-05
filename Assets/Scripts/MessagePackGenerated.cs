@@ -243,7 +243,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.RoomName, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.RoomId, options);
             writer.Write(value.IsDealer);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Serialize(ref writer, value.CardHand, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.CardPool, options);
@@ -263,7 +263,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __Name__ = default(string);
             var __Id__ = default(global::System.Guid);
             var __PlayerRole__ = default(global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum);
-            var __RoomName__ = default(string);
+            var __RoomId__ = default(global::System.Guid);
             var __IsDealer__ = default(bool);
             var __CardHand__ = default(global::THE.MagicOnion.Shared.Entities.CardEntity[]);
             var __CardPool__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
@@ -283,7 +283,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __PlayerRole__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerRoleEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 3:
-                        __RoomName__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
+                        __RoomId__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 4:
                         __IsDealer__ = reader.ReadBoolean();
@@ -304,6 +304,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             var ____result = new global::THE.MagicOnion.Shared.Entities.PlayerEntity(__Name__, __Id__, __PlayerRole__);
+            if (length <= 3)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.RoomId = __RoomId__;
             if (length <= 4)
             {
                 goto MEMBER_ASSIGNMENT_END;

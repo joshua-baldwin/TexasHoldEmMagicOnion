@@ -9,7 +9,7 @@ namespace THE.MagicOnion.Shared.Interfaces
     {
         ValueTask<PlayerEntity> JoinRoomAsync(string name);
         ValueTask<PlayerEntity> LeaveRoomAsync();
-        ValueTask<PlayerEntity[]> GetAllPlayers(string roomName);
+        ValueTask<PlayerEntity[]> GetAllPlayers();
         ValueTask StartGame(Guid playerId);
         ValueTask CancelStart(Guid playerId);
         ValueTask QuitGame(Guid playerId);
