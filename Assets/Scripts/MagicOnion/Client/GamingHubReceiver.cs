@@ -25,12 +25,11 @@ namespace THE.MagicOnion.Client
         public string RoomName;
         public bool IsHost;
         
-        public Action OnConnectSuccess;
-        public Action OnConnectFailed;
-        public Action OnCancel;
+        public Action OnRoomConnectSuccess;
+        public Action OnRoomConnectFailed;
+        public Action OnCancelRoomConnect;
 
         public Action<int> UpdatePlayerCount;
-        public Action<PlayerEntity[]> OnGameStartAction;
 
         public async void CallCreateRoom(string userName)
         {
@@ -44,7 +43,7 @@ namespace THE.MagicOnion.Client
             UserName = self.Name;
             RoomName = self.RoomName;
             IsHost = true;
-            OnConnectSuccess?.Invoke();
+            OnRoomConnectSuccess?.Invoke();
         }
         
         public async void CallJoinRoom(string userName)
@@ -58,7 +57,7 @@ namespace THE.MagicOnion.Client
             self = await CallJoin(userName);
             UserName = self.Name;
             RoomName = self.RoomName;
-            OnConnectSuccess?.Invoke();
+            OnRoomConnectSuccess?.Invoke();
         }
 
         public async void CallLeaveMethod(Action onFinish)
@@ -84,6 +83,7 @@ namespace THE.MagicOnion.Client
         private void Disconnect()
         {
             client.DisposeAsync();
+            client = null;
         }
         
         private async ValueTask<PlayerEntity> CallCreate(string userName)
@@ -176,7 +176,7 @@ namespace THE.MagicOnion.Client
                 }
                 catch (Exception e)
                 {
-                    OnConnectFailed?.Invoke();
+                    OnRoomConnectFailed?.Invoke();
                     Debug.LogError(e);
                 }
 
@@ -187,7 +187,7 @@ namespace THE.MagicOnion.Client
             if (shutdownCancellation.IsCancellationRequested)
             {
                 Debug.Log("Request cancelled");
-                OnCancel?.Invoke();
+                OnCancelRoomConnect?.Invoke();
             }
         }
         

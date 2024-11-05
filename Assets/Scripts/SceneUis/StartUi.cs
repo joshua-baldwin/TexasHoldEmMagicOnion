@@ -26,9 +26,9 @@ namespace THE.SceneControllers
             cancelCreateRoom.onClick.AddListener(CancelCreateRoom);
             cancelJoinRoom.onClick.AddListener(CancelJoinRoom);
             SetCancelButtons(false);
-            GamingHubReceiver.Instance.OnConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
-            GamingHubReceiver.Instance.OnConnectFailed = () => SetRoomButtons(true);
-            GamingHubReceiver.Instance.OnCancel = () => SetRoomButtons(true);
+            GamingHubReceiver.Instance.OnRoomConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
+            GamingHubReceiver.Instance.OnRoomConnectFailed = () => SetRoomButtons(true);
+            GamingHubReceiver.Instance.OnCancelRoomConnect = () => SetRoomButtons(true);
         }
 
         public void Initialize()
