@@ -9,7 +9,6 @@ namespace THE.SceneControllers
     public class StartUi : MonoBehaviour
     {
         [SerializeField] private InputField userName;
-        [SerializeField] private Button connectButton;
         [SerializeField] private Button joinRoom;
         [SerializeField] private Button cancelJoinRoom;
         
@@ -22,10 +21,6 @@ namespace THE.SceneControllers
                 .Subscribe(x => gamingHubReceiver.UserName.Value = x)
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
-            connectButton.OnClickAsAsyncEnumerable()
-                .Subscribe(_ => Connect())
-                .AddTo(this.GetCancellationTokenOnDestroy());
-            
             joinRoom.OnClickAsAsyncEnumerable()
                 .Subscribe(_ => CreateRoom())
                 .AddTo(this.GetCancellationTokenOnDestroy());
@@ -35,7 +30,6 @@ namespace THE.SceneControllers
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             userName.gameObject.SetActive(false);
-            connectButton.gameObject.SetActive(true);
             SetRoomButton(false);
             SetCancelButton(false);
         }
@@ -43,14 +37,6 @@ namespace THE.SceneControllers
         public void Initialize()
         {
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
-        }
-
-        private async UniTaskVoid Connect()
-        {
-            await gamingHubReceiver.Connect();
-            userName.gameObject.SetActive(true);
-            connectButton.interactable = false;
-            SetRoomButton(true);
         }
         
         private async UniTaskVoid CreateRoom()
