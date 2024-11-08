@@ -9,14 +9,15 @@ using GrpcWebSocketBridge.Client;
 using MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
-using THE.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace THE.MagicOnion.Client
 {
-    public class GamingHubReceiver : Singleton<GamingHubReceiver>, IGamingHubReceiver
+    public class GamingHubReceiver : IGamingHubReceiver
     {
+        public AsyncReactiveProperty<string> UserName { get; } = new("");
+        
         private const int MaxRetry = 5;
         private CancellationTokenSource shutdownCancellation;
         private GrpcChannel channel;
@@ -32,7 +33,7 @@ namespace THE.MagicOnion.Client
 
         public PlayerEntity GetSelf() => self;
         
-        public async UniTask CreateRoom(string userName)
+        public async UniTask CreateRoom()
         {
             if (client == null)
                 await InitializeClientAsync();
@@ -40,7 +41,8 @@ namespace THE.MagicOnion.Client
             if (shutdownCancellation.IsCancellationRequested)
                 return;
             
-            self = await CallCreateRoom(userName);
+            self = await CallCreateRoom(UserName.Value);
+            UserName.Value = "";
             Debug.Log("room joined");
             OnRoomConnectSuccess?.Invoke();
         }
@@ -57,9 +59,9 @@ namespace THE.MagicOnion.Client
             await CallGetPlayers(onFinish);
         }
 
-        public async UniTask StartGame()
+        public async UniTask StartGame(Action onFinish)
         {
-            await CallStartGame();
+            await CallStartGame(onFinish);
         }
 
         public async UniTask CancelStartGame()
@@ -101,10 +103,12 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke(players.Length);
         }
 
-        private async UniTask CallStartGame()
+        private async UniTask CallStartGame(Action onFinish)
         {
             Debug.Log("Calling StartGame");
-            await client.StartGame(self.Id);
+            var canStart = await client.StartGame(self.Id);
+            if (canStart)
+                onFinish?.Invoke();
         }
 
         private async UniTask CallCancelGame()

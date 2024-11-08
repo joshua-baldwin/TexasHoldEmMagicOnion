@@ -8,10 +8,13 @@ namespace THE.SceneControllers
     {
         [SerializeField] private GameObject playerRoot;
         [SerializeField] private GameObject playerPrefab;
+        
+        private GamingHubReceiver gamingHubReceiver;
 
         public void Initialize()
         {
-            foreach (var player in GamingHubReceiver.Instance.GetPlayerList())
+            gamingHubReceiver = MySceneManager.Instance.HubReceiver;
+            foreach (var player in gamingHubReceiver.GetPlayerList())
             {
                 var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
                 playerObject.Initialize(player);

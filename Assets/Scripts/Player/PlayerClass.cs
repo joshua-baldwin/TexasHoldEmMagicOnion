@@ -12,10 +12,12 @@ namespace THE.Player
         [SerializeField] private Text dealer;
         [SerializeField] private List<CardClass> cardList;
         [SerializeField] private GameObject cover;
+        
+        private GamingHubReceiver gamingHubReceiver;
 
         public void Initialize(PlayerEntity player)
         {
-            cover.gameObject.SetActive(player.Name != GamingHubReceiver.Instance.GetSelf().Name);
+            cover.gameObject.SetActive(player.Name != gamingHubReceiver.GetSelf().Name);
             dealer.gameObject.SetActive(player.IsDealer);
             if (player.PlayerRole != PlayerRoleEnum.None)
             {

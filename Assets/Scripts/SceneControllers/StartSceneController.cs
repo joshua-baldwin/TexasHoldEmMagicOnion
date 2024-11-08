@@ -1,6 +1,6 @@
 using THE.MagicOnion.Client;
+using THE.Utilities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace THE.SceneControllers
 {
@@ -10,13 +10,15 @@ namespace THE.SceneControllers
         [SerializeField] private GameObject startUiPrefab;
         
         private StartUi startUi;
+        private GamingHubReceiver gamingHubReceiver;
 
         private void Start()
         {
+            gamingHubReceiver = MySceneManager.Instance.HubReceiver;
+            gamingHubReceiver.OnRoomConnectSuccess = () => StartCoroutine(UtilityMethods.LoadAsyncScene("WaitingRoomScene"));
+            gamingHubReceiver.OnRoomConnectFailed = () => startUi.SetRoomButton(true);
+            gamingHubReceiver.OnCancelRoomConnect = () => startUi.SetRoomButton(true);
             startUi = Instantiate(startUiPrefab, canvas.transform).GetComponent<StartUi>();
-            GamingHubReceiver.Instance.OnRoomConnectSuccess = () => SceneManager.LoadSceneAsync("WaitingRoomScene");
-            GamingHubReceiver.Instance.OnRoomConnectFailed = () => startUi.SetRoomButton(true);
-            GamingHubReceiver.Instance.OnCancelRoomConnect = () => startUi.SetRoomButton(true);
             startUi.Initialize();
         }
     }
