@@ -29,8 +29,6 @@ namespace THE.SceneControllers
                 .Subscribe(_ => CancelCreateRoom())
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
-            userName.gameObject.SetActive(false);
-            SetRoomButton(false);
             SetCancelButton(false);
         }
 
