@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Linq;
 using THE.MagicOnion.Client;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,8 +14,13 @@ namespace THE.SceneControllers
 
         private void Awake()
         {
-            joinRoom.onClick.AddListener(CreateRoom);
-            cancelJoinRoom.onClick.AddListener(CancelCreateRoom);
+            joinRoom.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => CreateRoom())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            cancelJoinRoom.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => CancelCreateRoom())
+                .AddTo(this.GetCancellationTokenOnDestroy());
             SetCancelButton(false);
         }
 
@@ -22,11 +29,11 @@ namespace THE.SceneControllers
             
         }
 
-        private void CreateRoom()
+        private async UniTaskVoid CreateRoom()
         {
             SetRoomButton(false);
             SetCancelButton(true);
-            GamingHubReceiver.Instance.CreateRoom(userName.text);
+            await GamingHubReceiver.Instance.CreateRoom(userName.text);
         }
 
         public void SetRoomButton(bool isActive)

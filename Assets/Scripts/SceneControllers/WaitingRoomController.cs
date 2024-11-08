@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace THE.SceneControllers
@@ -7,10 +8,10 @@ namespace THE.SceneControllers
         [SerializeField] private Canvas canvas;
         [SerializeField] private GameObject waitingRoomUiPrefab;
 
-        private void Start()
+        private async void Start()
         {
             var ui = Instantiate(waitingRoomUiPrefab, canvas.transform).GetComponent<WaitingRoomUi>();
-            ui.Initialize();
+            await ui.Initialize();
         }
     }
 }

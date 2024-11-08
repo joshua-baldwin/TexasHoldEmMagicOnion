@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Grpc.Net.Client;
 using GrpcWebSocketBridge.Client;
-using MagicOnion;
 using MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
@@ -33,7 +32,7 @@ namespace THE.MagicOnion.Client
 
         public PlayerEntity GetSelf() => self;
         
-        public async UniTaskVoid CreateRoom(string userName)
+        public async UniTask CreateRoom(string userName)
         {
             if (client == null)
                 await InitializeClientAsync();
@@ -46,29 +45,29 @@ namespace THE.MagicOnion.Client
             OnRoomConnectSuccess?.Invoke();
         }
 
-        public async void LeaveRoom(Action onFinish)
+        public async UniTask LeaveRoom(Action onFinish)
         {
             await CallLeaveRoom();
             Disconnect();
             onFinish?.Invoke();
         }
 
-        public void GetPlayers(Action<int> onFinish)
+        public async UniTask GetPlayers(Action<int> onFinish)
         {
-            CallGetPlayers(onFinish);
+            await CallGetPlayers(onFinish);
         }
 
-        public async void StartGame()
+        public async UniTask StartGame()
         {
             await CallStartGame();
         }
 
-        public async void CancelStartGame()
+        public async UniTask CancelStartGame()
         {
             await CallCancelGame();
         }
 
-        public async void QuitGame()
+        public async UniTaskVoid QuitGame()
         {
             await CallQuitGame();
         }
@@ -95,7 +94,7 @@ namespace THE.MagicOnion.Client
             await client.LeaveRoomAsync();
         }
 
-        private async void CallGetPlayers(Action<int> onFinish)
+        private async UniTask CallGetPlayers(Action<int> onFinish)
         {
             Debug.Log("Calling GetAllPlayers");
             players = await client.GetAllPlayers();
@@ -161,7 +160,7 @@ namespace THE.MagicOnion.Client
         
         #endregion
         
-        public async UniTask InitializeClientAsync()
+        private async UniTask InitializeClientAsync()
         {
             // Initialize the Hub
             channel = GrpcChannel.ForAddress("http://localhost:5137", new GrpcChannelOptions
@@ -178,7 +177,13 @@ namespace THE.MagicOnion.Client
                 {
                     Debug.Log("Connecting to the server...");
                     client = await StreamingHubClient.ConnectAsync<IGamingHub, IGamingHubReceiver>(channel, this, cancellationToken: shutdownCancellation.Token);
-                    RegisterDisconnectEvent(client);
+                    //await RegisterDisconnectEvent(client);
+                    WaitForDisconnected().Forget();
+            
+                    async UniTaskVoid WaitForDisconnected()
+                    {
+                        await RegisterDisconnectEvent(client);
+                    }
                     Debug.Log("Connection is established.");
                     break;
                 }
@@ -205,7 +210,7 @@ namespace THE.MagicOnion.Client
             }
         }
         
-        private async void RegisterDisconnectEvent(IGamingHub streamingClient)
+        private async UniTask RegisterDisconnectEvent(IGamingHub streamingClient)
         {
             try
             {

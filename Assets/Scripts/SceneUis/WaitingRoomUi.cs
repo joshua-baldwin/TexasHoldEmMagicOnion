@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Linq;
 using THE.MagicOnion.Client;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,15 +23,24 @@ namespace THE.SceneControllers
             roomName.text = $"Room id:\n{GamingHubReceiver.Instance.GetSelf().RoomId}";
             startButton.interactable = playerCount > 1;
             cancelButton.interactable = false;
-            startButton.onClick.AddListener(StartAction);
-            cancelButton.onClick.AddListener(CancelAction);
-            leaveButton.onClick.AddListener(LeaveRoom);
+            startButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => StartAction())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            cancelButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => CancelAction())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            leaveButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => LeaveRoom())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
             GamingHubReceiver.Instance.UpdatePlayerCount = UpdatePlayerCount;
         }
 
-        public void Initialize()
+        public async UniTask Initialize()
         {
-            GamingHubReceiver.Instance.GetPlayers(UpdatePlayerCount);
+            await GamingHubReceiver.Instance.GetPlayers(UpdatePlayerCount);
         }
 
         private void UpdatePlayerCount(int count)
@@ -39,23 +50,23 @@ namespace THE.SceneControllers
             startButton.interactable = playerCount > 1;
         }
 
-        private void StartAction()
+        private async UniTaskVoid StartAction()
         {
             startButton.interactable = false;
             cancelButton.interactable = true;
-            GamingHubReceiver.Instance.StartGame();
+            await GamingHubReceiver.Instance.StartGame();
         }
 
-        private void CancelAction()
+        private async UniTaskVoid CancelAction()
         {
             startButton.interactable = true;
             cancelButton.interactable = false;
-            GamingHubReceiver.Instance.CancelStartGame();
+            await GamingHubReceiver.Instance.CancelStartGame();
         }
         
-        private void LeaveRoom()
+        private async UniTaskVoid LeaveRoom()
         {
-            GamingHubReceiver.Instance.LeaveRoom(() => SceneManager.LoadScene("StartScene"));
+            await GamingHubReceiver.Instance.LeaveRoom(() => SceneManager.LoadScene("StartScene"));
         }
     }
 }
