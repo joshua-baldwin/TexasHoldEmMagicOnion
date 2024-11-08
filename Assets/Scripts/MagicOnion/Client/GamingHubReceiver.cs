@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Grpc.Net.Client;
+using GrpcWebSocketBridge.Client;
 using MagicOnion;
 using MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
@@ -17,7 +20,7 @@ namespace THE.MagicOnion.Client
     {
         private const int MaxRetry = 5;
         private CancellationTokenSource shutdownCancellation;
-        private GrpcChannelx channel;
+        private GrpcChannel channel;
         private IGamingHub client;
         private PlayerEntity[] players;
         private PlayerEntity self;
@@ -30,7 +33,7 @@ namespace THE.MagicOnion.Client
 
         public PlayerEntity GetSelf() => self;
         
-        public async void CreateRoom(string userName)
+        public async UniTaskVoid CreateRoom(string userName)
         {
             if (client == null)
                 await InitializeClientAsync();
@@ -39,6 +42,7 @@ namespace THE.MagicOnion.Client
                 return;
             
             self = await CallCreateRoom(userName);
+            Debug.Log("room joined");
             OnRoomConnectSuccess?.Invoke();
         }
 
@@ -79,13 +83,13 @@ namespace THE.MagicOnion.Client
 
         #region RPC calls
         
-        private async ValueTask<PlayerEntity> CallCreateRoom(string userName)
+        private async UniTask<PlayerEntity> CallCreateRoom(string userName)
         {
             Debug.Log("Calling JoinRoom");
             return await client.JoinRoomAsync(userName);
         }
         
-        private async ValueTask CallLeaveRoom()
+        private async UniTask CallLeaveRoom()
         {
             Debug.Log("Calling LeaveRoom");
             await client.LeaveRoomAsync();
@@ -98,19 +102,19 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke(players.Length);
         }
 
-        private async ValueTask CallStartGame()
+        private async UniTask CallStartGame()
         {
             Debug.Log("Calling StartGame");
             await client.StartGame(self.Id);
         }
 
-        private async ValueTask CallCancelGame()
+        private async UniTask CallCancelGame()
         {
             Debug.Log("Calling CancelGame");
             await client.CancelStart(self.Id);
         }
 
-        private async ValueTask CallQuitGame()
+        private async UniTask CallQuitGame()
         {
             Debug.Log("Calling QuitGame");
             await client.QuitGame(self.Id);
@@ -157,10 +161,13 @@ namespace THE.MagicOnion.Client
         
         #endregion
         
-        public async Task InitializeClientAsync()
+        public async UniTask InitializeClientAsync()
         {
             // Initialize the Hub
-            channel = GrpcChannelx.ForAddress("https://localhost:7007");
+            channel = GrpcChannel.ForAddress("http://localhost:5137", new GrpcChannelOptions
+            {
+                HttpHandler = new GrpcWebSocketBridgeHandler()
+            });
 
             shutdownCancellation?.Dispose();
             shutdownCancellation = new();

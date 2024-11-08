@@ -1,3 +1,4 @@
+using System.Threading;
 using MessagePack;
 using MessagePack.Resolvers;
 using THE.MagicOnion.Client;
@@ -7,7 +8,7 @@ namespace THE.MagicOnion.Settings
 {
     public class InitialSettings : MonoBehaviour
     {
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod]
         static void RegisterResolvers()
         {
             StaticCompositeResolver.Instance.Register(
@@ -18,5 +19,13 @@ namespace THE.MagicOnion.Settings
             
             MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(StaticCompositeResolver.Instance);
         }
+        
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void InitializeSynchronizationContext()
+        {
+            SynchronizationContext.SetSynchronizationContext(null);
+        }
+#endif
     }
 }
