@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks.Linq;
 using THE.MagicOnion.Client;
 using THE.Utilities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace THE.SceneControllers
@@ -58,7 +57,11 @@ namespace THE.SceneControllers
         {
             startButton.interactable = false;
             cancelButton.interactable = true;
-            await gamingHubReceiver.StartGame(() => StartCoroutine(UtilityMethods.LoadAsyncScene("GameScene")));
+            await gamingHubReceiver.StartGame(() =>
+            {
+                gamingHubReceiver.UpdatePlayerCount = null;
+                StartCoroutine(UtilityMethods.LoadAsyncScene("GameScene"));
+            });
         }
 
         private async UniTaskVoid CancelAction()

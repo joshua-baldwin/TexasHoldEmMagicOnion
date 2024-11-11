@@ -1,3 +1,4 @@
+using System;
 using THE.MagicOnion.Shared.Entities;
 using THE.Utilities;
 using UnityEngine;
@@ -9,11 +10,21 @@ namespace THE.Player
     {
         [SerializeField] private Text cardSuit;
         [SerializeField] private Text cardRank;
+        [SerializeField] private GameObject cover;
 
-        public void Initialize(CardSuitEnum suit, CardRankEnum rank)
+        public void Initialize(CardSuitEnum suit, CardRankEnum rank, bool isOwnCard)
         {
-            cardSuit.text = suit.ToString();
+            cardSuit.text = suit switch
+            {
+                CardSuitEnum.Heart => "\u2764\ufe0f",
+                CardSuitEnum.Spade => "\u2660\ufe0f",
+                CardSuitEnum.Diamond => "\u2666\ufe0f",
+                CardSuitEnum.Club => "\u2663\ufe0f",
+                _ => throw new ArgumentOutOfRangeException(nameof(suit), suit, null)
+            };
+            
             cardRank.text = rank.GetDescription();
+            cover.SetActive(!isOwnCard);
         }
     }
 }
