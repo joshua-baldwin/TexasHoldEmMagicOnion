@@ -149,7 +149,6 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game started");
             SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities;
-            //OnGameStartAction?.Invoke(playerEntities);
         }
 
         public void OnCancelGameStart()
