@@ -162,6 +162,8 @@ namespace THE.MagicOnion.Client
         public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer)
         {
             Debug.Log("Game started");
+            UpdatePlayerCount = null;
+            //do this in scene manager
             SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities;
             CurrentPlayer = currentPlayer;
