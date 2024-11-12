@@ -25,16 +25,17 @@ namespace THE.MagicOnion.Client
         private IGamingHub client;
         private PlayerEntity[] players;
         private PlayerEntity self;
-        public bool IsMyTurn;
         
         public Action OnRoomConnectSuccess;
         public Action OnRoomConnectFailed;
         public Action OnCancelRoomConnect;
 
         public Action<int> UpdatePlayerCount;
-        public Action<bool> UpdateGameUi;
+        public Action<bool, string> UpdateGameUi;
 
         public PlayerEntity GetSelf() => self;
+        public PlayerEntity CurrentPlayer;
+        public bool IsMyTurn => CurrentPlayer == self;
         
         public async UniTask CreateRoom()
         {
@@ -163,7 +164,7 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game started");
             SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities;
-            IsMyTurn = currentPlayer.Id == self.Id;
+            CurrentPlayer = currentPlayer;
         }
 
         public void OnCancelGameStart()
@@ -179,7 +180,7 @@ namespace THE.MagicOnion.Client
         public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer)
         {
             Debug.Log($"Doing action {commandType}");
-            UpdateGameUi?.Invoke(currentPlayer.Id == self.Id);
+            UpdateGameUi?.Invoke(currentPlayer.Id == self.Id, currentPlayer.Name);
         }
         
         #endregion
