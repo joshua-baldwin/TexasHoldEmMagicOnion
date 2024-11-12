@@ -53,13 +53,14 @@ namespace THE.SceneControllers
             gamingHubReceiver.UpdateGameUi = UpdateUi;
         }
         
-        public void Initialize()
+        public void Initialize(bool isMyTurn)
         {
             foreach (var player in gamingHubReceiver.GetPlayerList())
             {
                 var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
                 playerObject.Initialize(player);
             }
+            UpdateUi(isMyTurn);
         }
 
         private void UpdateUi(bool isMyTurn)

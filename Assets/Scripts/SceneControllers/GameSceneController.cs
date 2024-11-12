@@ -10,7 +10,7 @@ namespace THE.SceneControllers
         private void Start()
         {
             var ui = Instantiate(gameUiPrefab, canvas.transform).GetComponent<GameUi>();
-            ui.Initialize();
+            ui.Initialize(MySceneManager.Instance.HubReceiver.IsMyTurn);
         }
     }
 }

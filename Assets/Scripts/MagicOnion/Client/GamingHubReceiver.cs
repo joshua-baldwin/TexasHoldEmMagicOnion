@@ -25,7 +25,7 @@ namespace THE.MagicOnion.Client
         private IGamingHub client;
         private PlayerEntity[] players;
         private PlayerEntity self;
-        private bool isMyTurn;
+        public bool IsMyTurn;
         
         public Action OnRoomConnectSuccess;
         public Action OnRoomConnectFailed;
@@ -163,8 +163,7 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game started");
             SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities;
-            isMyTurn = currentPlayer.Id == self.Id;
-            UpdateGameUi?.Invoke(isMyTurn);
+            IsMyTurn = currentPlayer.Id == self.Id;
         }
 
         public void OnCancelGameStart()
