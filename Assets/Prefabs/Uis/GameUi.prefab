@@ -144,7 +144,7 @@ MonoBehaviour:
     ButtonObject: {fileID: 7947276070780260655}
   - ButtonType: 4
     ButtonObject: {fileID: 2707740060571529485}
-  quitButton: {fileID: 3292036218456159919}
+  quitButton: {fileID: 5252650392203420373}
   currentTurnText: {fileID: 3411148938598562873}
 --- !u!114 &3814156556238716432
 MonoBehaviour:
