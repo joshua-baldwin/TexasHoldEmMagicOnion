@@ -35,7 +35,7 @@ namespace THE.MagicOnion.Client
 
         public PlayerEntity GetSelf() => self;
         public PlayerEntity CurrentPlayer;
-        public bool IsMyTurn => CurrentPlayer == self;
+        public bool IsMyTurn => CurrentPlayer.Id == self.Id;
         
         public async UniTask CreateRoom()
         {
