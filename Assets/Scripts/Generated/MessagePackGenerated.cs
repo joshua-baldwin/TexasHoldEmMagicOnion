@@ -305,7 +305,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(9);
+            writer.WriteArrayHeader(10);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
@@ -315,6 +315,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.CardPool, options);
             writer.Write(value.IsReady);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Serialize(ref writer, value.Chips, options);
+            writer.Write(value.CurrentBet);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -336,6 +337,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __CardPool__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
             var __IsReady__ = default(bool);
             var __Chips__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>);
+            var __CurrentBet__ = default(int);
 
             for (int i = 0; i < length; i++)
             {
@@ -367,6 +369,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         break;
                     case 8:
                         __Chips__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 9:
+                        __CurrentBet__ = reader.ReadInt32();
                         break;
                     default:
                         reader.Skip();
@@ -411,6 +416,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             ____result.Chips = __Chips__;
+            if (length <= 9)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.CurrentBet = __CurrentBet__;
 
         MEMBER_ASSIGNMENT_END:
             reader.Depth--;

@@ -13,6 +13,7 @@ namespace THE.Player
         [SerializeField] private Text role;
         [SerializeField] private Text dealer;
         [SerializeField] private List<CardClass> cardList;
+        [SerializeField] private Text currentBetText;
         
         private GamingHubReceiver gamingHubReceiver;
 
@@ -30,7 +31,12 @@ namespace THE.Player
             var isSelf = player.Id == gamingHubReceiver.GetSelf().Id;
             cardList[0].Initialize(player.CardHand[0].Suit, player.CardHand[0].Rank, isSelf);
             cardList[1].Initialize(player.CardHand[1].Suit, player.CardHand[1].Rank, isSelf);
-            
+            UpdateBet(player);
+        }
+
+        public void UpdateBet(PlayerEntity player)
+        {
+            currentBetText.text = $"Current bet: {player.CurrentBet}";
         }
     }
 }
