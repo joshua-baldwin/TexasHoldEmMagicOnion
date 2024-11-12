@@ -20,7 +20,8 @@ namespace THE.SceneControllers
             Fold,
             Call,
             Raise,
-            Quit
+            Quit,
+            Cancel
         }
         
         [Serializable]
@@ -35,6 +36,9 @@ namespace THE.SceneControllers
         [SerializeField] private List<ButtonClass> buttonList;
         [SerializeField] private Button quitButton;
         [SerializeField] private Text currentTurnText;
+        [SerializeField] private InputField betAmountInput;
+        [SerializeField] private Button confirmAmountButton;
+        [SerializeField] private Button cancelButton;
         
         private GamingHubReceiver gamingHubReceiver;
 
@@ -50,10 +54,27 @@ namespace THE.SceneControllers
             quitButton.OnClickAsAsyncEnumerable()
                 .Subscribe(_ => OnClickButton(ButtonTypeEnum.Quit))
                 .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            betAmountInput.OnValueChangedAsAsyncEnumerable()
+                .Where(x => gamingHubReceiver.BetAmount.Value != int.Parse(x))
+                .Subscribe(x => gamingHubReceiver.BetAmount.Value = int.Parse(x))
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            confirmAmountButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => ConfirmAmount())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            cancelButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => CancelBet())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            betAmountInput.gameObject.SetActive(false);
+            confirmAmountButton.gameObject.SetActive(false);
+            cancelButton.gameObject.SetActive(false);
 
             gamingHubReceiver.UpdateGameUi = UpdateUi;
         }
-        
+
         public void Initialize(bool isMyTurn, string currentPlayerName)
         {
             foreach (var player in gamingHubReceiver.GetPlayerList())
@@ -76,19 +97,36 @@ namespace THE.SceneControllers
         {
             if (buttonType == ButtonTypeEnum.Quit)
                 await gamingHubReceiver.LeaveRoom(() => StartCoroutine(UtilityMethods.LoadAsyncScene("StartScene")));
+            else if (buttonType == ButtonTypeEnum.Bet || buttonType == ButtonTypeEnum.Call)
+            {
+                //show bet amount input field
+                betAmountInput.gameObject.SetActive(true);
+                confirmAmountButton.gameObject.SetActive(true);
+                cancelButton.gameObject.SetActive(true);
+            }
             else
             {
                 var commandType = buttonType switch
                 {
                     ButtonTypeEnum.Check => Enums.CommandTypeEnum.Check,
-                    ButtonTypeEnum.Bet => Enums.CommandTypeEnum.Bet,
                     ButtonTypeEnum.Fold => Enums.CommandTypeEnum.Fold,
-                    ButtonTypeEnum.Call => Enums.CommandTypeEnum.Call,
                     ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 await gamingHubReceiver.DoAction(commandType);
             }
+        }
+
+        private void ConfirmAmount()
+        {
+            //todo
+        }
+        
+        private void CancelBet()
+        {
+            betAmountInput.gameObject.SetActive(false);
+            confirmAmountButton.gameObject.SetActive(false);
+            cancelButton.gameObject.SetActive(false);   
         }
     }
 }

@@ -18,6 +18,7 @@ namespace THE.MagicOnion.Client
     public class GamingHubReceiver : IGamingHubReceiver
     {
         public AsyncReactiveProperty<string> UserName { get; } = new("");
+        public AsyncReactiveProperty<int> BetAmount { get; }
         
         private const int MaxRetry = 5;
         private CancellationTokenSource shutdownCancellation;
@@ -80,7 +81,8 @@ namespace THE.MagicOnion.Client
 
         public async UniTask DoAction(Enums.CommandTypeEnum commandType)
         {
-            await CallDoAction(commandType);
+            await CallDoAction(commandType, BetAmount.Value);
+            BetAmount.Value = 0;
         }
 
         public List<PlayerEntity> GetPlayerList() => players.ToList();
@@ -132,10 +134,10 @@ namespace THE.MagicOnion.Client
             await client.QuitGame(self.Id);
         }
 
-        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType)
+        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int betAmount)
         {
             Debug.Log("Calling DoAction");
-            await client.DoAction(commandType);
+            await client.DoAction(commandType, betAmount);
         }
         
         #endregion
@@ -179,7 +181,7 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game quit");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
             UpdateGameUi?.Invoke(currentPlayer.Id == self.Id, currentPlayer.Name);

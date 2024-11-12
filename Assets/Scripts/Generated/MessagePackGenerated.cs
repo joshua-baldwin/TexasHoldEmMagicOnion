@@ -47,18 +47,17 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(10)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(9)
             {
-                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>), 0 },
-                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>), 1 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity[]), 2 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 3 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 4 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum), 5 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 6 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 7 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.ChipEntity), 8 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 9 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>), 0 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity[]), 1 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 2 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 3 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum), 4 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 5 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 6 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.ChipEntity), 7 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 8 },
             };
         }
 
@@ -72,16 +71,15 @@ namespace MessagePack.Resolvers
 
             switch (key)
             {
-                case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
-                case 1: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.ChipEntity>();
-                case 2: return new global::MessagePack.Formatters.ArrayFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
-                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
-                case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
-                case 5: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_ChipTypeEnumFormatter();
-                case 6: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
-                case 7: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
-                case 8: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.ChipEntityFormatter();
-                case 9: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
+                case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.ChipEntity>();
+                case 1: return new global::MessagePack.Formatters.ArrayFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
+                case 2: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
+                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
+                case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_ChipTypeEnumFormatter();
+                case 5: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
+                case 6: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
+                case 7: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.ChipEntityFormatter();
+                case 8: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
                 default: return null;
             }
         }
@@ -305,14 +303,13 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(10);
+            writer.WriteArrayHeader(9);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.RoomId, options);
             writer.Write(value.IsDealer);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Serialize(ref writer, value.CardHand, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.CardPool, options);
             writer.Write(value.IsReady);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Serialize(ref writer, value.Chips, options);
             writer.Write(value.CurrentBet);
@@ -334,7 +331,6 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __RoomId__ = default(global::System.Guid);
             var __IsDealer__ = default(bool);
             var __CardHand__ = default(global::THE.MagicOnion.Shared.Entities.CardEntity[]);
-            var __CardPool__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
             var __IsReady__ = default(bool);
             var __Chips__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>);
             var __CurrentBet__ = default(int);
@@ -362,15 +358,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __CardHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 6:
-                        __CardPool__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
-                        break;
-                    case 7:
                         __IsReady__ = reader.ReadBoolean();
                         break;
-                    case 8:
+                    case 7:
                         __Chips__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
-                    case 9:
+                    case 8:
                         __CurrentBet__ = reader.ReadInt32();
                         break;
                     default:
@@ -403,20 +396,14 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.CardPool = __CardPool__;
+            ____result.IsReady = __IsReady__;
             if (length <= 7)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.IsReady = __IsReady__;
-            if (length <= 8)
-            {
-                goto MEMBER_ASSIGNMENT_END;
-            }
-
             ____result.Chips = __Chips__;
-            if (length <= 9)
+            if (length <= 8)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
