@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
-using Cysharp.Threading.Tasks;
-using THE.MagicOnion.Shared.Entities;
+using TexasHoldEmShared.Enums;
 using THE.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,14 +12,14 @@ namespace THE.Player
         [SerializeField] private Text cardRank;
         [SerializeField] private GameObject cover;
 
-        public void Initialize(CardSuitEnum suit, CardRankEnum rank, bool isOwnCard)
+        public void Initialize(Enums.CardSuitEnum suit, Enums.CardRankEnum rank, bool isOwnCard)
         {
             StartCoroutine(LoadFromResourcesFolder(suit));
             cardRank.text = rank.GetDescription();
             cover.SetActive(!isOwnCard);
         }
         
-        private IEnumerator LoadFromResourcesFolder(CardSuitEnum suit)
+        private IEnumerator LoadFromResourcesFolder(Enums.CardSuitEnum suit)
         {
             var loadAsync = Resources.LoadAsync($"Suits/{suit}", typeof(Sprite));
             

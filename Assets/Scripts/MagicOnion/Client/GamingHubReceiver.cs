@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using Grpc.Net.Client;
 using GrpcWebSocketBridge.Client;
 using MagicOnion.Client;
+using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
 using UnityEngine;
@@ -24,12 +25,14 @@ namespace THE.MagicOnion.Client
         private IGamingHub client;
         private PlayerEntity[] players;
         private PlayerEntity self;
+        private bool isMyTurn;
         
         public Action OnRoomConnectSuccess;
         public Action OnRoomConnectFailed;
         public Action OnCancelRoomConnect;
 
         public Action<int> UpdatePlayerCount;
+        public Action<bool> UpdateGameUi;
 
         public PlayerEntity GetSelf() => self;
         
@@ -72,6 +75,11 @@ namespace THE.MagicOnion.Client
         public async UniTaskVoid QuitGame()
         {
             await CallQuitGame();
+        }
+
+        public async UniTask DoAction(Enums.CommandTypeEnum commandType)
+        {
+            await CallDoAction(commandType);
         }
 
         public List<PlayerEntity> GetPlayerList() => players.ToList();
@@ -122,6 +130,12 @@ namespace THE.MagicOnion.Client
             Debug.Log("Calling QuitGame");
             await client.QuitGame(self.Id);
         }
+
+        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType)
+        {
+            Debug.Log("Calling DoAction");
+            await client.DoAction(commandType);
+        }
         
         #endregion
         
@@ -144,11 +158,13 @@ namespace THE.MagicOnion.Client
             Debug.Log($"Player count: {playerEntities.Length}");
         }
 
-        public void OnGameStart(PlayerEntity[] playerEntities)
+        public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer)
         {
             Debug.Log("Game started");
             SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities;
+            isMyTurn = currentPlayer.Id == self.Id;
+            UpdateGameUi?.Invoke(isMyTurn);
         }
 
         public void OnCancelGameStart()
@@ -160,13 +176,25 @@ namespace THE.MagicOnion.Client
         {
             Debug.Log("Game quit");
         }
+
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer)
+        {
+            Debug.Log($"Doing action {commandType}");
+            UpdateGameUi?.Invoke(currentPlayer.Id == self.Id);
+        }
         
         #endregion
         
         private async UniTask InitializeClientAsync()
         {
+            string url = "";
+#if UNITY_EDITOR
+            url = "http://localhost:5137";
+#else
+            url = "http://54.178.31.18:5137";
+#endif
             // Initialize the Hub
-            channel = GrpcChannel.ForAddress("http://localhost:5137", new GrpcChannelOptions
+            channel = GrpcChannel.ForAddress(url, new GrpcChannelOptions
             {
                 HttpHandler = new GrpcWebSocketBridgeHandler()
             });

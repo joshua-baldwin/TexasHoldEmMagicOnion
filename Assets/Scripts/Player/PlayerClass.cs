@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.SceneControllers;
@@ -19,9 +20,9 @@ namespace THE.Player
         {
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             dealer.gameObject.SetActive(player.IsDealer);
-            if (player.PlayerRole != PlayerRoleEnum.None)
+            if (player.PlayerRole != Enums.PlayerRoleEnum.None)
             {
-                role.text = player.PlayerRole == PlayerRoleEnum.SmallBlind
+                role.text = player.PlayerRole == Enums.PlayerRoleEnum.SmallBlind
                     ? "SB"
                     : "BB";
             }
