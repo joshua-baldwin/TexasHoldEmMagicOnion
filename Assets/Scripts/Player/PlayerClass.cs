@@ -11,9 +11,10 @@ namespace THE.Player
 {
     public class PlayerClass : MonoBehaviour
     {
+        [SerializeField] private Text nameText;
         [SerializeField] private Text role;
         [SerializeField] private Text dealer;
-        [SerializeField] private GameObject cardListObject;
+        [SerializeField] private GameObject cardListRoot;
         [SerializeField] private List<CardClass> cardList;
         [SerializeField] private Text currentBetText;
         
@@ -24,6 +25,7 @@ namespace THE.Player
         {
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             PlayerId = player.Id;
+            nameText.text = player.Name;
             dealer.gameObject.SetActive(player.IsDealer);
             if (player.PlayerRole != Enums.PlayerRoleEnum.None)
             {
@@ -45,7 +47,7 @@ namespace THE.Player
 
         public void ChangeCardVisibility(bool visible)
         {
-            cardListObject.SetActive(visible);
+            cardListRoot.SetActive(visible);
         }
     }
 }

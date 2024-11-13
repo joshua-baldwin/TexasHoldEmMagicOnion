@@ -80,15 +80,16 @@ namespace THE.SceneControllers
             gamingHubReceiver.UpdateGameUi = UpdateUi;
         }
 
-        public void Initialize(bool isMyTurn, PlayerEntity playerEntity)
+        public void Initialize(bool isMyTurn, PlayerEntity currentPlayerEntity)
         {
             foreach (var player in gamingHubReceiver.GetPlayerList())
             {
                 var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
+                UpdateBets(player);
             }
-            UpdateUi(isMyTurn, playerEntity, 0);
+            UpdateUi(isMyTurn, currentPlayerEntity, 0);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
             if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
             {
@@ -99,15 +100,20 @@ namespace THE.SceneControllers
                 });
             }
         }
+        
+        public void UpdateBets(PlayerEntity playerEntity)
+        {
+            playerList.First(x => x.PlayerId == playerEntity.Id).UpdateBet(playerEntity.CurrentBet);
+        }
 
-        private void UpdateUi(bool isMyTurn, PlayerEntity playerEntity, int currentPot)
+        private void UpdateUi(bool isMyTurn, PlayerEntity currentPlayerEntity, int currentPot)
         {
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
             
-            currentTurnText.text = $"Current turn: {playerEntity.Name}";
+            currentTurnText.text = $"Current turn: {currentPlayerEntity.Name}";
             potText.text = $"Pot: {currentPot}";
-            playerList.First(x => x.PlayerId == playerEntity.Id).UpdateBet(playerEntity.CurrentBet);
+            UpdateBets(currentPlayerEntity);
         }
 
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)
