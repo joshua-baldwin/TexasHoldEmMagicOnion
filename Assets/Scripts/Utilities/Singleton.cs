@@ -35,7 +35,7 @@ namespace THE.Utilities
                 {
                     if (_instance != null)
                         return _instance;
-                    var instances = FindObjectsOfType<T>();
+                    var instances = FindObjectsByType<T>(FindObjectsSortMode.None);
                     var count = instances.Length;
                     if (count > 0)
                     {

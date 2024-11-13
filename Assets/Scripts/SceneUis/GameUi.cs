@@ -113,6 +113,7 @@ namespace THE.SceneControllers
                 ButtonTypeEnum.Fold => Enums.CommandTypeEnum.Fold,
                 ButtonTypeEnum.Call => Enums.CommandTypeEnum.Call,
                 ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,
+                _ => throw new ArgumentOutOfRangeException()
             };
             
             if (buttonType is ButtonTypeEnum.Bet or ButtonTypeEnum.Call)
