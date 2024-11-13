@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
+using THE.MagicOnion.Shared.Entities;
 using THE.Player;
 using THE.Utilities;
 using UnityEngine;
@@ -41,7 +43,9 @@ namespace THE.SceneControllers
         [SerializeField] private Button confirmAmountButton;
         [SerializeField] private Button cancelButton;
         
+        private readonly List<PlayerClass> playerList = new();
         private GamingHubReceiver gamingHubReceiver;
+        private Enums.CommandTypeEnum currentAction;
 
         private void Awake()
         {
@@ -76,59 +80,67 @@ namespace THE.SceneControllers
             gamingHubReceiver.UpdateGameUi = UpdateUi;
         }
 
-        public void Initialize(bool isMyTurn, string currentPlayerName, int currentPot)
+        public void Initialize(bool isMyTurn, PlayerEntity playerEntity)
         {
             foreach (var player in gamingHubReceiver.GetPlayerList())
             {
                 var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
                 playerObject.Initialize(player);
+                playerList.Add(playerObject);
             }
-            UpdateUi(isMyTurn, currentPlayerName, currentPot);
+            UpdateUi(isMyTurn, playerEntity, 0);
         }
 
-        private void UpdateUi(bool isMyTurn, string currentPlayerName, int currentPot)
+        private void UpdateUi(bool isMyTurn, PlayerEntity playerEntity, int currentPot)
         {
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
             
-            currentTurnText.text = $"Current turn: {currentPlayerName}";
+            currentTurnText.text = $"Current turn: {playerEntity.Name}";
             potText.text = $"Pot: {currentPot}";
+            playerList.First(x => x.PlayerId == playerEntity.Id).UpdateBet(playerEntity.CurrentBet);
         }
 
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)
         {
             if (buttonType == ButtonTypeEnum.Quit)
                 await gamingHubReceiver.LeaveRoom(() => StartCoroutine(UtilityMethods.LoadAsyncScene("StartScene")));
-            else if (buttonType == ButtonTypeEnum.Bet || buttonType == ButtonTypeEnum.Call)
+            
+            currentAction = buttonType switch
             {
-                //show bet amount input field
+                ButtonTypeEnum.Check => Enums.CommandTypeEnum.Check,
+                ButtonTypeEnum.Bet => Enums.CommandTypeEnum.Bet,
+                ButtonTypeEnum.Fold => Enums.CommandTypeEnum.Fold,
+                ButtonTypeEnum.Call => Enums.CommandTypeEnum.Call,
+                ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,
+            };
+            
+            if (buttonType is ButtonTypeEnum.Bet or ButtonTypeEnum.Call)
+            {
                 betAmountInput.gameObject.SetActive(true);
                 confirmAmountButton.gameObject.SetActive(true);
                 cancelButton.gameObject.SetActive(true);
             }
             else
             {
-                var commandType = buttonType switch
-                {
-                    ButtonTypeEnum.Check => Enums.CommandTypeEnum.Check,
-                    ButtonTypeEnum.Fold => Enums.CommandTypeEnum.Fold,
-                    ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-                await gamingHubReceiver.DoAction(commandType);
+                await gamingHubReceiver.DoAction(currentAction);
             }
         }
 
-        private void ConfirmAmount()
+        private async UniTaskVoid ConfirmAmount()
         {
-            //todo
+            betAmountInput.gameObject.SetActive(false);
+            confirmAmountButton.gameObject.SetActive(false);
+            cancelButton.gameObject.SetActive(false);
+            await gamingHubReceiver.DoAction(currentAction);
         }
         
         private void CancelBet()
         {
             betAmountInput.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
-            cancelButton.gameObject.SetActive(false);   
+            cancelButton.gameObject.SetActive(false);
+            gamingHubReceiver.BetAmount.Value = 0;
         }
     }
 }

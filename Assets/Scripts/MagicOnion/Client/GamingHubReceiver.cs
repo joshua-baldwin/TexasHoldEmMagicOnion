@@ -31,11 +31,10 @@ namespace THE.MagicOnion.Client
         public Action OnCancelRoomConnect;
 
         public Action<int> UpdatePlayerCount;
-        public Action<bool, string, int> UpdateGameUi;
+        public Action<bool, PlayerEntity, int> UpdateGameUi;
 
         public PlayerEntity Self { get; private set; }
         public PlayerEntity CurrentPlayer { get; private set; }
-        public int CurrentPot { get; private set; }
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
         public async UniTask CreateRoom()
@@ -184,7 +183,7 @@ namespace THE.MagicOnion.Client
         public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer, int currentPot, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
-            UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, currentPlayer.Name, currentPot);
+            UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, currentPlayer, currentPot);
         }
         
         #endregion
