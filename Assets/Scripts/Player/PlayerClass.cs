@@ -28,7 +28,7 @@ namespace THE.Player
                     : "BB";
             }
 
-            var isSelf = player.Id == gamingHubReceiver.GetSelf().Id;
+            var isSelf = player.Id == gamingHubReceiver.Self.Id;
             cardList[0].Initialize(player.CardHand[0].Suit, player.CardHand[0].Rank, isSelf);
             cardList[1].Initialize(player.CardHand[1].Suit, player.CardHand[1].Rank, isSelf);
             UpdateBet(player);

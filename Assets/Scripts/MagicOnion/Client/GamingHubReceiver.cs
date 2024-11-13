@@ -18,25 +18,25 @@ namespace THE.MagicOnion.Client
     public class GamingHubReceiver : IGamingHubReceiver
     {
         public AsyncReactiveProperty<string> UserName { get; } = new("");
-        public AsyncReactiveProperty<int> BetAmount { get; }
+        public AsyncReactiveProperty<int> BetAmount { get; } = new(0);
         
         private const int MaxRetry = 5;
         private CancellationTokenSource shutdownCancellation;
         private GrpcChannel channel;
         private IGamingHub client;
         private PlayerEntity[] players;
-        private PlayerEntity self;
         
         public Action OnRoomConnectSuccess;
         public Action OnRoomConnectFailed;
         public Action OnCancelRoomConnect;
 
         public Action<int> UpdatePlayerCount;
-        public Action<bool, string> UpdateGameUi;
+        public Action<bool, string, int> UpdateGameUi;
 
-        public PlayerEntity GetSelf() => self;
-        public PlayerEntity CurrentPlayer;
-        public bool IsMyTurn => CurrentPlayer.Id == self.Id;
+        public PlayerEntity Self { get; private set; }
+        public PlayerEntity CurrentPlayer { get; private set; }
+        public int CurrentPot { get; private set; }
+        public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
         public async UniTask CreateRoom()
         {
@@ -46,7 +46,7 @@ namespace THE.MagicOnion.Client
             if (shutdownCancellation.IsCancellationRequested)
                 return;
             
-            self = await CallCreateRoom(UserName.Value);
+            Self = await CallCreateRoom(UserName.Value);
             UserName.Value = "";
             Debug.Log("room joined");
             OnRoomConnectSuccess?.Invoke();
@@ -117,7 +117,7 @@ namespace THE.MagicOnion.Client
         private async UniTask CallStartGame(Action onFinish)
         {
             Debug.Log("Calling StartGame");
-            var canStart = await client.StartGame(self.Id);
+            var canStart = await client.StartGame(Self.Id);
             if (canStart)
                 onFinish?.Invoke();
         }
@@ -125,13 +125,13 @@ namespace THE.MagicOnion.Client
         private async UniTask CallCancelGame()
         {
             Debug.Log("Calling CancelGame");
-            await client.CancelStart(self.Id);
+            await client.CancelStart(Self.Id);
         }
 
         private async UniTask CallQuitGame()
         {
             Debug.Log("Calling QuitGame");
-            await client.QuitGame(self.Id);
+            await client.QuitGame(Self.Id);
         }
 
         private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int betAmount)
@@ -181,10 +181,10 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game quit");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer, string actionMessage)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer, int currentPot, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
-            UpdateGameUi?.Invoke(currentPlayer.Id == self.Id, currentPlayer.Name);
+            UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, currentPlayer.Name, currentPot);
         }
         
         #endregion

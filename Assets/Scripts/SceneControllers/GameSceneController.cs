@@ -9,9 +9,9 @@ namespace THE.SceneControllers
 
         private void Start()
         {
-            var currentPlayer = MySceneManager.Instance.HubReceiver.CurrentPlayer;
+            var hubReceiver = MySceneManager.Instance.HubReceiver;
             var ui = Instantiate(gameUiPrefab, canvas.transform).GetComponent<GameUi>();
-            ui.Initialize(MySceneManager.Instance.HubReceiver.IsMyTurn, currentPlayer.Name);
+            ui.Initialize(hubReceiver.IsMyTurn, hubReceiver.CurrentPlayer.Name, hubReceiver.CurrentPot);
         }
     }
 }

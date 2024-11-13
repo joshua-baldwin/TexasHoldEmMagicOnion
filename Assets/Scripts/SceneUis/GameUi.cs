@@ -36,6 +36,7 @@ namespace THE.SceneControllers
         [SerializeField] private List<ButtonClass> buttonList;
         [SerializeField] private Button quitButton;
         [SerializeField] private Text currentTurnText;
+        [SerializeField] private Text potText;
         [SerializeField] private InputField betAmountInput;
         [SerializeField] private Button confirmAmountButton;
         [SerializeField] private Button cancelButton;
@@ -75,22 +76,23 @@ namespace THE.SceneControllers
             gamingHubReceiver.UpdateGameUi = UpdateUi;
         }
 
-        public void Initialize(bool isMyTurn, string currentPlayerName)
+        public void Initialize(bool isMyTurn, string currentPlayerName, int currentPot)
         {
             foreach (var player in gamingHubReceiver.GetPlayerList())
             {
                 var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
                 playerObject.Initialize(player);
             }
-            UpdateUi(isMyTurn, currentPlayerName);
+            UpdateUi(isMyTurn, currentPlayerName, currentPot);
         }
 
-        private void UpdateUi(bool isMyTurn, string currentPlayerName)
+        private void UpdateUi(bool isMyTurn, string currentPlayerName, int currentPot)
         {
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
             
             currentTurnText.text = $"Current turn: {currentPlayerName}";
+            potText.text = $"Pot: {currentPot}";
         }
 
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)

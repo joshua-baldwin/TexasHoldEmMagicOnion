@@ -22,8 +22,8 @@ namespace THE.SceneControllers
         private void Awake()
         {
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
-            userName.text = $"Name: {gamingHubReceiver.GetSelf().Name}";
-            roomName.text = $"Room id:\n{gamingHubReceiver.GetSelf().RoomId}";
+            userName.text = $"Name: {gamingHubReceiver.Self.Name}";
+            roomName.text = $"Room id:\n{gamingHubReceiver.Self.RoomId}";
             startButton.interactable = playerCount > 1;
             cancelButton.interactable = false;
             startButton.OnClickAsAsyncEnumerable()
