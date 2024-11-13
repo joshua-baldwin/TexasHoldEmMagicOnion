@@ -13,6 +13,7 @@ namespace THE.Player
     {
         [SerializeField] private Text role;
         [SerializeField] private Text dealer;
+        [SerializeField] private GameObject cardListObject;
         [SerializeField] private List<CardClass> cardList;
         [SerializeField] private Text currentBetText;
         
@@ -40,6 +41,11 @@ namespace THE.Player
         public void UpdateBet(int betAmount)
         {
             currentBetText.text = $"Current bet: {betAmount}";
+        }
+
+        public void ChangeCardVisibility(bool visible)
+        {
+            cardListObject.SetActive(visible);
         }
     }
 }

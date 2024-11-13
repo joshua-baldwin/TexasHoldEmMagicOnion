@@ -89,6 +89,15 @@ namespace THE.SceneControllers
                 playerList.Add(playerObject);
             }
             UpdateUi(isMyTurn, playerEntity, 0);
+            playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
+            if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
+            {
+                buttonList.ForEach(x =>
+                {
+                    if (x.ButtonType != ButtonTypeEnum.Bet)
+                        x.ButtonObject.gameObject.SetActive(false);
+                });
+            }
         }
 
         private void UpdateUi(bool isMyTurn, PlayerEntity playerEntity, int currentPot)

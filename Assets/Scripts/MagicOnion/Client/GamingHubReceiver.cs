@@ -35,6 +35,7 @@ namespace THE.MagicOnion.Client
 
         public PlayerEntity Self { get; private set; }
         public PlayerEntity CurrentPlayer { get; private set; }
+        public Enums.GameStateEnum GameState { get; private set; }
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
         public async UniTask CreateRoom()
@@ -160,7 +161,7 @@ namespace THE.MagicOnion.Client
             Debug.Log($"Player count: {playerEntities.Length}");
         }
 
-        public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer)
+        public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer, Enums.GameStateEnum gameState)
         {
             Debug.Log("Game started");
             UpdatePlayerCount = null;
@@ -168,6 +169,7 @@ namespace THE.MagicOnion.Client
             SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities;
             CurrentPlayer = currentPlayer;
+            GameState = gameState;
         }
 
         public void OnCancelGameStart()
@@ -180,10 +182,11 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game quit");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer, int currentPot, string actionMessage)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer, int currentPot, Enums.GameStateEnum gameState, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
             UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, currentPlayer, currentPot);
+            GameState = gameState;
         }
         
         #endregion
