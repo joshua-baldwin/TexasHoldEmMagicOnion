@@ -5,6 +5,11 @@ namespace THE.SceneControllers
 {
     public class MySceneManager : Singleton<MySceneManager>
     {
-        public GamingHubReceiver HubReceiver = new();
+        public readonly GamingHubReceiver HubReceiver = new();
+
+        private async void OnApplicationQuit()
+        {
+            await HubReceiver.LeaveRoom(null);
+        }
     }
 }
