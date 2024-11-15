@@ -118,6 +118,16 @@ namespace THE.SceneControllers
                 communityCardList[2].gameObject.SetActive(true);
                 communityCardList[2].Initialize(communityCards[2].Suit, communityCards[2].Rank, true);
             }
+            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.TheTurn)
+            {
+                communityCardList[3].gameObject.SetActive(true);
+                communityCardList[3].Initialize(communityCards[3].Suit, communityCards[3].Rank, true);
+            }
+            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.TheRiver)
+            {
+                communityCardList[4].gameObject.SetActive(true);
+                communityCardList[4].Initialize(communityCards[4].Suit, communityCards[4].Rank, true);
+            }
             
             //update buttons
             if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
