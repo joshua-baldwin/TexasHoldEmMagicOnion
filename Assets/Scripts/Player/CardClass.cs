@@ -12,11 +12,11 @@ namespace THE.Player
         [SerializeField] private Text cardRank;
         [SerializeField] private GameObject cover;
 
-        public void Initialize(Enums.CardSuitEnum suit, Enums.CardRankEnum rank, bool isOwnCard)
+        public void Initialize(Enums.CardSuitEnum suit, Enums.CardRankEnum rank, bool isOwnCardOrCommunity)
         {
             StartCoroutine(LoadFromResourcesFolder(suit));
             cardRank.text = rank.GetDescription();
-            cover.SetActive(!isOwnCard);
+            cover.SetActive(!isOwnCardOrCommunity);
         }
         
         private IEnumerator LoadFromResourcesFolder(Enums.CardSuitEnum suit)

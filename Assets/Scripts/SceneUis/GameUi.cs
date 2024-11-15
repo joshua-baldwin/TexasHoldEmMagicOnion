@@ -35,6 +35,7 @@ namespace THE.SceneControllers
         
         [SerializeField] private GameObject playerRoot;
         [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private List<CardClass> communityCardList;
         [SerializeField] private List<ButtonClass> buttonList;
         [SerializeField] private Button quitButton;
         [SerializeField] private Text currentTurnText;
@@ -66,6 +67,10 @@ namespace THE.SceneControllers
                 .Subscribe(x => gamingHubReceiver.BetAmount.Value = int.Parse(x))
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
+            gamingHubReceiver.BetAmount
+                .Subscribe(x => betAmountInput.text = x.ToString())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
             confirmAmountButton.OnClickAsAsyncEnumerable()
                 .Subscribe(_ => ConfirmAmount())
                 .AddTo(this.GetCancellationTokenOnDestroy());
@@ -89,7 +94,7 @@ namespace THE.SceneControllers
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
             }
-            UpdateUi(isMyTurn, null, currentPlayerEntity, 0);
+            UpdateUi(isMyTurn, null, currentPlayerEntity, 0, null);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
         
@@ -98,12 +103,30 @@ namespace THE.SceneControllers
             playerList.First(x => x.PlayerId == playerEntity.Id).UpdateBet(playerEntity.CurrentBet);
         }
 
-        private void UpdateUi(bool isMyTurn, PlayerEntity previousPlayerEntity, PlayerEntity currentPlayerEntity, int currentPot)
+        private void UpdateUi(bool isMyTurn, PlayerEntity previousPlayerEntity, PlayerEntity currentPlayerEntity, int currentPot, CardEntity[] communityCards)
         {
             gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
             if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop)
                 playerList.ForEach(player => player.InitializeCards());
-            UpdateButtons();
+            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.TheFlop)
+            {
+                //set community cards
+                communityCardList[0].gameObject.SetActive(true);
+                communityCardList[0].Initialize(communityCards[0].Suit, communityCards[0].Rank, true);
+                communityCardList[1].gameObject.SetActive(true);
+                communityCardList[1].Initialize(communityCards[1].Suit, communityCards[1].Rank, true);
+                communityCardList[2].gameObject.SetActive(true);
+                communityCardList[2].Initialize(communityCards[2].Suit, communityCards[2].Rank, true);
+            }
+            
+            //update buttons
+            if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
+                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType == ButtonTypeEnum.Bet));
+            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop)
+                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
+            else
+                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
+            
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
             
@@ -111,22 +134,6 @@ namespace THE.SceneControllers
             potText.text = $"Pot: {currentPot}";
             if (previousPlayerEntity != null)
                 UpdateBets(previousPlayerEntity);
-        }
-
-        private void UpdateButtons()
-        {
-            if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
-            {
-                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType == ButtonTypeEnum.Bet));
-            }
-            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop)
-            {
-                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
-            }
-            else
-            {
-                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
-            }
         }
 
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)
@@ -146,8 +153,9 @@ namespace THE.SceneControllers
                 _ => throw new ArgumentOutOfRangeException()
             };
             
-            if (buttonType is ButtonTypeEnum.Bet or ButtonTypeEnum.Call)
+            if (buttonType is ButtonTypeEnum.Bet or ButtonTypeEnum.Raise)
             {
+                buttonList.ForEach(x => x.ButtonObject.interactable = false);
                 betAmountInput.gameObject.SetActive(true);
                 confirmAmountButton.gameObject.SetActive(true);
                 cancelButton.gameObject.SetActive(true);
@@ -160,6 +168,7 @@ namespace THE.SceneControllers
 
         private async UniTaskVoid ConfirmAmount()
         {
+            buttonList.ForEach(x => x.ButtonObject.interactable = true);
             betAmountInput.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
@@ -168,6 +177,7 @@ namespace THE.SceneControllers
         
         private void CancelBet()
         {
+            buttonList.ForEach(x => x.ButtonObject.interactable = true);
             betAmountInput.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
