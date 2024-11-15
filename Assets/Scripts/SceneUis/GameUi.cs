@@ -91,14 +91,6 @@ namespace THE.SceneControllers
             }
             UpdateUi(isMyTurn, null, currentPlayerEntity, 0);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
-            if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
-            {
-                buttonList.ForEach(x =>
-                {
-                    if (x.ButtonType != ButtonTypeEnum.Bet)
-                        x.ButtonObject.gameObject.SetActive(false);
-                });
-            }
         }
         
         public void UpdateBets(PlayerEntity playerEntity)
@@ -123,7 +115,11 @@ namespace THE.SceneControllers
 
         private void UpdateButtons()
         {
-            if (gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet)
+            if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
+            {
+                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType == ButtonTypeEnum.Bet));
+            }
+            else
             {
                 buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
             }
