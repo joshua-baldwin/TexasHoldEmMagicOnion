@@ -168,6 +168,7 @@ namespace THE.MagicOnion.Client
             //do this in scene manager
             SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities;
+            Self = playerEntities.First(x => x.Id == Self.Id);
             CurrentPlayer = currentPlayer;
             GameState = gameState;
         }
@@ -185,8 +186,8 @@ namespace THE.MagicOnion.Client
         public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity previousPlayer, PlayerEntity currentPlayer, int currentPot, Enums.GameStateEnum gameState, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
-            UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, previousPlayer, currentPlayer, currentPot);
             GameState = gameState;
+            UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, previousPlayer, currentPlayer, currentPot);
         }
         
         #endregion
