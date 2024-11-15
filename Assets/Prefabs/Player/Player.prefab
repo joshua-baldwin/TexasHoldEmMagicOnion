@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 1193720495425938312}
   - component: {fileID: 4031359572928004702}
   m_Layer: 5
-  m_Name: Cards
+  m_Name: HoleCards
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

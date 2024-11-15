@@ -35,8 +35,8 @@ namespace THE.Player
             }
 
             var isSelf = player.Id == gamingHubReceiver.Self.Id;
-            cardList[0].Initialize(player.CardHand[0].Suit, player.CardHand[0].Rank, isSelf);
-            cardList[1].Initialize(player.CardHand[1].Suit, player.CardHand[1].Rank, isSelf);
+            cardList[0].Initialize(player.HoleCards[0].Suit, player.HoleCards[0].Rank, isSelf);
+            cardList[1].Initialize(player.HoleCards[1].Suit, player.HoleCards[1].Rank, isSelf);
             UpdateBet(player.CurrentBet);
         }
 

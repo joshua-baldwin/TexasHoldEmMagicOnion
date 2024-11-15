@@ -108,12 +108,21 @@ namespace THE.SceneControllers
 
         private void UpdateUi(bool isMyTurn, PlayerEntity currentPlayerEntity, int currentPot)
         {
+            UpdateButtons();
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
             
             currentTurnText.text = $"Current turn: {currentPlayerEntity.Name}";
             potText.text = $"Pot: {currentPot}";
             UpdateBets(currentPlayerEntity);
+        }
+
+        private void UpdateButtons()
+        {
+            if (gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet)
+            {
+                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
+            }
         }
 
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)
@@ -124,7 +133,9 @@ namespace THE.SceneControllers
             currentAction = buttonType switch
             {
                 ButtonTypeEnum.Check => Enums.CommandTypeEnum.Check,
-                ButtonTypeEnum.Bet => Enums.CommandTypeEnum.Bet,
+                ButtonTypeEnum.Bet => gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet && gamingHubReceiver.Self.PlayerRole == Enums.PlayerRoleEnum.SmallBlind
+                    ? Enums.CommandTypeEnum.SmallBlindBet
+                    : Enums.CommandTypeEnum.BigBlindBet,
                 ButtonTypeEnum.Fold => Enums.CommandTypeEnum.Fold,
                 ButtonTypeEnum.Call => Enums.CommandTypeEnum.Call,
                 ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,

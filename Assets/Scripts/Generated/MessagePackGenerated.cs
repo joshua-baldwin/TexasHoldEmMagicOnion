@@ -303,16 +303,18 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(9);
+            writer.WriteArrayHeader(11);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.RoomId, options);
             writer.Write(value.IsDealer);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Serialize(ref writer, value.CardHand, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Serialize(ref writer, value.HoleCards, options);
             writer.Write(value.IsReady);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Serialize(ref writer, value.Chips, options);
             writer.Write(value.CurrentBet);
+            writer.Write(value.HasTakenAction);
+            writer.Write(value.HasFolded);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -330,10 +332,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __PlayerRole__ = default(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum);
             var __RoomId__ = default(global::System.Guid);
             var __IsDealer__ = default(bool);
-            var __CardHand__ = default(global::THE.MagicOnion.Shared.Entities.CardEntity[]);
+            var __HoleCards__ = default(global::THE.MagicOnion.Shared.Entities.CardEntity[]);
             var __IsReady__ = default(bool);
             var __Chips__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>);
             var __CurrentBet__ = default(int);
+            var __HasTakenAction__ = default(bool);
+            var __HasFolded__ = default(bool);
 
             for (int i = 0; i < length; i++)
             {
@@ -355,7 +359,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __IsDealer__ = reader.ReadBoolean();
                         break;
                     case 5:
-                        __CardHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Deserialize(ref reader, options);
+                        __HoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 6:
                         __IsReady__ = reader.ReadBoolean();
@@ -366,6 +370,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                     case 8:
                         __CurrentBet__ = reader.ReadInt32();
                         break;
+                    case 9:
+                        __HasTakenAction__ = reader.ReadBoolean();
+                        break;
+                    case 10:
+                        __HasFolded__ = reader.ReadBoolean();
+                        break;
                     default:
                         reader.Skip();
                         break;
@@ -373,12 +383,6 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             var ____result = new global::THE.MagicOnion.Shared.Entities.PlayerEntity(__Name__, __Id__, __PlayerRole__);
-            if (length <= 3)
-            {
-                goto MEMBER_ASSIGNMENT_END;
-            }
-
-            ____result.RoomId = __RoomId__;
             if (length <= 4)
             {
                 goto MEMBER_ASSIGNMENT_END;
@@ -390,7 +394,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.CardHand = __CardHand__;
+            ____result.HoleCards = __HoleCards__;
             if (length <= 6)
             {
                 goto MEMBER_ASSIGNMENT_END;
@@ -409,6 +413,18 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             ____result.CurrentBet = __CurrentBet__;
+            if (length <= 9)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.HasTakenAction = __HasTakenAction__;
+            if (length <= 10)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.HasFolded = __HasFolded__;
 
         MEMBER_ASSIGNMENT_END:
             reader.Depth--;
