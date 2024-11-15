@@ -7,11 +7,12 @@ using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.Player;
+using THE.SceneControllers;
 using THE.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace THE.SceneControllers
+namespace THE.SceneUis
 {
     public class GameUi : MonoBehaviour
     {
@@ -48,6 +49,8 @@ namespace THE.SceneControllers
         private readonly List<PlayerClass> playerList = new();
         private GamingHubReceiver gamingHubReceiver;
         private Enums.CommandTypeEnum currentAction;
+        
+        private PopupUi popupUi;
 
         private void Awake()
         {
@@ -84,6 +87,7 @@ namespace THE.SceneControllers
             cancelButton.gameObject.SetActive(false);
 
             gamingHubReceiver.UpdateGameUi = UpdateUi;
+            gamingHubReceiver.ShowErrorMessage = ShowErrorMessage;
         }
 
         public void Initialize(bool isMyTurn, PlayerEntity currentPlayerEntity)
@@ -106,35 +110,33 @@ namespace THE.SceneControllers
         private void UpdateUi(bool isMyTurn, PlayerEntity previousPlayerEntity, PlayerEntity currentPlayerEntity, int currentPot, CardEntity[] communityCards)
         {
             gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
-            if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop)
-                playerList.ForEach(player => player.InitializeCards());
-            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.TheFlop)
+            switch (gamingHubReceiver.GameState)
             {
-                //set community cards
-                communityCardList[0].gameObject.SetActive(true);
-                communityCardList[0].Initialize(communityCards[0].Suit, communityCards[0].Rank, true);
-                communityCardList[1].gameObject.SetActive(true);
-                communityCardList[1].Initialize(communityCards[1].Suit, communityCards[1].Rank, true);
-                communityCardList[2].gameObject.SetActive(true);
-                communityCardList[2].Initialize(communityCards[2].Suit, communityCards[2].Rank, true);
+                case Enums.GameStateEnum.BlindBet:
+                    buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType == ButtonTypeEnum.Bet));
+                    break;
+                case Enums.GameStateEnum.PreFlop:
+                    playerList.ForEach(player => player.InitializeCards());
+                    buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
+                    break;
+                case Enums.GameStateEnum.TheFlop:
+                    communityCardList[0].gameObject.SetActive(true);
+                    communityCardList[0].Initialize(communityCards[0].Suit, communityCards[0].Rank, true);
+                    communityCardList[1].gameObject.SetActive(true);
+                    communityCardList[1].Initialize(communityCards[1].Suit, communityCards[1].Rank, true);
+                    communityCardList[2].gameObject.SetActive(true);
+                    communityCardList[2].Initialize(communityCards[2].Suit, communityCards[2].Rank, true);
+                    break;
+                case Enums.GameStateEnum.TheTurn:
+                    communityCardList[3].gameObject.SetActive(true);
+                    communityCardList[3].Initialize(communityCards[3].Suit, communityCards[3].Rank, true);
+                    break;
+                case Enums.GameStateEnum.TheRiver:
+                    communityCardList[4].gameObject.SetActive(true);
+                    communityCardList[4].Initialize(communityCards[4].Suit, communityCards[4].Rank, true);
+                    break;
             }
-            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.TheTurn)
-            {
-                communityCardList[3].gameObject.SetActive(true);
-                communityCardList[3].Initialize(communityCards[3].Suit, communityCards[3].Rank, true);
-            }
-            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.TheRiver)
-            {
-                communityCardList[4].gameObject.SetActive(true);
-                communityCardList[4].Initialize(communityCards[4].Suit, communityCards[4].Rank, true);
-            }
-            
-            //update buttons
-            if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
-                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType == ButtonTypeEnum.Bet));
-            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop)
-                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
-            else
+            if (gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet && gamingHubReceiver.GameState != Enums.GameStateEnum.PreFlop)
                 buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
             
             foreach (var button in buttonList)
@@ -144,6 +146,12 @@ namespace THE.SceneControllers
             potText.text = $"Pot: {currentPot}";
             if (previousPlayerEntity != null)
                 UpdateBets(previousPlayerEntity);
+        }
+
+        private void ShowErrorMessage(string message)
+        {
+            popupUi = FindFirstObjectByType<PopupUi>();
+            popupUi.ShowMessage(message);
         }
 
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)

@@ -149,6 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 1561815413}
   gameUiPrefab: {fileID: 1268754579827074000, guid: 4d153bfb8c19f43709c1268264000b87, type: 3}
+  popupPrefab: {fileID: 4525094861639717131, guid: e8c03d43cd66841938e2df1bb4774a73, type: 3}
 --- !u!4 &832606117
 Transform:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using THE.MagicOnion.Client;
+using THE.SceneUis;
 using THE.Utilities;
 using UnityEngine;
 

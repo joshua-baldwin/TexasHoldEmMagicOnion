@@ -1,10 +1,11 @@
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using THE.MagicOnion.Client;
+using THE.SceneControllers;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace THE.SceneControllers
+namespace THE.SceneUis
 {
     public class StartUi : MonoBehaviour
     {

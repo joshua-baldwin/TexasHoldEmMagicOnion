@@ -32,6 +32,7 @@ namespace THE.MagicOnion.Client
 
         public Action<int> UpdatePlayerCount;
         public Action<bool, PlayerEntity, PlayerEntity, int, CardEntity[]> UpdateGameUi;
+        public Action<string> ShowErrorMessage;
 
         public PlayerEntity Self { get; private set; }
         public PlayerEntity CurrentPlayer { get; private set; }
@@ -183,12 +184,15 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game quit");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, string actionMessage)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
             players = playerEntities;
-            UpdateGameUi?.Invoke(currentPlayerId == Self.Id, players.First(x => x.Id == previousPlayerId), players.First(x => x.Id == currentPlayerId), currentPot, communityCards);
+            if (isError)
+                ShowErrorMessage?.Invoke(actionMessage);
+            else
+                UpdateGameUi?.Invoke(currentPlayerId == Self.Id, players.First(x => x.Id == previousPlayerId), players.First(x => x.Id == currentPlayerId), currentPot, communityCards);
         }
         
         #endregion
