@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
@@ -20,7 +21,6 @@ namespace THE.Player
         [SerializeField] private Text currentBetText;
         
         private GamingHubReceiver gamingHubReceiver;
-        private PlayerEntity playerEntity;
         public Guid PlayerId;
         private bool cardsInitialized;
 
@@ -29,7 +29,6 @@ namespace THE.Player
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             if (player.Id == gamingHubReceiver.Self.Id)
                 nameColor.color = Color.green;
-            playerEntity = player;
             PlayerId = player.Id;
             nameText.text = player.Name;
             dealer.gameObject.SetActive(player.IsDealer);
@@ -46,6 +45,8 @@ namespace THE.Player
             if (cardsInitialized)
                 return;
             
+            ChangeCardVisibility(true);
+            var playerEntity = MySceneManager.Instance.HubReceiver.GetPlayerList().First(x => x.Id == PlayerId);
             var isSelf = playerEntity.Id == gamingHubReceiver.Self.Id;
             cardList[0].Initialize(playerEntity.HoleCards[0].Suit, playerEntity.HoleCards[0].Rank, isSelf);
             cardList[1].Initialize(playerEntity.HoleCards[1].Suit, playerEntity.HoleCards[1].Rank, isSelf);
