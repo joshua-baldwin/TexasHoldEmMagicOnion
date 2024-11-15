@@ -119,6 +119,10 @@ namespace THE.SceneControllers
             {
                 buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType == ButtonTypeEnum.Bet));
             }
+            else if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop)
+            {
+                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
+            }
             else
             {
                 buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
