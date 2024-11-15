@@ -12,6 +12,7 @@ namespace THE.Player
     public class PlayerClass : MonoBehaviour
     {
         [SerializeField] private Text nameText;
+        [SerializeField] private Image nameColor;
         [SerializeField] private Text role;
         [SerializeField] private Text dealer;
         [SerializeField] private GameObject cardListRoot;
@@ -26,6 +27,8 @@ namespace THE.Player
         public void Initialize(PlayerEntity player)
         {
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
+            if (player.Id == gamingHubReceiver.Self.Id)
+                nameColor.color = Color.green;
             playerEntity = player;
             PlayerId = player.Id;
             nameText.text = player.Name;
@@ -36,8 +39,6 @@ namespace THE.Player
                     ? "SB"
                     : "BB";
             }
-            
-            UpdateBet(player.CurrentBet);
         }
 
         public void InitializeCards()

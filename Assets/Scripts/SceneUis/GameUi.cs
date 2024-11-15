@@ -88,9 +88,8 @@ namespace THE.SceneControllers
                 var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
-                UpdateBets(player);
             }
-            UpdateUi(isMyTurn, currentPlayerEntity, 0);
+            UpdateUi(isMyTurn, null, currentPlayerEntity, 0);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
             if (gamingHubReceiver.GameState == Enums.GameStateEnum.BlindBet)
             {
@@ -107,7 +106,7 @@ namespace THE.SceneControllers
             playerList.First(x => x.PlayerId == playerEntity.Id).UpdateBet(playerEntity.CurrentBet);
         }
 
-        private void UpdateUi(bool isMyTurn, PlayerEntity currentPlayerEntity, int currentPot)
+        private void UpdateUi(bool isMyTurn, PlayerEntity previousPlayerEntity, PlayerEntity currentPlayerEntity, int currentPot)
         {
             gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
             if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop)
@@ -118,7 +117,8 @@ namespace THE.SceneControllers
             
             currentTurnText.text = $"Current turn: {currentPlayerEntity.Name}";
             potText.text = $"Pot: {currentPot}";
-            UpdateBets(currentPlayerEntity);
+            if (previousPlayerEntity != null)
+                UpdateBets(previousPlayerEntity);
         }
 
         private void UpdateButtons()

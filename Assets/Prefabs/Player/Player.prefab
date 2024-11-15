@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nameText: {fileID: 459088070731559006}
+  nameColor: {fileID: 7859305228170096484}
   role: {fileID: 3261221781692458707}
   dealer: {fileID: 7440461338602190097}
   cardListRoot: {fileID: 2016685610216031572}
@@ -387,7 +388,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Current bet: '
+  m_Text: 'Current bet: 0'
 --- !u!1 &5083201660261361485
 GameObject:
   m_ObjectHideFlags: 0

@@ -31,7 +31,7 @@ namespace THE.MagicOnion.Client
         public Action OnCancelRoomConnect;
 
         public Action<int> UpdatePlayerCount;
-        public Action<bool, PlayerEntity, int> UpdateGameUi;
+        public Action<bool, PlayerEntity, PlayerEntity, int> UpdateGameUi;
 
         public PlayerEntity Self { get; private set; }
         public PlayerEntity CurrentPlayer { get; private set; }
@@ -182,10 +182,10 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game quit");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity currentPlayer, int currentPot, Enums.GameStateEnum gameState, string actionMessage)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity previousPlayer, PlayerEntity currentPlayer, int currentPot, Enums.GameStateEnum gameState, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
-            UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, currentPlayer, currentPot);
+            UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, previousPlayer, currentPlayer, currentPot);
             GameState = gameState;
         }
         
