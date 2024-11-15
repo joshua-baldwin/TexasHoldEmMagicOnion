@@ -39,6 +39,7 @@ namespace THE.SceneControllers
         [SerializeField] private Button quitButton;
         [SerializeField] private Text currentTurnText;
         [SerializeField] private Text potText;
+        [SerializeField] private Text gameStateText;
         [SerializeField] private InputField betAmountInput;
         [SerializeField] private Button confirmAmountButton;
         [SerializeField] private Button cancelButton;
@@ -108,6 +109,9 @@ namespace THE.SceneControllers
 
         private void UpdateUi(bool isMyTurn, PlayerEntity currentPlayerEntity, int currentPot)
         {
+            gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
+            if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop)
+                playerList.ForEach(player => player.InitializeCards());
             UpdateButtons();
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;

@@ -19,11 +19,14 @@ namespace THE.Player
         [SerializeField] private Text currentBetText;
         
         private GamingHubReceiver gamingHubReceiver;
+        private PlayerEntity playerEntity;
         public Guid PlayerId;
+        private bool cardsInitialized;
 
         public void Initialize(PlayerEntity player)
         {
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
+            playerEntity = player;
             PlayerId = player.Id;
             nameText.text = player.Name;
             dealer.gameObject.SetActive(player.IsDealer);
@@ -33,11 +36,19 @@ namespace THE.Player
                     ? "SB"
                     : "BB";
             }
-
-            var isSelf = player.Id == gamingHubReceiver.Self.Id;
-            cardList[0].Initialize(player.HoleCards[0].Suit, player.HoleCards[0].Rank, isSelf);
-            cardList[1].Initialize(player.HoleCards[1].Suit, player.HoleCards[1].Rank, isSelf);
+            
             UpdateBet(player.CurrentBet);
+        }
+
+        public void InitializeCards()
+        {
+            if (cardsInitialized)
+                return;
+            
+            var isSelf = playerEntity.Id == gamingHubReceiver.Self.Id;
+            cardList[0].Initialize(playerEntity.HoleCards[0].Suit, playerEntity.HoleCards[0].Rank, isSelf);
+            cardList[1].Initialize(playerEntity.HoleCards[1].Suit, playerEntity.HoleCards[1].Rank, isSelf);
+            cardsInitialized = true;
         }
 
         public void UpdateBet(int betAmount)

@@ -383,6 +383,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             var ____result = new global::THE.MagicOnion.Shared.Entities.PlayerEntity(__Name__, __Id__, __PlayerRole__);
+            if (length <= 3)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.RoomId = __RoomId__;
             if (length <= 4)
             {
                 goto MEMBER_ASSIGNMENT_END;
