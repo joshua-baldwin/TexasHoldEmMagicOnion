@@ -183,11 +183,12 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game quit");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity previousPlayer, PlayerEntity currentPlayer, int currentPot, Enums.GameStateEnum gameState, string actionMessage)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, int currentPot, Enums.GameStateEnum gameState, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
-            UpdateGameUi?.Invoke(currentPlayer.Id == Self.Id, previousPlayer, currentPlayer, currentPot);
+            players = playerEntities;
+            UpdateGameUi?.Invoke(currentPlayerId == Self.Id, players.First(x => x.Id == previousPlayerId), players.First(x => x.Id == currentPlayerId), currentPot);
         }
         
         #endregion
