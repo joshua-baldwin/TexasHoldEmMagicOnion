@@ -180,7 +180,8 @@ namespace THE.SceneUis
             }
             else
             {
-                await gamingHubReceiver.DoAction(currentAction);
+                //todo get target id
+                await gamingHubReceiver.DoAction(currentAction, Guid.Empty);
             }
         }
 
@@ -190,7 +191,8 @@ namespace THE.SceneUis
             betAmountInput.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
-            await gamingHubReceiver.DoAction(currentAction);
+            //todo get target id
+            await gamingHubReceiver.DoAction(currentAction, Guid.Empty);
         }
         
         private void CancelBet()

@@ -80,9 +80,9 @@ namespace THE.MagicOnion.Client
             await CallQuitGame();
         }
 
-        public async UniTask DoAction(Enums.CommandTypeEnum commandType)
+        public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId)
         {
-            await CallDoAction(commandType, BetAmount.Value);
+            await CallDoAction(commandType, BetAmount.Value, targetPlayerId);
             BetAmount.Value = 0;
         }
 
@@ -135,10 +135,10 @@ namespace THE.MagicOnion.Client
             await client.QuitGame(Self.Id);
         }
 
-        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int betAmount)
+        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int betAmount, Guid targetPlayerId)
         {
             Debug.Log("Calling DoAction");
-            await client.DoAction(commandType, betAmount);
+            await client.DoAction(commandType, betAmount, targetPlayerId);
         }
         
         #endregion
@@ -184,7 +184,7 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game quit");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
