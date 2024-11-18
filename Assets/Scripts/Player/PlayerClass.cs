@@ -24,7 +24,7 @@ namespace THE.Player
         public Guid PlayerId;
         private bool cardsInitialized;
 
-        public void Initialize(PlayerEntity player)
+        public void Initialize(PlayerData player)
         {
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             if (player.Id == gamingHubReceiver.Self.Id)
@@ -40,7 +40,7 @@ namespace THE.Player
             }
         }
 
-        public void InitializeCards(Action<bool, CardClass> onCardSelected)
+        public void InitializeCards(Action<bool, CardData> onCardSelected)
         {
             if (cardsInitialized)
                 return;

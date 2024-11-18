@@ -9,6 +9,7 @@ using THE.MagicOnion.Shared.Entities;
 using THE.Player;
 using THE.SceneControllers;
 using THE.Utilities;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,11 +50,11 @@ namespace THE.SceneUis
         [SerializeField] private Button cancelButton;
         
         private readonly List<PlayerClass> playerList = new();
+        private readonly List<CardData> selectedCards = new();
         private GamingHubReceiver gamingHubReceiver;
         private Enums.CommandTypeEnum currentAction;
         
         private PopupUi popupUi;
-        private List<CardClass> selectedCards = new();
 
         private void Awake()
         {
@@ -100,7 +101,7 @@ namespace THE.SceneUis
             gamingHubReceiver.ShowPlayerHands = ShowAllPlayersCards;
         }
 
-        public void Initialize(bool isMyTurn, PlayerEntity currentPlayerEntity)
+        public void Initialize(bool isMyTurn, PlayerData currentPlayerEntity)
         {
             foreach (var player in gamingHubReceiver.GetPlayerList())
             {
@@ -112,12 +113,12 @@ namespace THE.SceneUis
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
         
-        private void UpdateBets(PlayerEntity playerEntity)
+        private void UpdateBets(PlayerData playerEntity)
         {
             playerList.First(x => x.PlayerId == playerEntity.Id).UpdateBet(playerEntity.CurrentBet);
         }
 
-        private void UpdateUi(bool isMyTurn, PlayerEntity previousPlayerEntity, PlayerEntity currentPlayerEntity, int currentPot, CardEntity[] communityCards)
+        private void UpdateUi(bool isMyTurn, PlayerData previousPlayerEntity, PlayerData currentPlayerEntity, int currentPot, List<CardData> communityCards)
         {
             gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
             switch (gamingHubReceiver.GameState)
@@ -159,6 +160,7 @@ namespace THE.SceneUis
                 buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
                 confirmHandButton.gameObject.SetActive(true);
                 confirmHandButton.interactable = false;
+                gamingHubReceiver.Self.CanSelectCard = true;
             }
 
             foreach (var button in buttonList)
@@ -170,7 +172,7 @@ namespace THE.SceneUis
                 UpdateBets(previousPlayerEntity);
         }
 
-        private void OnCardSelected(bool isSelected, CardClass cardEntity)
+        private void OnCardSelected(bool isSelected, CardData cardEntity)
         {
             if (isSelected)
                 selectedCards.Add(cardEntity);
@@ -178,6 +180,7 @@ namespace THE.SceneUis
                 selectedCards.Remove(cardEntity);
 
             confirmHandButton.interactable = selectedCards.Count == 5;
+            gamingHubReceiver.Self.CanSelectCard = selectedCards.Count < 5;
         }
 
         private void ShowMessage(string message)
@@ -211,6 +214,7 @@ namespace THE.SceneUis
                 ButtonTypeEnum.Fold => Enums.CommandTypeEnum.Fold,
                 ButtonTypeEnum.Call => Enums.CommandTypeEnum.Call,
                 ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,
+                _ => throw new ArgumentOutOfRangeException()
             };
             
             if (buttonType is ButtonTypeEnum.Bet or ButtonTypeEnum.Raise)

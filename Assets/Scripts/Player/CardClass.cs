@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using TexasHoldEmShared.Enums;
+using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
+using THE.SceneControllers;
 using THE.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,14 +20,19 @@ namespace THE.Player
         [SerializeField] private Image highlightImage;
 
         private bool isSelected;
+        private GamingHubReceiver gamingHubReceiver;
         
-        public CardEntity CardEntity { get; private set; }
-        public Action<bool, CardClass> CardSelectedAction;
+        public CardData CardData { get; private set; }
+        public Action<bool, CardData> CardSelectedAction;
 
         private void Awake()
         {
+            gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             selectButton.onClick.AddListener(() =>
             {
+                if (!gamingHubReceiver.Self.CanSelectCard && !isSelected)
+                    return;
+                
                 if (isSelected)
                     DeselectCard();
                 else
@@ -34,12 +41,12 @@ namespace THE.Player
             selectButton.interactable = false;
         }
 
-        public void Initialize(CardEntity entity, bool isOwnCardOrCommunity, Action<bool, CardClass> onCardSelected)
+        public void Initialize(CardData data, bool isOwnCardOrCommunity, Action<bool, CardData> onCardSelected)
         {
-            CardEntity = entity;
+            CardData = data;
             CardSelectedAction = onCardSelected;
-            StartCoroutine(LoadFromResourcesFolder(CardEntity.Suit));
-            cardRank.text = CardEntity.Rank.GetDescription();
+            StartCoroutine(LoadFromResourcesFolder(CardData.Suit));
+            cardRank.text = CardData.Rank.GetDescription();
             cover.SetActive(!isOwnCardOrCommunity);
         }
         
@@ -53,14 +60,14 @@ namespace THE.Player
         {
             highlightImage.color = Color.green;
             isSelected = true;
-            CardSelectedAction?.Invoke(true, this);
+            CardSelectedAction?.Invoke(true, CardData);
         }
 
         public void DeselectCard()
         {
             highlightImage.color = Color.yellow;
             isSelected = false;
-            CardSelectedAction?.Invoke(false, this);
+            CardSelectedAction?.Invoke(false, CardData);
         }
 
         public void ShowCard()

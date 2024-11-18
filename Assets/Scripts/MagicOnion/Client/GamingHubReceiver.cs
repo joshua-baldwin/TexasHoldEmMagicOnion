@@ -25,19 +25,19 @@ namespace THE.MagicOnion.Client
         private CancellationTokenSource shutdownCancellation;
         private GrpcChannel channel;
         private IGamingHub client;
-        private PlayerEntity[] players;
+        private PlayerData[] players;
         
         public Action OnRoomConnectSuccess;
         public Action OnRoomConnectFailed;
         public Action OnCancelRoomConnect;
 
         public Action<int> UpdatePlayerCount;
-        public Action<bool, PlayerEntity, PlayerEntity, int, CardEntity[]> UpdateGameUi;
+        public Action<bool, PlayerData, PlayerData, int, List<CardData>> UpdateGameUi;
         public Action<string> ShowMessage;
         public Action ShowPlayerHands;
 
-        public PlayerEntity Self { get; private set; }
-        public PlayerEntity CurrentPlayer { get; private set; }
+        public PlayerData Self { get; private set; }
+        public PlayerData CurrentPlayer { get; private set; }
         public Enums.GameStateEnum GameState { get; private set; }
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
@@ -49,7 +49,8 @@ namespace THE.MagicOnion.Client
             if (shutdownCancellation.IsCancellationRequested)
                 return;
             
-            Self = await CallCreateRoom(UserName.Value);
+            var selfEntity = await CallCreateRoom(UserName.Value);
+            Self = new PlayerData(selfEntity);
             UserName.Value = "";
             Debug.Log("room joined");
             OnRoomConnectSuccess?.Invoke();
@@ -88,13 +89,13 @@ namespace THE.MagicOnion.Client
             BetAmount.Value = 0;
         }
 
-        public async UniTask ChooseHand(Guid playerId, List<CardClass> showdownCards)
+        public async UniTask ChooseHand(Guid playerId, List<CardData> showdownCards)
         {
-            var cardEntities = showdownCards.Select(card => new CardEntity(card.CardEntity.Suit, card.CardEntity.Rank)).ToArray();
+            var cardEntities = showdownCards.Select(card => new CardEntity(card.Suit, card.Rank)).ToArray();
             await CallChooseHand(playerId, cardEntities);
         }
 
-        public List<PlayerEntity> GetPlayerList() => players.ToList();
+        public List<PlayerData> GetPlayerList() => players.ToList();
 
         private void Disconnect()
         {
@@ -119,7 +120,8 @@ namespace THE.MagicOnion.Client
         private async UniTask CallGetPlayers(Action<int> onFinish)
         {
             Debug.Log("Calling GetAllPlayers");
-            players = await client.GetAllPlayers();
+            var playerEntities = await client.GetAllPlayers();
+            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             onFinish?.Invoke(players.Length);
         }
 
@@ -182,9 +184,9 @@ namespace THE.MagicOnion.Client
             UpdatePlayerCount = null;
             //do this in scene manager
             SceneManager.LoadSceneAsync("GameScene");
-            players = playerEntities;
-            Self = playerEntities.First(x => x.Id == Self.Id);
-            CurrentPlayer = currentPlayer;
+            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
+            Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
+            CurrentPlayer = new PlayerData(currentPlayer);
             GameState = gameState;
         }
 
@@ -202,17 +204,26 @@ namespace THE.MagicOnion.Client
         {
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
-            players = playerEntities;
+            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             if (isError)
                 ShowMessage?.Invoke(actionMessage);
             else
-                UpdateGameUi?.Invoke(currentPlayerId == Self.Id, players.First(x => x.Id == previousPlayerId), players.First(x => x.Id == currentPlayerId), currentPot, communityCards);
+            {
+                var cards = new List<CardData>();
+                foreach (var card in communityCards)
+                {
+                    if (card != null)
+                        cards.Add(new CardData(card));
+                }
+                
+                UpdateGameUi?.Invoke(currentPlayerId == Self.Id, players.First(x => x.Id == previousPlayerId), players.First(x => x.Id == currentPlayerId), currentPot, cards);
+            }
         }
 
         public void OnChooseHand(Guid winnerId, PlayerEntity[] playerEntities)
         {
             Debug.Log("Hand chosen");
-            players = playerEntities;
+            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             var player = playerEntities.First(x => x.Id == winnerId);
             ShowMessage?.Invoke($"{player.Name} is the winner!");
             ShowPlayerHands?.Invoke();
