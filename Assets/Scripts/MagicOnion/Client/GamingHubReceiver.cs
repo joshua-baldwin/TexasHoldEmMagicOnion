@@ -10,6 +10,7 @@ using MagicOnion.Client;
 using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
+using THE.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,7 +33,8 @@ namespace THE.MagicOnion.Client
 
         public Action<int> UpdatePlayerCount;
         public Action<bool, PlayerEntity, PlayerEntity, int, CardEntity[]> UpdateGameUi;
-        public Action<string> ShowErrorMessage;
+        public Action<string> ShowMessage;
+        public Action ShowPlayerHands;
 
         public PlayerEntity Self { get; private set; }
         public PlayerEntity CurrentPlayer { get; private set; }
@@ -84,6 +86,12 @@ namespace THE.MagicOnion.Client
         {
             await CallDoAction(commandType, BetAmount.Value, targetPlayerId);
             BetAmount.Value = 0;
+        }
+
+        public async UniTask ChooseHand(Guid playerId, List<CardClass> showdownCards)
+        {
+            var cardEntities = showdownCards.Select(card => new CardEntity(card.CardEntity.Suit, card.CardEntity.Rank)).ToArray();
+            await CallChooseHand(playerId, cardEntities);
         }
 
         public List<PlayerEntity> GetPlayerList() => players.ToList();
@@ -140,6 +148,12 @@ namespace THE.MagicOnion.Client
             Debug.Log("Calling DoAction");
             await client.DoAction(commandType, betAmount, targetPlayerId);
         }
+
+        private async UniTask CallChooseHand(Guid playerId, CardEntity[] showdownCards)
+        {
+            Debug.Log("Calling ChooseHand");
+            await client.ChooseHand(playerId, showdownCards);
+        }
         
         #endregion
         
@@ -190,9 +204,18 @@ namespace THE.MagicOnion.Client
             GameState = gameState;
             players = playerEntities;
             if (isError)
-                ShowErrorMessage?.Invoke(actionMessage);
+                ShowMessage?.Invoke(actionMessage);
             else
                 UpdateGameUi?.Invoke(currentPlayerId == Self.Id, players.First(x => x.Id == previousPlayerId), players.First(x => x.Id == currentPlayerId), currentPot, communityCards);
+        }
+
+        public void OnChooseHand(Guid winnerId, PlayerEntity[] playerEntities)
+        {
+            Debug.Log("Hand chosen");
+            players = playerEntities;
+            var player = playerEntities.First(x => x.Id == winnerId);
+            ShowMessage?.Invoke($"{player.Name} is the winner!");
+            ShowPlayerHands?.Invoke();
         }
         
         #endregion

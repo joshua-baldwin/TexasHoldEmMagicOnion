@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TexasHoldEmShared.Enums;
+using THE.MagicOnion.Shared.Entities;
 using THE.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,9 @@ namespace THE.Player
         [SerializeField] private Image highlightImage;
 
         private bool isSelected;
+        
+        public CardEntity CardEntity { get; private set; }
+        public Action<bool, CardClass> CardSelectedAction;
 
         private void Awake()
         {
@@ -30,10 +34,12 @@ namespace THE.Player
             selectButton.interactable = false;
         }
 
-        public void Initialize(Enums.CardSuitEnum suit, Enums.CardRankEnum rank, bool isOwnCardOrCommunity)
+        public void Initialize(CardEntity entity, bool isOwnCardOrCommunity, Action<bool, CardClass> onCardSelected)
         {
-            StartCoroutine(LoadFromResourcesFolder(suit));
-            cardRank.text = rank.GetDescription();
+            CardEntity = entity;
+            CardSelectedAction = onCardSelected;
+            StartCoroutine(LoadFromResourcesFolder(CardEntity.Suit));
+            cardRank.text = CardEntity.Rank.GetDescription();
             cover.SetActive(!isOwnCardOrCommunity);
         }
         
@@ -47,12 +53,14 @@ namespace THE.Player
         {
             highlightImage.color = Color.green;
             isSelected = true;
+            CardSelectedAction?.Invoke(true, this);
         }
 
         public void DeselectCard()
         {
             highlightImage.color = Color.yellow;
             isSelected = false;
+            CardSelectedAction?.Invoke(false, this);
         }
 
         public void ShowCard()
