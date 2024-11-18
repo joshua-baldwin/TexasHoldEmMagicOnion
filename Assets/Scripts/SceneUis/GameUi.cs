@@ -87,7 +87,7 @@ namespace THE.SceneUis
             cancelButton.gameObject.SetActive(false);
 
             gamingHubReceiver.UpdateGameUi = UpdateUi;
-            gamingHubReceiver.ShowErrorMessage = ShowErrorMessage;
+            gamingHubReceiver.ShowErrorMessage = ShowMessage;
         }
 
         public void Initialize(bool isMyTurn, PlayerEntity currentPlayerEntity)
@@ -102,7 +102,7 @@ namespace THE.SceneUis
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
         
-        public void UpdateBets(PlayerEntity playerEntity)
+        private void UpdateBets(PlayerEntity playerEntity)
         {
             playerList.First(x => x.PlayerId == playerEntity.Id).UpdateBet(playerEntity.CurrentBet);
         }
@@ -135,9 +135,16 @@ namespace THE.SceneUis
                     communityCardList[4].gameObject.SetActive(true);
                     communityCardList[4].Initialize(communityCards[4].Suit, communityCards[4].Rank, true);
                     break;
+                case Enums.GameStateEnum.Showdown:
+                    HighlightCards();
+                    ShowMessage("Choose your hand");
+                    break;
             }
             if (gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet && gamingHubReceiver.GameState != Enums.GameStateEnum.PreFlop)
                 buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
+            
+            if (gamingHubReceiver.GameState == Enums.GameStateEnum.Showdown)
+                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
             
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
@@ -148,7 +155,7 @@ namespace THE.SceneUis
                 UpdateBets(previousPlayerEntity);
         }
 
-        private void ShowErrorMessage(string message)
+        private void ShowMessage(string message)
         {
             popupUi = FindFirstObjectByType<PopupUi>();
             popupUi.ShowMessage(message);
@@ -202,6 +209,17 @@ namespace THE.SceneUis
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
             gamingHubReceiver.BetAmount.Value = 0;
+        }
+        
+        private void HighlightCards()
+        {
+            communityCardList.ForEach(card => card.HighlightCard());
+            playerList.First(player => player.PlayerId == gamingHubReceiver.CurrentPlayer.Id).HighlightCards();
+        }
+
+        private void ShowAllPlayersCards()
+        {
+            playerList.ForEach(player => player.ShowCards());
         }
     }
 }

@@ -62,5 +62,15 @@ namespace THE.Player
         {
             cardListRoot.SetActive(visible);
         }
+        
+        public void HighlightCards()
+        {
+            cardList.ForEach(card => card.HighlightCard());
+        }
+
+        public void ShowCards()
+        {
+            cardList.ForEach(card => card.ShowCard());
+        }
     }
 }
