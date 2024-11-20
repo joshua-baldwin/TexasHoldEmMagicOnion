@@ -113,9 +113,9 @@ namespace THE.SceneUis
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
         
-        private void UpdateBets(PlayerData playerEntity)
+        private void UpdateBets(PlayerData playerData)
         {
-            playerList.First(x => x.PlayerId == playerEntity.Id).UpdateBet(playerEntity.CurrentBet);
+            playerList.First(x => x.PlayerId == playerData.Id).UpdateBetAndChips(playerData);
         }
 
         private void UpdateUi(bool isMyTurn, PlayerData previousPlayerEntity, PlayerData currentPlayerEntity, int currentPot, List<CardData> communityCards)

@@ -49,8 +49,8 @@ namespace MessagePack.Resolvers
         {
             lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(9)
             {
-                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>), 0 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity[]), 1 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>), 0 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>), 1 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 2 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 3 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum), 4 },
@@ -71,8 +71,8 @@ namespace MessagePack.Resolvers
 
             switch (key)
             {
-                case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.ChipEntity>();
-                case 1: return new global::MessagePack.Formatters.ArrayFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
+                case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
+                case 1: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.ChipEntity>();
                 case 2: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
                 case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
                 case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_ChipTypeEnumFormatter();
@@ -309,7 +309,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.RoomId, options);
             writer.Write(value.IsDealer);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Serialize(ref writer, value.HoleCards, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.HoleCards, options);
             writer.Write(value.IsReady);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Serialize(ref writer, value.Chips, options);
             writer.Write(value.CurrentBet);
@@ -332,7 +332,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __PlayerRole__ = default(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum);
             var __RoomId__ = default(global::System.Guid);
             var __IsDealer__ = default(bool);
-            var __HoleCards__ = default(global::THE.MagicOnion.Shared.Entities.CardEntity[]);
+            var __HoleCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
             var __IsReady__ = default(bool);
             var __Chips__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>);
             var __CurrentBet__ = default(int);
@@ -359,7 +359,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __IsDealer__ = reader.ReadBoolean();
                         break;
                     case 5:
-                        __HoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.CardEntity[]>(formatterResolver).Deserialize(ref reader, options);
+                        __HoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 6:
                         __IsReady__ = reader.ReadBoolean();

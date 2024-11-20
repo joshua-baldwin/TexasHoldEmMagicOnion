@@ -13,6 +13,7 @@ namespace THE.Player
     public class PlayerClass : MonoBehaviour
     {
         [SerializeField] private Text nameText;
+        [SerializeField] private Text chipsText;
         [SerializeField] private Image nameColor;
         [SerializeField] private Text role;
         [SerializeField] private Text dealer;
@@ -31,12 +32,14 @@ namespace THE.Player
                 nameColor.color = Color.green;
             PlayerId = player.Id;
             nameText.text = player.Name;
+            chipsText.text = player.Chips.Sum(x => (int)x.ChipType).ToString();
             dealer.gameObject.SetActive(player.IsDealer);
             if (player.PlayerRole != Enums.PlayerRoleEnum.None)
             {
                 role.text = player.PlayerRole == Enums.PlayerRoleEnum.SmallBlind
                     ? "SB"
                     : "BB";
+                role.gameObject.SetActive(true);
             }
         }
 
@@ -53,9 +56,10 @@ namespace THE.Player
             cardsInitialized = true;
         }
 
-        public void UpdateBet(int betAmount)
+        public void UpdateBetAndChips(PlayerData playerData)
         {
-            currentBetText.text = $"Current bet: {betAmount}";
+            chipsText.text = $"Remaining chips: {playerData.Chips.Sum(x => (int)x.ChipType).ToString()}";
+            currentBetText.text = $"Current bet: {playerData.CurrentBet}";
         }
 
         public void ChangeCardVisibility(bool visible)
