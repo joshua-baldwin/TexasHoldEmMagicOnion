@@ -9,7 +9,6 @@ using THE.MagicOnion.Shared.Entities;
 using THE.Player;
 using THE.SceneControllers;
 using THE.Utilities;
-using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,7 +44,11 @@ namespace THE.SceneUis
         [SerializeField] private Text currentTurnText;
         [SerializeField] private Text potText;
         [SerializeField] private Text gameStateText;
-        [SerializeField] private InputField betAmountInput;
+        [SerializeField] private InputField whiteAmountInput;
+        [SerializeField] private InputField redAmountInput;
+        [SerializeField] private InputField blueAmountInput;
+        [SerializeField] private InputField greenAmountInput;
+        [SerializeField] private InputField blackAmountInput;
         [SerializeField] private Button confirmAmountButton;
         [SerializeField] private Button cancelButton;
         
@@ -74,13 +77,49 @@ namespace THE.SceneUis
                 .Subscribe(_ => OnClickButton(ButtonTypeEnum.Quit))
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
-            betAmountInput.OnValueChangedAsAsyncEnumerable()
-                .Where(x => gamingHubReceiver.BetAmount.Value != int.Parse(x))
-                .Subscribe(x => gamingHubReceiver.BetAmount.Value = int.Parse(x))
+            whiteAmountInput.OnValueChangedAsAsyncEnumerable()
+                .Where(x => gamingHubReceiver.WhiteBetAmount.Value != int.Parse(x))
+                .Subscribe(x => gamingHubReceiver.WhiteBetAmount.Value = int.Parse(x))
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
-            gamingHubReceiver.BetAmount
-                .Subscribe(x => betAmountInput.text = x.ToString())
+            redAmountInput.OnValueChangedAsAsyncEnumerable()
+                .Where(x => gamingHubReceiver.RedBetAmount.Value != int.Parse(x))
+                .Subscribe(x => gamingHubReceiver.RedBetAmount.Value = int.Parse(x))
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            blueAmountInput.OnValueChangedAsAsyncEnumerable()
+                .Where(x => gamingHubReceiver.BlueBetAmount.Value != int.Parse(x))
+                .Subscribe(x => gamingHubReceiver.BlueBetAmount.Value = int.Parse(x))
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            greenAmountInput.OnValueChangedAsAsyncEnumerable()
+                .Where(x => gamingHubReceiver.GreenBetAmount.Value != int.Parse(x))
+                .Subscribe(x => gamingHubReceiver.GreenBetAmount.Value = int.Parse(x))
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            blackAmountInput.OnValueChangedAsAsyncEnumerable()
+                .Where(x => gamingHubReceiver.BlackBetAmount.Value != int.Parse(x))
+                .Subscribe(x => gamingHubReceiver.BlackBetAmount.Value = int.Parse(x))
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            gamingHubReceiver.WhiteBetAmount
+                .Subscribe(x => whiteAmountInput.text = x.ToString())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            gamingHubReceiver.RedBetAmount
+                .Subscribe(x => redAmountInput.text = x.ToString())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            gamingHubReceiver.BlueBetAmount
+                .Subscribe(x => blueAmountInput.text = x.ToString())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            gamingHubReceiver.GreenBetAmount
+                .Subscribe(x => greenAmountInput.text = x.ToString())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            gamingHubReceiver.BlackBetAmount
+                .Subscribe(x => blackAmountInput.text = x.ToString())
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             confirmAmountButton.OnClickAsAsyncEnumerable()
@@ -92,7 +131,11 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             confirmHandButton.gameObject.SetActive(false);
-            betAmountInput.gameObject.SetActive(false);
+            whiteAmountInput.gameObject.SetActive(false);
+            redAmountInput.gameObject.SetActive(false);
+            blueAmountInput.gameObject.SetActive(false);
+            greenAmountInput.gameObject.SetActive(false);
+            blackAmountInput.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
 
@@ -109,7 +152,7 @@ namespace THE.SceneUis
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
             }
-            UpdateUi(isMyTurn, null, currentPlayerEntity, 0, null);
+            UpdateUi(isMyTurn, null, currentPlayerEntity, new List<ChipEntity>(), null);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
         
@@ -118,7 +161,7 @@ namespace THE.SceneUis
             playerList.First(x => x.PlayerId == playerData.Id).UpdateBetAndChips(playerData);
         }
 
-        private void UpdateUi(bool isMyTurn, PlayerData previousPlayerEntity, PlayerData currentPlayerEntity, int currentPot, List<CardData> communityCards)
+        private void UpdateUi(bool isMyTurn, PlayerData previousPlayerEntity, PlayerData currentPlayerEntity, List<ChipEntity> currentPot, List<CardData> communityCards)
         {
             gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
             switch (gamingHubReceiver.GameState)
@@ -167,7 +210,7 @@ namespace THE.SceneUis
                 button.ButtonObject.interactable = isMyTurn;
             
             currentTurnText.text = $"Current turn: {currentPlayerEntity.Name}";
-            potText.text = $"Pot: {currentPot}";
+            potText.text = $"Pot: {currentPot.GetTotalChipValue()}";
             if (previousPlayerEntity != null)
                 UpdateBets(previousPlayerEntity);
         }
@@ -220,7 +263,11 @@ namespace THE.SceneUis
             if (buttonType is ButtonTypeEnum.Bet or ButtonTypeEnum.Raise)
             {
                 buttonList.ForEach(x => x.ButtonObject.interactable = false);
-                betAmountInput.gameObject.SetActive(true);
+                whiteAmountInput.gameObject.SetActive(true);
+                redAmountInput.gameObject.SetActive(true);
+                blueAmountInput.gameObject.SetActive(true);
+                greenAmountInput.gameObject.SetActive(true);
+                blackAmountInput.gameObject.SetActive(true);
                 confirmAmountButton.gameObject.SetActive(true);
                 cancelButton.gameObject.SetActive(true);
             }
@@ -233,21 +280,34 @@ namespace THE.SceneUis
 
         private async UniTaskVoid ConfirmAmount()
         {
+            if (!gamingHubReceiver.CanPlaceBet())
+            {
+                ShowMessage("Not enough chips");
+                return;
+            }
             buttonList.ForEach(x => x.ButtonObject.interactable = true);
-            betAmountInput.gameObject.SetActive(false);
+            whiteAmountInput.gameObject.SetActive(false);
+            redAmountInput.gameObject.SetActive(false);
+            blueAmountInput.gameObject.SetActive(false);
+            greenAmountInput.gameObject.SetActive(false);
+            blackAmountInput.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
             //todo get target id
             await gamingHubReceiver.DoAction(currentAction, Guid.Empty);
         }
-        
+
         private void CancelBet()
         {
             buttonList.ForEach(x => x.ButtonObject.interactable = true);
-            betAmountInput.gameObject.SetActive(false);
+            whiteAmountInput.gameObject.SetActive(false);
+            redAmountInput.gameObject.SetActive(false);
+            blueAmountInput.gameObject.SetActive(false);
+            greenAmountInput.gameObject.SetActive(false);
+            blackAmountInput.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
-            gamingHubReceiver.BetAmount.Value = 0;
+            gamingHubReceiver.ResetBetAmounts();
         }
         
         private void HighlightCards()

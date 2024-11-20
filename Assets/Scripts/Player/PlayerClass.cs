@@ -5,6 +5,7 @@ using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.SceneControllers;
+using THE.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +33,7 @@ namespace THE.Player
                 nameColor.color = Color.green;
             PlayerId = player.Id;
             nameText.text = player.Name;
-            chipsText.text = player.Chips.Sum(x => (int)x.ChipType).ToString();
+            chipsText.text = UtilityMethods.GetChipText(player.Chips);
             dealer.gameObject.SetActive(player.IsDealer);
             if (player.PlayerRole != Enums.PlayerRoleEnum.None)
             {
@@ -58,7 +59,7 @@ namespace THE.Player
 
         public void UpdateBetAndChips(PlayerData playerData)
         {
-            chipsText.text = $"Remaining chips: {playerData.Chips.Sum(x => (int)x.ChipType).ToString()}";
+            chipsText.text = UtilityMethods.GetChipText(playerData.Chips);
             currentBetText.text = $"Current bet: {playerData.CurrentBet}";
         }
 

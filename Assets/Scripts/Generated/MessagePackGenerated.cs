@@ -256,8 +256,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(1);
+            writer.WriteArrayHeader(2);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum>(formatterResolver).Serialize(ref writer, value.ChipType, options);
+            writer.Write(value.ChipCount);
         }
 
         public global::THE.MagicOnion.Shared.Entities.ChipEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -271,6 +272,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
             var __ChipType__ = default(global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum);
+            var __ChipCount__ = default(int);
 
             for (int i = 0; i < length; i++)
             {
@@ -279,13 +281,16 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                     case 0:
                         __ChipType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
+                    case 1:
+                        __ChipCount__ = reader.ReadInt32();
+                        break;
                     default:
                         reader.Skip();
                         break;
                 }
             }
 
-            var ____result = new global::THE.MagicOnion.Shared.Entities.ChipEntity(__ChipType__);
+            var ____result = new global::THE.MagicOnion.Shared.Entities.ChipEntity(__ChipType__, __ChipCount__);
             reader.Depth--;
             return ____result;
         }

@@ -19,7 +19,12 @@ namespace THE.MagicOnion.Client
     public class GamingHubReceiver : IGamingHubReceiver
     {
         public AsyncReactiveProperty<string> UserName { get; } = new("");
-        public AsyncReactiveProperty<int> BetAmount { get; } = new(0);
+        public AsyncReactiveProperty<int> WhiteBetAmount { get; } = new(0);
+        public AsyncReactiveProperty<int> RedBetAmount { get; } = new(0);
+        public AsyncReactiveProperty<int> BlueBetAmount { get; } = new(0);
+        public AsyncReactiveProperty<int> GreenBetAmount { get; } = new(0);
+        public AsyncReactiveProperty<int> BlackBetAmount { get; } = new(0);
+        public AsyncReactiveProperty<Enums.ChipTypeEnum> SelectedChip { get; } = new(0);
         
         private const int MaxRetry = 5;
         private CancellationTokenSource shutdownCancellation;
@@ -32,7 +37,7 @@ namespace THE.MagicOnion.Client
         public Action OnCancelRoomConnect;
 
         public Action<int> UpdatePlayerCount;
-        public Action<bool, PlayerData, PlayerData, int, List<CardData>> UpdateGameUi;
+        public Action<bool, PlayerData, PlayerData, List<ChipEntity>, List<CardData>> UpdateGameUi;
         public Action<string> ShowMessage;
         public Action ShowPlayerHands;
 
@@ -85,8 +90,25 @@ namespace THE.MagicOnion.Client
 
         public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId)
         {
-            await CallDoAction(commandType, BetAmount.Value, targetPlayerId);
-            BetAmount.Value = 0;
+            var chipsBet = new List<ChipEntity>
+            {
+                new(Enums.ChipTypeEnum.White, WhiteBetAmount.Value),
+                new(Enums.ChipTypeEnum.Red, RedBetAmount.Value),
+                new(Enums.ChipTypeEnum.Blue, BlueBetAmount.Value),
+                new(Enums.ChipTypeEnum.Green, GreenBetAmount.Value),
+                new(Enums.ChipTypeEnum.Black, BlackBetAmount.Value)
+            };
+            await CallDoAction(commandType, chipsBet, targetPlayerId);
+            ResetBetAmounts();
+        }
+
+        public void ResetBetAmounts()
+        {
+            WhiteBetAmount.Value = 0;
+            RedBetAmount.Value = 0;
+            BlueBetAmount.Value = 0;
+            GreenBetAmount.Value = 0;
+            BlackBetAmount.Value = 0;
         }
 
         public async UniTask ChooseHand(Guid playerId, List<CardData> showdownCards)
@@ -96,6 +118,15 @@ namespace THE.MagicOnion.Client
         }
 
         public List<PlayerData> GetPlayerList() => players.ToList();
+        
+        public bool CanPlaceBet()
+        {
+            return WhiteBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.White).ChipCount &&
+                   RedBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Red).ChipCount &&
+                   BlueBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Blue).ChipCount &&
+                   GreenBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Green).ChipCount &&
+                   BlackBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Black).ChipCount;
+        }
 
         private void Disconnect()
         {
@@ -145,10 +176,10 @@ namespace THE.MagicOnion.Client
             await client.QuitGame(Self.Id);
         }
 
-        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int betAmount, Guid targetPlayerId)
+        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, List<ChipEntity> chipsBet, Guid targetPlayerId)
         {
             Debug.Log("Calling DoAction");
-            await client.DoAction(commandType, betAmount, targetPlayerId);
+            await client.DoAction(commandType, chipsBet, targetPlayerId);
         }
 
         private async UniTask CallChooseHand(Guid playerId, CardEntity[] showdownCards)
@@ -200,7 +231,7 @@ namespace THE.MagicOnion.Client
             Debug.Log("Game quit");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, List<ChipEntity> currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage)
         {
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;

@@ -14,7 +14,7 @@ namespace THE.Player
         public Guid RoomId { get; set; }
         public bool IsDealer { get; set; }
         public List<CardData> HoleCards { get; set; }
-        public List<ChipEntity> Chips { get; set; }
+        public List<ChipData> Chips { get; } = new();
         public int CurrentBet { get; set; }
         public bool CanSelectCard { get; set; }
         
@@ -25,9 +25,10 @@ namespace THE.Player
             PlayerRole = playerEntity.PlayerRole;
             RoomId = playerEntity.RoomId;
             IsDealer = playerEntity.IsDealer;
-            if (playerEntity.HoleCards[0] != null && playerEntity.HoleCards[1] != null)
+            if (playerEntity.HoleCards != null)
                 HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();
-            Chips = playerEntity.Chips;
+            playerEntity.Chips.ForEach(x => Chips.Add(new ChipData(x.ChipType, x.ChipCount)));
+            
             CurrentBet = playerEntity.CurrentBet;
         }
     }
