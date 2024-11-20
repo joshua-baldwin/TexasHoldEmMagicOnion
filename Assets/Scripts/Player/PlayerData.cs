@@ -15,7 +15,7 @@ namespace THE.Player
         public bool IsDealer { get; set; }
         public List<CardData> HoleCards { get; set; }
         public List<ChipData> Chips { get; } = new();
-        public int CurrentBet { get; set; }
+        public List<ChipData> CurrentBet { get; } = new();
         public bool CanSelectCard { get; set; }
         
         public PlayerData(PlayerEntity playerEntity)
@@ -28,8 +28,7 @@ namespace THE.Player
             if (playerEntity.HoleCards != null)
                 HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();
             playerEntity.Chips.ForEach(x => Chips.Add(new ChipData(x.ChipType, x.ChipCount)));
-            
-            CurrentBet = playerEntity.CurrentBet;
+            playerEntity.CurrentBet.ForEach(x => CurrentBet.Add(new ChipData(x.ChipType, x.ChipCount)));
         }
     }
 }

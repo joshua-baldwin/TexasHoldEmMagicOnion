@@ -317,7 +317,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.HoleCards, options);
             writer.Write(value.IsReady);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Serialize(ref writer, value.Chips, options);
-            writer.Write(value.CurrentBet);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Serialize(ref writer, value.CurrentBet, options);
             writer.Write(value.HasTakenAction);
             writer.Write(value.HasFolded);
         }
@@ -340,7 +340,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __HoleCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
             var __IsReady__ = default(bool);
             var __Chips__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>);
-            var __CurrentBet__ = default(int);
+            var __CurrentBet__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>);
             var __HasTakenAction__ = default(bool);
             var __HasFolded__ = default(bool);
 
@@ -373,7 +373,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __Chips__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 8:
-                        __CurrentBet__ = reader.ReadInt32();
+                        __CurrentBet__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 9:
                         __HasTakenAction__ = reader.ReadBoolean();
