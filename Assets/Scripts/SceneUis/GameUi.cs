@@ -9,6 +9,7 @@ using THE.MagicOnion.Shared.Entities;
 using THE.Player;
 using THE.SceneControllers;
 using THE.Utilities;
+using THE.MagicOnion.Shared.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 

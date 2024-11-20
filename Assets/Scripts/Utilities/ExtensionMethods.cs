@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using THE.MagicOnion.Shared.Entities;
 using THE.Player;
 
 namespace THE.Utilities
@@ -33,11 +32,6 @@ namespace THE.Utilities
             }
             //If we have no description attribute, just return the ToString of the enum
             return enumerationValue.ToString();
-        }
-        
-        public static int GetTotalChipValue(this List<ChipEntity> chips)
-        {
-            return chips.Sum(x => (int)x.ChipType * x.ChipCount);
         }
         
         public static int GetTotalChipValue(this List<ChipData> chips)
