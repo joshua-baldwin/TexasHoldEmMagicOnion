@@ -205,7 +205,7 @@ namespace THE.SceneUis
 
             gamingHubReceiver.UpdateGameUi = UpdateUi;
             gamingHubReceiver.ShowMessage = ShowMessage;
-            gamingHubReceiver.ShowPlayerHands = ShowAllPlayersCards;
+            gamingHubReceiver.OnGameOverAction = OnGameOver;
         }
 
         public void Initialize(bool isMyTurn, PlayerData currentPlayerEntity)
@@ -379,9 +379,10 @@ namespace THE.SceneUis
             playerList.First(player => player.PlayerId == gamingHubReceiver.Self.Id).HighlightCards();
         }
 
-        private void ShowAllPlayersCards()
+        private void OnGameOver()
         {
             playerList.ForEach(player => player.ShowCards());
+            buttonList.ForEach(x => x.ButtonObject.interactable = false);
         }
     }
 }

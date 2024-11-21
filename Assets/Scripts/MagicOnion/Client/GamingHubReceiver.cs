@@ -40,7 +40,7 @@ namespace THE.MagicOnion.Client
         public Action<int> UpdatePlayerCount;
         public Action<bool, PlayerData, PlayerData, List<ChipEntity>, List<CardData>> UpdateGameUi;
         public Action<string> ShowMessage;
-        public Action ShowPlayerHands;
+        public Action OnGameOverAction;
 
         public PlayerData Self { get; private set; }
         public PlayerData CurrentPlayer { get; private set; }
@@ -260,9 +260,18 @@ namespace THE.MagicOnion.Client
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             var player = playerEntities.First(x => x.Id == winnerId);
             ShowMessage?.Invoke($"{player.Name} is the winner!");
-            ShowPlayerHands?.Invoke();
+            OnGameOverAction?.Invoke();
         }
-        
+
+        public void OnGameOver(Guid winnerId, PlayerEntity[] playerEntities)
+        {
+            Debug.Log("Game over");
+            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
+            var player = playerEntities.First(x => x.Id == winnerId);
+            ShowMessage?.Invoke($"{player.Name} is the winner!");
+            OnGameOverAction?.Invoke();
+        }
+
         #endregion
         
         private async UniTask InitializeClientAsync()
