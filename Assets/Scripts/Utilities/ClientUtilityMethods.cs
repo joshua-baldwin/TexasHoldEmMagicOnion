@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace THE.Utilities
 {
-    public static class UtilityMethods
+    public static class ClientUtilityMethods
     {
         public static IEnumerator LoadAsyncScene(string sceneName)
         {

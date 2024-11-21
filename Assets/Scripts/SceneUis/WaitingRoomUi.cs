@@ -61,7 +61,7 @@ namespace THE.SceneUis
             await gamingHubReceiver.StartGame(() =>
             {
                 gamingHubReceiver.UpdatePlayerCount = null;
-                StartCoroutine(UtilityMethods.LoadAsyncScene("GameScene"));
+                StartCoroutine(ClientUtilityMethods.LoadAsyncScene("GameScene"));
             });
         }
 
@@ -74,7 +74,7 @@ namespace THE.SceneUis
         
         private async UniTaskVoid LeaveRoom()
         {
-            await gamingHubReceiver.LeaveRoom(() => StartCoroutine(UtilityMethods.LoadAsyncScene("StartScene")));
+            await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")));
         }
     }
 }

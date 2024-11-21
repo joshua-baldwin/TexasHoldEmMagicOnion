@@ -33,7 +33,7 @@ namespace THE.Player
                 nameColor.color = Color.green;
             PlayerId = player.Id;
             nameText.text = player.Name;
-            chipsText.text = UtilityMethods.GetChipText(player.Chips);
+            chipsText.text = ClientUtilityMethods.GetChipText(player.Chips);
             dealer.gameObject.SetActive(player.IsDealer);
             if (player.PlayerRole != Enums.PlayerRoleEnum.None)
             {
@@ -59,7 +59,7 @@ namespace THE.Player
 
         public void UpdateBetAndChips(PlayerData playerData)
         {
-            chipsText.text = UtilityMethods.GetChipText(playerData.Chips);
+            chipsText.text = ClientUtilityMethods.GetChipText(playerData.Chips);
             currentBetText.text = $"Current bet: {playerData.CurrentBet.GetTotalChipValue()}";
         }
 

@@ -296,7 +296,7 @@ namespace THE.SceneUis
         {
             if (buttonType == ButtonTypeEnum.Quit)
             {
-                await gamingHubReceiver.LeaveRoom(() => StartCoroutine(UtilityMethods.LoadAsyncScene("StartScene")));
+                await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")));
                 return;
             }
 
