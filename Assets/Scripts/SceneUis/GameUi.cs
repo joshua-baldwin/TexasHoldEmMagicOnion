@@ -83,28 +83,68 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             whiteAmountInput.OnValueChangedAsAsyncEnumerable()
-                .Where(x => gamingHubReceiver.WhiteBetAmount.Value != int.Parse(x))
-                .Subscribe(x => gamingHubReceiver.WhiteBetAmount.Value = int.Parse(x))
+                .Where(x =>
+                {
+                    int.TryParse(x, out var val);
+                    return gamingHubReceiver.WhiteBetAmount.Value != val;
+                })
+                .Subscribe(x =>
+                {
+                    int.TryParse(x, out var val);
+                    gamingHubReceiver.WhiteBetAmount.Value = val;
+                })
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             redAmountInput.OnValueChangedAsAsyncEnumerable()
-                .Where(x => gamingHubReceiver.RedBetAmount.Value != int.Parse(x))
-                .Subscribe(x => gamingHubReceiver.RedBetAmount.Value = int.Parse(x))
+                .Where(x =>
+                {
+                    int.TryParse(x, out var val);
+                    return gamingHubReceiver.RedBetAmount.Value != val;
+                })
+                .Subscribe(x =>
+                {
+                    int.TryParse(x, out var val);
+                    gamingHubReceiver.RedBetAmount.Value = val;
+                })
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             blueAmountInput.OnValueChangedAsAsyncEnumerable()
-                .Where(x => gamingHubReceiver.BlueBetAmount.Value != int.Parse(x))
-                .Subscribe(x => gamingHubReceiver.BlueBetAmount.Value = int.Parse(x))
+                .Where(x =>
+                {
+                    int.TryParse(x, out var val);
+                    return gamingHubReceiver.BlueBetAmount.Value != val;
+                })
+                .Subscribe(x =>
+                {
+                    int.TryParse(x, out var val);
+                    gamingHubReceiver.BlueBetAmount.Value = val;
+                })
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             greenAmountInput.OnValueChangedAsAsyncEnumerable()
-                .Where(x => gamingHubReceiver.GreenBetAmount.Value != int.Parse(x))
-                .Subscribe(x => gamingHubReceiver.GreenBetAmount.Value = int.Parse(x))
+                .Where(x =>
+                {
+                    int.TryParse(x, out var val);
+                    return gamingHubReceiver.GreenBetAmount.Value != val;
+                })
+                .Subscribe(x =>
+                {
+                    int.TryParse(x, out var val);
+                    gamingHubReceiver.GreenBetAmount.Value = val;
+                })
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             blackAmountInput.OnValueChangedAsAsyncEnumerable()
-                .Where(x => gamingHubReceiver.BlackBetAmount.Value != int.Parse(x))
-                .Subscribe(x => gamingHubReceiver.BlackBetAmount.Value = int.Parse(x))
+                .Where(x =>
+                {
+                    int.TryParse(x, out var val);
+                    return gamingHubReceiver.BlackBetAmount.Value != val;
+                })
+                .Subscribe(x =>
+                {
+                    int.TryParse(x, out var val);
+                    gamingHubReceiver.BlackBetAmount.Value = val;
+                })
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             gamingHubReceiver.WhiteBetAmount
