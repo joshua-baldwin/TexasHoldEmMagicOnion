@@ -21,7 +21,11 @@ namespace THE.Utilities
 
         public static string GetChipText(List<ChipData> chips)
         {
-            return $"W={chips.First(x => x.ChipType == Enums.ChipTypeEnum.White).ChipCount}, R={chips.First(x => x.ChipType == Enums.ChipTypeEnum.Red).ChipCount}, Blu={chips.First(x => x.ChipType == Enums.ChipTypeEnum.Blue).ChipCount}, G={chips.First(x => x.ChipType == Enums.ChipTypeEnum.Green).ChipCount}, Bla={chips.First(x => x.ChipType == Enums.ChipTypeEnum.Black).ChipCount}";
+            return $"W={chips.First(x => x.ChipType == Enums.ChipTypeEnum.White).ChipCount}, " +
+                   $"R={chips.First(x => x.ChipType == Enums.ChipTypeEnum.Red).ChipCount}, " +
+                   $"Blu={chips.First(x => x.ChipType == Enums.ChipTypeEnum.Blue).ChipCount}\n" +
+                   $"G={chips.First(x => x.ChipType == Enums.ChipTypeEnum.Green).ChipCount}, " +
+                   $"Bla={chips.First(x => x.ChipType == Enums.ChipTypeEnum.Black).ChipCount}";
         }
     }
 }
