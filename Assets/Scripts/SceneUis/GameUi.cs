@@ -44,10 +44,15 @@ namespace THE.SceneUis
         [SerializeField] private Text currentTurnText;
         [SerializeField] private Text potText;
         [SerializeField] private Text gameStateText;
+        [SerializeField] private GameObject whiteRoot;
         [SerializeField] private InputField whiteAmountInput;
+        [SerializeField] private GameObject redRoot;
         [SerializeField] private InputField redAmountInput;
+        [SerializeField] private GameObject blueRoot;
         [SerializeField] private InputField blueAmountInput;
+        [SerializeField] private GameObject greenRoot;
         [SerializeField] private InputField greenAmountInput;
+        [SerializeField] private GameObject blackRoot;
         [SerializeField] private InputField blackAmountInput;
         [SerializeField] private Button confirmAmountButton;
         [SerializeField] private Button cancelButton;
@@ -131,11 +136,11 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             confirmHandButton.gameObject.SetActive(false);
-            whiteAmountInput.gameObject.SetActive(false);
-            redAmountInput.gameObject.SetActive(false);
-            blueAmountInput.gameObject.SetActive(false);
-            greenAmountInput.gameObject.SetActive(false);
-            blackAmountInput.gameObject.SetActive(false);
+            whiteRoot.gameObject.SetActive(false);
+            redRoot.gameObject.SetActive(false);
+            blueRoot.gameObject.SetActive(false);
+            greenRoot.gameObject.SetActive(false);
+            blackRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
 
@@ -259,11 +264,11 @@ namespace THE.SceneUis
             if (buttonType is ButtonTypeEnum.Bet or ButtonTypeEnum.Raise)
             {
                 buttonList.ForEach(x => x.ButtonObject.interactable = false);
-                whiteAmountInput.gameObject.SetActive(true);
-                redAmountInput.gameObject.SetActive(true);
-                blueAmountInput.gameObject.SetActive(true);
-                greenAmountInput.gameObject.SetActive(true);
-                blackAmountInput.gameObject.SetActive(true);
+                whiteRoot.gameObject.SetActive(true);
+                redRoot.gameObject.SetActive(true);
+                blueRoot.gameObject.SetActive(true);
+                greenRoot.gameObject.SetActive(true);
+                blackRoot.gameObject.SetActive(true);
                 confirmAmountButton.gameObject.SetActive(true);
                 cancelButton.gameObject.SetActive(true);
             }
@@ -282,11 +287,11 @@ namespace THE.SceneUis
                 return;
             }
             buttonList.ForEach(x => x.ButtonObject.interactable = true);
-            whiteAmountInput.gameObject.SetActive(false);
-            redAmountInput.gameObject.SetActive(false);
-            blueAmountInput.gameObject.SetActive(false);
-            greenAmountInput.gameObject.SetActive(false);
-            blackAmountInput.gameObject.SetActive(false);
+            whiteRoot.gameObject.SetActive(false);
+            redRoot.gameObject.SetActive(false);
+            blueRoot.gameObject.SetActive(false);
+            greenRoot.gameObject.SetActive(false);
+            blackRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
             //todo get target id
@@ -296,11 +301,11 @@ namespace THE.SceneUis
         private void CancelBet()
         {
             buttonList.ForEach(x => x.ButtonObject.interactable = true);
-            whiteAmountInput.gameObject.SetActive(false);
-            redAmountInput.gameObject.SetActive(false);
-            blueAmountInput.gameObject.SetActive(false);
-            greenAmountInput.gameObject.SetActive(false);
-            blackAmountInput.gameObject.SetActive(false);
+            whiteRoot.gameObject.SetActive(false);
+            redRoot.gameObject.SetActive(false);
+            blueRoot.gameObject.SetActive(false);
+            greenRoot.gameObject.SetActive(false);
+            blackRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
             gamingHubReceiver.ResetBetAmounts();

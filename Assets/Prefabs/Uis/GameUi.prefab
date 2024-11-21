@@ -347,10 +347,15 @@ MonoBehaviour:
   currentTurnText: {fileID: 3411148938598562873}
   potText: {fileID: 4026166040267538932}
   gameStateText: {fileID: 9008563858170190126}
+  whiteRoot: {fileID: 6894930834310910300}
   whiteAmountInput: {fileID: 4125890443632300692}
+  redRoot: {fileID: 5251096085083296548}
   redAmountInput: {fileID: 9055663616769317031}
+  blueRoot: {fileID: 2349396015058618575}
   blueAmountInput: {fileID: 7243213060174662148}
+  greenRoot: {fileID: 7933364366323503886}
   greenAmountInput: {fileID: 7836808457857435108}
+  blackRoot: {fileID: 3195264161437275772}
   blackAmountInput: {fileID: 4166450617416732974}
   confirmAmountButton: {fileID: 6740524115200198782}
   cancelButton: {fileID: 2023941731859934077}
