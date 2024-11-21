@@ -11,6 +11,7 @@ using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
 using THE.Player;
+using THE.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,11 +20,12 @@ namespace THE.MagicOnion.Client
     public class GamingHubReceiver : IGamingHubReceiver
     {
         public AsyncReactiveProperty<string> UserName { get; } = new("");
-        public AsyncReactiveProperty<int> WhiteBetAmount { get; } = new(0);
-        public AsyncReactiveProperty<int> RedBetAmount { get; } = new(0);
-        public AsyncReactiveProperty<int> BlueBetAmount { get; } = new(0);
-        public AsyncReactiveProperty<int> GreenBetAmount { get; } = new(0);
-        public AsyncReactiveProperty<int> BlackBetAmount { get; } = new(0);
+        public AsyncReactiveProperty<int> BetAmount { get; } = new(0);
+        // public AsyncReactiveProperty<int> WhiteBetAmount { get; } = new(0);
+        // public AsyncReactiveProperty<int> RedBetAmount { get; } = new(0);
+        // public AsyncReactiveProperty<int> BlueBetAmount { get; } = new(0);
+        // public AsyncReactiveProperty<int> GreenBetAmount { get; } = new(0);
+        // public AsyncReactiveProperty<int> BlackBetAmount { get; } = new(0);
         
         private const int MaxRetry = 5;
         private CancellationTokenSource shutdownCancellation;
@@ -89,25 +91,26 @@ namespace THE.MagicOnion.Client
 
         public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId)
         {
-            var chipsBet = new List<ChipEntity>
-            {
-                new(Enums.ChipTypeEnum.White, WhiteBetAmount.Value),
-                new(Enums.ChipTypeEnum.Red, RedBetAmount.Value),
-                new(Enums.ChipTypeEnum.Blue, BlueBetAmount.Value),
-                new(Enums.ChipTypeEnum.Green, GreenBetAmount.Value),
-                new(Enums.ChipTypeEnum.Black, BlackBetAmount.Value)
-            };
-            await CallDoAction(commandType, chipsBet, targetPlayerId);
+            // var chipsBet = new List<ChipEntity>
+            // {
+            //     new(Enums.ChipTypeEnum.White, WhiteBetAmount.Value),
+            //     new(Enums.ChipTypeEnum.Red, RedBetAmount.Value),
+            //     new(Enums.ChipTypeEnum.Blue, BlueBetAmount.Value),
+            //     new(Enums.ChipTypeEnum.Green, GreenBetAmount.Value),
+            //     new(Enums.ChipTypeEnum.Black, BlackBetAmount.Value)
+            // };
+            await CallDoAction(commandType, /*chipsBet*/ BetAmount.Value, targetPlayerId);
             ResetBetAmounts();
         }
 
         public void ResetBetAmounts()
         {
-            WhiteBetAmount.Value = 0;
-            RedBetAmount.Value = 0;
-            BlueBetAmount.Value = 0;
-            GreenBetAmount.Value = 0;
-            BlackBetAmount.Value = 0;
+            BetAmount.Value = 0;
+            // WhiteBetAmount.Value = 0;
+            // RedBetAmount.Value = 0;
+            // BlueBetAmount.Value = 0;
+            // GreenBetAmount.Value = 0;
+            // BlackBetAmount.Value = 0;
         }
 
         public async UniTask ChooseHand(Guid playerId, List<CardData> showdownCards)
@@ -120,11 +123,12 @@ namespace THE.MagicOnion.Client
         
         public bool CanPlaceBet()
         {
-            return WhiteBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.White).ChipCount &&
-                   RedBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Red).ChipCount &&
-                   BlueBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Blue).ChipCount &&
-                   GreenBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Green).ChipCount &&
-                   BlackBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Black).ChipCount;
+            return BetAmount.Value <= Self.Chips.GetTotalChipValue();
+            // return WhiteBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.White).ChipCount &&
+            //        RedBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Red).ChipCount &&
+            //        BlueBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Blue).ChipCount &&
+            //        GreenBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Green).ChipCount &&
+            //        BlackBetAmount.Value <= Self.Chips.First(x => x.ChipType == Enums.ChipTypeEnum.Black).ChipCount;
         }
 
         private void Disconnect()
@@ -175,7 +179,7 @@ namespace THE.MagicOnion.Client
             await client.QuitGame(Self.Id);
         }
 
-        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, List<ChipEntity> chipsBet, Guid targetPlayerId)
+        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, /*List<ChipEntity>*/int chipsBet, Guid targetPlayerId)
         {
             Debug.Log("Calling DoAction");
             await client.DoAction(commandType, chipsBet, targetPlayerId);
