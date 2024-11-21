@@ -60,7 +60,7 @@ namespace THE.Player
         public void UpdateBetAndChips(PlayerData playerData)
         {
             chipsText.text = UtilityMethods.GetChipText(playerData.Chips);
-            currentBetText.text = $"Current bet: {playerData.CurrentBet}";
+            currentBetText.text = $"Current bet: {playerData.CurrentBet.GetTotalChipValue()}";
         }
 
         public void ChangeCardVisibility(bool visible)
