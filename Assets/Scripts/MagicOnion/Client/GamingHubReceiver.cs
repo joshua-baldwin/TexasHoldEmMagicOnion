@@ -24,7 +24,6 @@ namespace THE.MagicOnion.Client
         public AsyncReactiveProperty<int> BlueBetAmount { get; } = new(0);
         public AsyncReactiveProperty<int> GreenBetAmount { get; } = new(0);
         public AsyncReactiveProperty<int> BlackBetAmount { get; } = new(0);
-        public AsyncReactiveProperty<Enums.ChipTypeEnum> SelectedChip { get; } = new(0);
         
         private const int MaxRetry = 5;
         private CancellationTokenSource shutdownCancellation;

@@ -26,7 +26,6 @@ namespace THE.SceneUis
             Raise,
             ConfirmHand,
             Quit,
-            Cancel
         }
         
         [Serializable]
@@ -156,11 +155,6 @@ namespace THE.SceneUis
             UpdateUi(isMyTurn, null, currentPlayerEntity, new List<ChipEntity>(), null);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
-        
-        private void UpdateBets(PlayerData playerData)
-        {
-            playerList.First(x => x.PlayerId == playerData.Id).UpdateBetAndChips(playerData);
-        }
 
         private void UpdateUi(bool isMyTurn, PlayerData previousPlayerEntity, PlayerData currentPlayerEntity, List<ChipEntity> currentPot, List<CardData> communityCards)
         {
@@ -175,6 +169,7 @@ namespace THE.SceneUis
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
                     break;
                 case Enums.GameStateEnum.TheFlop:
+                    buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     communityCardList[0].gameObject.SetActive(true);
                     communityCardList[0].Initialize(communityCards[0], true, OnCardSelected);
                     communityCardList[1].gameObject.SetActive(true);
@@ -183,37 +178,37 @@ namespace THE.SceneUis
                     communityCardList[2].Initialize(communityCards[2], true, OnCardSelected);
                     break;
                 case Enums.GameStateEnum.TheTurn:
+                    buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     communityCardList[3].gameObject.SetActive(true);
                     communityCardList[3].Initialize(communityCards[3], true, OnCardSelected);
                     break;
                 case Enums.GameStateEnum.TheRiver:
+                    buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     communityCardList[4].gameObject.SetActive(true);
                     communityCardList[4].Initialize(communityCards[4], true, OnCardSelected);
                     break;
                 case Enums.GameStateEnum.Showdown:
+                    buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
+                    confirmHandButton.gameObject.SetActive(true);
+                    confirmHandButton.interactable = false;
+                    gamingHubReceiver.Self.CanSelectCard = true;
                     HighlightCards();
                     ShowMessage("Choose your hand");
                     break;
             }
 
-            if (gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet && gamingHubReceiver.GameState != Enums.GameStateEnum.PreFlop)
-                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
-
-            if (gamingHubReceiver.GameState == Enums.GameStateEnum.Showdown)
-            {
-                buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
-                confirmHandButton.gameObject.SetActive(true);
-                confirmHandButton.interactable = false;
-                gamingHubReceiver.Self.CanSelectCard = true;
-            }
-
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
             
-            currentTurnText.text = $"Current turn: {currentPlayerEntity.Name}";
+            currentTurnText.text = $"Current player: {currentPlayerEntity.Name}";
             potText.text = $"Pot: {currentPot.GetTotalChipValue()}";
             if (previousPlayerEntity != null)
                 UpdateBets(previousPlayerEntity);
+        }
+        
+        private void UpdateBets(PlayerData playerData)
+        {
+            playerList.First(x => x.PlayerId == playerData.Id).UpdateBetAndChips(playerData);
         }
 
         private void OnCardSelected(bool isSelected, CardData cardEntity)
@@ -243,7 +238,7 @@ namespace THE.SceneUis
 
             if (buttonType == ButtonTypeEnum.ConfirmHand)
             {
-                gameStateText.text = $"Current state: Waiting";
+                gameStateText.text = "Current state: Waiting";
                 confirmHandButton.interactable = false;
                 await gamingHubReceiver.ChooseHand(gamingHubReceiver.Self.Id, selectedCards);
                 return;
