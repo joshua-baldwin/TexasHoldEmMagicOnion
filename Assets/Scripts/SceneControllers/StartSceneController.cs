@@ -16,13 +16,13 @@ namespace THE.SceneControllers
 
         private void Start()
         {
-            Instantiate(popupPrefab, canvas.transform);
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             gamingHubReceiver.OnRoomConnectSuccess = () => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("WaitingRoomScene"));
             gamingHubReceiver.OnRoomConnectFailed = () => startUi.SetRoomButton(true);
             gamingHubReceiver.OnCancelRoomConnect = () => startUi.SetRoomButton(true);
             startUi = Instantiate(startUiPrefab, canvas.transform).GetComponent<StartUi>();
             startUi.Initialize();
+            Instantiate(popupPrefab, canvas.transform);
         }
     }
 }

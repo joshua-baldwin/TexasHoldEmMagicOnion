@@ -11,9 +11,9 @@ namespace THE.SceneControllers
 
         private async void Start()
         {
-            Instantiate(popupPrefab, canvas.transform);
             var ui = Instantiate(waitingRoomUiPrefab, canvas.transform).GetComponent<WaitingRoomUi>();
             await ui.Initialize();
+            Instantiate(popupPrefab, canvas.transform);
         }
     }
 }
