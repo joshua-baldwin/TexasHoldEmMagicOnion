@@ -214,8 +214,12 @@ namespace THE.MagicOnion.Client
         
         public void OnJoinRoom(PlayerEntity player, int playerCount)
         {
-            Self = new PlayerData(player);
-            UserName.Value = "";
+            if (Self == null)
+            {
+                Self = new PlayerData(player);
+                UserName.Value = "";
+            }
+            
             Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomId}");
             OnRoomConnectSuccess?.Invoke();
             UpdatePlayerCount?.Invoke(playerCount);
