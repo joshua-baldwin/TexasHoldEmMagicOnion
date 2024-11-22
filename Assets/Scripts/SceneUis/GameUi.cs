@@ -195,7 +195,7 @@ namespace THE.SceneUis
         {
             if (buttonType == ButtonTypeEnum.Quit)
             {
-                await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")));
+                await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);
                 return;
             }
 
@@ -203,7 +203,7 @@ namespace THE.SceneUis
             {
                 gameStateText.text = "Current state: Waiting";
                 confirmHandButton.interactable = false;
-                await gamingHubReceiver.ChooseHand(gamingHubReceiver.Self.Id, selectedCards);
+                await gamingHubReceiver.ChooseHand(gamingHubReceiver.Self.Id, selectedCards, OnDisconnect);
                 return;
             }
 
@@ -229,7 +229,7 @@ namespace THE.SceneUis
             else
             {
                 //todo get target id
-                await gamingHubReceiver.DoAction(currentAction, Guid.Empty);
+                await gamingHubReceiver.DoAction(currentAction, Guid.Empty, OnDisconnect);
             }
         }
 
@@ -245,7 +245,7 @@ namespace THE.SceneUis
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
             //todo get target id
-            await gamingHubReceiver.DoAction(currentAction, Guid.Empty);
+            await gamingHubReceiver.DoAction(currentAction, Guid.Empty, OnDisconnect);
         }
 
         private void CancelBet()
@@ -267,6 +267,11 @@ namespace THE.SceneUis
         {
             playerList.ForEach(player => player.ShowCards());
             buttonList.ForEach(x => x.ButtonObject.interactable = false);
+        }
+
+        private void OnDisconnect()
+        {
+            StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));
         }
     }
 }

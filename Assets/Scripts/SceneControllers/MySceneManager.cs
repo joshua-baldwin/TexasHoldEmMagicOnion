@@ -9,7 +9,7 @@ namespace THE.SceneControllers
 
         private async void OnApplicationQuit()
         {
-            await HubReceiver.LeaveRoom(null);
+            await HubReceiver.LeaveRoom(null, null);
         }
     }
 }

@@ -47,34 +47,72 @@ namespace THE.MagicOnion.Client
             
             if (shutdownCancellation.IsCancellationRequested)
                 return;
-            
-            var selfEntity = await CallCreateRoom(UserName.Value);
-            Self = new PlayerData(selfEntity);
-            UserName.Value = "";
-            Debug.Log("room joined");
-            OnRoomConnectSuccess?.Invoke();
+
+            try
+            {
+                var selfEntity = await CallCreateRoom(UserName.Value);
+                Self = new PlayerData(selfEntity);
+                UserName.Value = "";
+                Debug.Log("room joined");
+                OnRoomConnectSuccess?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                OnRoomConnectFailed?.Invoke();
+            }
         }
 
-        public async UniTask LeaveRoom(Action onFinish)
+        public async UniTask LeaveRoom(Action onFinish, Action onDisconnect)
         {
-            await CallLeaveRoom();
-            Disconnect();
-            onFinish?.Invoke();
+            try
+            {
+                await CallLeaveRoom();
+                onFinish?.Invoke();
+            }
+            catch (ObjectDisposedException ode)
+            {
+                Disconnect();
+                onDisconnect?.Invoke();
+            }
         }
 
-        public async UniTask GetPlayers(Action<int> onFinish)
+        public async UniTask GetPlayers(Action<int> onFinish, Action onDisconnect)
         {
-            await CallGetPlayers(onFinish);
+            try
+            {
+                await CallGetPlayers(onFinish);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Disconnect();
+                onDisconnect?.Invoke();
+            }
         }
 
-        public async UniTask StartGame(Action onFinish)
+        public async UniTask StartGame(Action onFinish, Action onDisconnect)
         {
-            await CallStartGame(onFinish);
+            try
+            {
+                await CallStartGame(onFinish);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Disconnect();
+                onDisconnect?.Invoke();
+            }
         }
 
-        public async UniTask CancelStartGame()
+        public async UniTask CancelStartGame(Action onDisconnect)
         {
-            await CallCancelGame();
+            try
+            {
+                await CallCancelGame();
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Disconnect();
+                onDisconnect?.Invoke();
+            }
         }
 
         public async UniTaskVoid QuitGame()
@@ -82,16 +120,32 @@ namespace THE.MagicOnion.Client
             await CallQuitGame();
         }
 
-        public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId)
+        public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId, Action onDisconnect)
         {
-            await CallDoAction(commandType, BetAmount.Value, targetPlayerId);
-            BetAmount.Value = 0;
+            try
+            {
+                await CallDoAction(commandType, BetAmount.Value, targetPlayerId);
+                BetAmount.Value = 0;
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Disconnect();
+                onDisconnect?.Invoke();
+            }
         }
 
-        public async UniTask ChooseHand(Guid playerId, List<CardData> showdownCards)
+        public async UniTask ChooseHand(Guid playerId, List<CardData> showdownCards, Action onDisconnect)
         {
-            var cardEntities = showdownCards.Select(card => new CardEntity(card.Suit, card.Rank)).ToArray();
-            await CallChooseHand(playerId, cardEntities);
+            try
+            {
+                var cardEntities = showdownCards.Select(card => new CardEntity(card.Suit, card.Rank)).ToArray();
+                await CallChooseHand(playerId, cardEntities);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Disconnect();
+                onDisconnect?.Invoke();
+            }
         }
 
         public List<PlayerData> GetPlayerList() => players.ToList();

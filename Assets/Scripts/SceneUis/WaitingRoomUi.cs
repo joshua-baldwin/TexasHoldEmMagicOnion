@@ -44,7 +44,7 @@ namespace THE.SceneUis
 
         public async UniTask Initialize()
         {
-            await gamingHubReceiver.GetPlayers(UpdatePlayerCount);
+            await gamingHubReceiver.GetPlayers(UpdatePlayerCount, OnDisconnect);
         }
 
         private void UpdatePlayerCount(int count)
@@ -62,19 +62,24 @@ namespace THE.SceneUis
             {
                 gamingHubReceiver.UpdatePlayerCount = null;
                 StartCoroutine(ClientUtilityMethods.LoadAsyncScene("GameScene"));
-            });
+            }, OnDisconnect);
         }
 
         private async UniTaskVoid CancelAction()
         {
             startButton.interactable = true;
             cancelButton.interactable = false;
-            await gamingHubReceiver.CancelStartGame();
+            await gamingHubReceiver.CancelStartGame(OnDisconnect);
         }
         
         private async UniTaskVoid LeaveRoom()
         {
-            await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")));
+            await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);
+        }
+
+        private void OnDisconnect()
+        {
+            StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));
         }
     }
 }
