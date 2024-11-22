@@ -34,12 +34,12 @@ namespace THE.Player
             chipsText.text = $"Chips: {player.Chips}";
             //chipsText.text = ClientUtilityMethods.GetChipText(player.Chips);
             dealer.gameObject.SetActive(player.IsDealer);
+            role.gameObject.SetActive(player.PlayerRole != Enums.PlayerRoleEnum.None);
             if (player.PlayerRole != Enums.PlayerRoleEnum.None)
             {
                 role.text = player.PlayerRole == Enums.PlayerRoleEnum.SmallBlind
                     ? "SB"
                     : "BB";
-                role.gameObject.SetActive(true);
             }
         }
 

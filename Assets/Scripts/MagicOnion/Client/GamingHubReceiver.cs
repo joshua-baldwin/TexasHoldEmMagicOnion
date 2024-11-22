@@ -244,7 +244,7 @@ namespace THE.MagicOnion.Client
         private async UniTask InitializeClientAsync()
         {
             string url = "";
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             url = "http://localhost:5137";
 #else
             url = "http://54.178.31.18:5137";
