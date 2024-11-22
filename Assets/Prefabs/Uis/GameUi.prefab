@@ -348,6 +348,7 @@ MonoBehaviour:
   currentTurnText: {fileID: 3411148938598562873}
   potText: {fileID: 4026166040267538932}
   gameStateText: {fileID: 9008563858170190126}
+  betRoot: {fileID: 7839554019549905105}
   betAmountInput: {fileID: 1918262873776116991}
   confirmAmountButton: {fileID: 6740524115200198782}
   cancelButton: {fileID: 2023941731859934077}
