@@ -40,7 +40,7 @@ namespace THE.MagicOnion.Client
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
-        public async UniTask CreateRoom()
+        public async UniTask JoinRoom()
         {
             if (client == null)
                 await InitializeClientAsync();
@@ -50,7 +50,7 @@ namespace THE.MagicOnion.Client
 
             try
             {
-                await CallCreateRoom(UserName.Value);
+                await CallJoinRoom(UserName.Value);
             }
             catch (Exception)
             {
@@ -156,7 +156,7 @@ namespace THE.MagicOnion.Client
 
         #region RPC calls
         
-        private async UniTask CallCreateRoom(string userName)
+        private async UniTask CallJoinRoom(string userName)
         {
             Debug.Log("Calling JoinRoom");
             await client.JoinRoomAsync(userName);

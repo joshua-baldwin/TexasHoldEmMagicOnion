@@ -23,7 +23,7 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             joinRoom.OnClickAsAsyncEnumerable()
-                .Subscribe(_ => CreateRoom())
+                .Subscribe(_ => JoinRoom())
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             cancelJoinRoom.OnClickAsAsyncEnumerable()
@@ -38,11 +38,11 @@ namespace THE.SceneUis
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
         }
         
-        private async UniTaskVoid CreateRoom()
+        private async UniTaskVoid JoinRoom()
         {
             SetRoomButton(false);
             SetCancelButton(true);
-            await gamingHubReceiver.CreateRoom();
+            await gamingHubReceiver.JoinRoom();
         }
         
         private void CancelCreateRoom()
