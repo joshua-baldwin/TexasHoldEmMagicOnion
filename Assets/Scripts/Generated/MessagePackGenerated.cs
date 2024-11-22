@@ -47,17 +47,14 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(9)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(6)
             {
                 { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>), 0 },
-                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>), 1 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 2 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 3 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum), 4 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 5 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 6 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.ChipEntity), 7 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 8 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 1 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 2 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 3 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 4 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 5 },
             };
         }
 
@@ -72,14 +69,11 @@ namespace MessagePack.Resolvers
             switch (key)
             {
                 case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
-                case 1: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.ChipEntity>();
-                case 2: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
-                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
-                case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_ChipTypeEnumFormatter();
-                case 5: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
-                case 6: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
-                case 7: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.ChipEntityFormatter();
-                case 8: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
+                case 1: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
+                case 2: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
+                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
+                case 4: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
+                case 5: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
                 default: return null;
             }
         }
@@ -134,19 +128,6 @@ namespace MessagePack.Formatters.TexasHoldEmShared.Enums
         public global::TexasHoldEmShared.Enums.Enums.CardSuitEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             return (global::TexasHoldEmShared.Enums.Enums.CardSuitEnum)reader.ReadInt32();
-        }
-    }
-
-    public sealed class Enums_ChipTypeEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum>
-    {
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum value, global::MessagePack.MessagePackSerializerOptions options)
-        {
-            writer.Write((global::System.Int32)value);
-        }
-
-        public global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
-        {
-            return (global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum)reader.ReadInt32();
         }
     }
 
@@ -244,58 +225,6 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
         }
     }
 
-    public sealed class ChipEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.ChipEntity>
-    {
-
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::THE.MagicOnion.Shared.Entities.ChipEntity value, global::MessagePack.MessagePackSerializerOptions options)
-        {
-            if (value == null)
-            {
-                writer.WriteNil();
-                return;
-            }
-
-            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(2);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum>(formatterResolver).Serialize(ref writer, value.ChipType, options);
-            writer.Write(value.ChipCount);
-        }
-
-        public global::THE.MagicOnion.Shared.Entities.ChipEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
-        {
-            if (reader.TryReadNil())
-            {
-                return null;
-            }
-
-            options.Security.DepthStep(ref reader);
-            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            var length = reader.ReadArrayHeader();
-            var __ChipType__ = default(global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum);
-            var __ChipCount__ = default(int);
-
-            for (int i = 0; i < length; i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        __ChipType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ChipTypeEnum>(formatterResolver).Deserialize(ref reader, options);
-                        break;
-                    case 1:
-                        __ChipCount__ = reader.ReadInt32();
-                        break;
-                    default:
-                        reader.Skip();
-                        break;
-                }
-            }
-
-            var ____result = new global::THE.MagicOnion.Shared.Entities.ChipEntity(__ChipType__, __ChipCount__);
-            reader.Depth--;
-            return ____result;
-        }
-    }
-
     public sealed class PlayerEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.PlayerEntity>
     {
 
@@ -316,8 +245,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.IsDealer);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.HoleCards, options);
             writer.Write(value.IsReady);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Serialize(ref writer, value.Chips, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Serialize(ref writer, value.CurrentBet, options);
+            writer.Write(value.Chips);
+            writer.Write(value.CurrentBet);
             writer.Write(value.HasTakenAction);
             writer.Write(value.HasFolded);
         }
@@ -339,8 +268,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __IsDealer__ = default(bool);
             var __HoleCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
             var __IsReady__ = default(bool);
-            var __Chips__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>);
-            var __CurrentBet__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>);
+            var __Chips__ = default(int);
+            var __CurrentBet__ = default(int);
             var __HasTakenAction__ = default(bool);
             var __HasFolded__ = default(bool);
 
@@ -370,10 +299,10 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __IsReady__ = reader.ReadBoolean();
                         break;
                     case 7:
-                        __Chips__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        __Chips__ = reader.ReadInt32();
                         break;
                     case 8:
-                        __CurrentBet__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ChipEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        __CurrentBet__ = reader.ReadInt32();
                         break;
                     case 9:
                         __HasTakenAction__ = reader.ReadBoolean();
