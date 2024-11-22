@@ -237,7 +237,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(11);
+            writer.WriteArrayHeader(12);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
@@ -249,6 +249,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.CurrentBet);
             writer.Write(value.HasTakenAction);
             writer.Write(value.HasFolded);
+            writer.Write(value.HasChecked);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -272,6 +273,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __CurrentBet__ = default(int);
             var __HasTakenAction__ = default(bool);
             var __HasFolded__ = default(bool);
+            var __HasChecked__ = default(bool);
 
             for (int i = 0; i < length; i++)
             {
@@ -309,6 +311,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         break;
                     case 10:
                         __HasFolded__ = reader.ReadBoolean();
+                        break;
+                    case 11:
+                        __HasChecked__ = reader.ReadBoolean();
                         break;
                     default:
                         reader.Skip();
@@ -365,6 +370,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             ____result.HasFolded = __HasFolded__;
+            if (length <= 11)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.HasChecked = __HasChecked__;
 
         MEMBER_ASSIGNMENT_END:
             reader.Depth--;

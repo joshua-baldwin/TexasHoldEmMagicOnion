@@ -7,6 +7,12 @@ namespace THE.SceneControllers
     {
         public readonly GamingHubReceiver HubReceiver = new();
 
+        protected override void OnAwake()
+        {
+            HubReceiver.OnRoomConnectSuccess = () => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("WaitingRoomScene"));
+            base.OnAwake();
+        }
+
         private async void OnApplicationQuit()
         {
             await HubReceiver.LeaveRoom(null, null);
