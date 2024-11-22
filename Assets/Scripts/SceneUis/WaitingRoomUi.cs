@@ -19,6 +19,8 @@ namespace THE.SceneUis
         
         private int playerCount;
         private GamingHubReceiver gamingHubReceiver;
+        
+        private PopupUi popupUi;
 
         private void Awake()
         {
@@ -40,6 +42,7 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             gamingHubReceiver.UpdatePlayerCount = UpdatePlayerCount;
+            gamingHubReceiver.ShowMessage = ShowMessage;
         }
 
         public async UniTask Initialize()
@@ -52,6 +55,12 @@ namespace THE.SceneUis
             currentPlayerCount.text = $"{count}/10";
             playerCount = count;
             startButton.interactable = playerCount > 1;
+        }
+        
+        private void ShowMessage(string message)
+        {
+            popupUi = FindFirstObjectByType<PopupUi>();
+            popupUi.ShowMessage(message);
         }
 
         private async UniTaskVoid StartAction()
@@ -80,6 +89,7 @@ namespace THE.SceneUis
         private void OnDisconnect()
         {
             StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));
+            ShowMessage("Disconnected from server");
         }
     }
 }

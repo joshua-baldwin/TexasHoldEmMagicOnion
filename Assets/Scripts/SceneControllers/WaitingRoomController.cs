@@ -7,9 +7,11 @@ namespace THE.SceneControllers
     {
         [SerializeField] private Canvas canvas;
         [SerializeField] private GameObject waitingRoomUiPrefab;
+        [SerializeField] private GameObject popupPrefab;
 
         private async void Start()
         {
+            Instantiate(popupPrefab, canvas.transform);
             var ui = Instantiate(waitingRoomUiPrefab, canvas.transform).GetComponent<WaitingRoomUi>();
             await ui.Initialize();
         }

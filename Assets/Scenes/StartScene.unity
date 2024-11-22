@@ -149,6 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 2035503873}
   startUiPrefab: {fileID: 6617340840394494030, guid: 75659a6b3e7014e2b96177e86539a8f7, type: 3}
+  popupPrefab: {fileID: 4525094861639717131, guid: e8c03d43cd66841938e2df1bb4774a73, type: 3}
 --- !u!4 &256286459
 Transform:
   m_ObjectHideFlags: 0

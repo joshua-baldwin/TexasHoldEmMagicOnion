@@ -21,6 +21,7 @@ namespace THE.SceneUis
 
         public void ShowMessage(string message)
         {
+            //TODO do action on close
             contents.SetActive(true);
             messageText.text = message;
         }

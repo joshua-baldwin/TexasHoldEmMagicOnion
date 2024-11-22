@@ -56,7 +56,7 @@ namespace THE.MagicOnion.Client
                 Debug.Log("room joined");
                 OnRoomConnectSuccess?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 OnRoomConnectFailed?.Invoke();
             }
@@ -69,7 +69,7 @@ namespace THE.MagicOnion.Client
                 await CallLeaveRoom();
                 onFinish?.Invoke();
             }
-            catch (ObjectDisposedException ode)
+            catch (ObjectDisposedException)
             {
                 Disconnect();
                 onDisconnect?.Invoke();
@@ -82,7 +82,7 @@ namespace THE.MagicOnion.Client
             {
                 await CallGetPlayers(onFinish);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException)
             {
                 Disconnect();
                 onDisconnect?.Invoke();
@@ -95,7 +95,7 @@ namespace THE.MagicOnion.Client
             {
                 await CallStartGame(onFinish);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException)
             {
                 Disconnect();
                 onDisconnect?.Invoke();
@@ -108,7 +108,7 @@ namespace THE.MagicOnion.Client
             {
                 await CallCancelGame();
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException)
             {
                 Disconnect();
                 onDisconnect?.Invoke();
@@ -127,7 +127,7 @@ namespace THE.MagicOnion.Client
                 await CallDoAction(commandType, BetAmount.Value, targetPlayerId);
                 BetAmount.Value = 0;
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException)
             {
                 Disconnect();
                 onDisconnect?.Invoke();
@@ -141,7 +141,7 @@ namespace THE.MagicOnion.Client
                 var cardEntities = showdownCards.Select(card => new CardEntity(card.Suit, card.Rank)).ToArray();
                 await CallChooseHand(playerId, cardEntities);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException)
             {
                 Disconnect();
                 onDisconnect?.Invoke();
@@ -297,11 +297,10 @@ namespace THE.MagicOnion.Client
         
         private async UniTask InitializeClientAsync()
         {
-            string url = "";
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            url = "http://localhost:5137";
+            var url = "http://localhost:5137";
 #else
-            url = "http://54.178.31.18:5137";
+            var url = "http://54.178.31.18:5137";
 #endif
             // Initialize the Hub
             channel = GrpcChannel.ForAddress(url, new GrpcChannelOptions

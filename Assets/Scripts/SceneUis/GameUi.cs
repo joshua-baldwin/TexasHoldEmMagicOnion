@@ -272,6 +272,7 @@ namespace THE.SceneUis
         private void OnDisconnect()
         {
             StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));
+            ShowMessage("Disconnected from server");
         }
     }
 }

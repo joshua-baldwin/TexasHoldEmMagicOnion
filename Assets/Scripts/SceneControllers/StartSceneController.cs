@@ -9,12 +9,14 @@ namespace THE.SceneControllers
     {
         [SerializeField] private Canvas canvas;
         [SerializeField] private GameObject startUiPrefab;
+        [SerializeField] private GameObject popupPrefab;
         
         private StartUi startUi;
         private GamingHubReceiver gamingHubReceiver;
 
         private void Start()
         {
+            Instantiate(popupPrefab, canvas.transform);
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             gamingHubReceiver.OnRoomConnectSuccess = () => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("WaitingRoomScene"));
             gamingHubReceiver.OnRoomConnectFailed = () => startUi.SetRoomButton(true);
