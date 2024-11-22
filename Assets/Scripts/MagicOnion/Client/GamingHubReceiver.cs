@@ -50,11 +50,7 @@ namespace THE.MagicOnion.Client
 
             try
             {
-                var selfEntity = await CallCreateRoom(UserName.Value);
-                Self = new PlayerData(selfEntity);
-                UserName.Value = "";
-                Debug.Log("room joined");
-                OnRoomConnectSuccess?.Invoke();
+                await CallCreateRoom(UserName.Value);
             }
             catch (Exception)
             {
@@ -160,10 +156,10 @@ namespace THE.MagicOnion.Client
 
         #region RPC calls
         
-        private async UniTask<PlayerEntity> CallCreateRoom(string userName)
+        private async UniTask CallCreateRoom(string userName)
         {
             Debug.Log("Calling JoinRoom");
-            return await client.JoinRoomAsync(userName);
+            await client.JoinRoomAsync(userName);
         }
         
         private async UniTask CallLeaveRoom()
@@ -218,7 +214,10 @@ namespace THE.MagicOnion.Client
         
         public void OnJoinRoom(PlayerEntity player, int playerCount)
         {
+            Self = new PlayerData(player);
+            UserName.Value = "";
             Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomId}");
+            OnRoomConnectSuccess?.Invoke();
             UpdatePlayerCount?.Invoke(playerCount);
         }
 
