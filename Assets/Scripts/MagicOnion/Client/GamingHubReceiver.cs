@@ -278,12 +278,12 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public void OnChooseHand(Guid winnerId, PlayerEntity[] playerEntities)
+        public void OnChooseHand(Guid winnerId, Enums.HandRankingType winningHand, PlayerEntity[] playerEntities)
         {
             Debug.Log("Hand chosen");
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             var player = playerEntities.First(x => x.Id == winnerId);
-            ShowMessage?.Invoke($"{player.Name} is the winner!");
+            ShowMessage?.Invoke($"{player.Name} is the winner with a {winningHand}!");
             OnGameOverAction?.Invoke();
         }
 
