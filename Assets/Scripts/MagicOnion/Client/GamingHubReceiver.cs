@@ -130,20 +130,6 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask ChooseHand(Guid playerId, List<CardData> showdownCards, Action onDisconnect)
-        {
-            try
-            {
-                var cardEntities = showdownCards.Select(card => new CardEntity(card.Suit, card.Rank)).ToArray();
-                await CallChooseHand(playerId, cardEntities);
-            }
-            catch (ObjectDisposedException)
-            {
-                Disconnect();
-                onDisconnect?.Invoke();
-            }
-        }
-
         public List<PlayerData> GetPlayerList() => players.ToList();
         
         public bool CanPlaceBet() => BetAmount.Value <= Self.Chips;
@@ -200,12 +186,6 @@ namespace THE.MagicOnion.Client
         {
             Debug.Log("Calling DoAction");
             await client.DoAction(commandType, chipsBet, targetPlayerId);
-        }
-
-        private async UniTask CallChooseHand(Guid playerId, CardEntity[] showdownCards)
-        {
-            Debug.Log("Calling ChooseHand");
-            await client.ChooseHand(playerId, showdownCards);
         }
         
         #endregion

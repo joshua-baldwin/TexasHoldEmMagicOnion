@@ -22,7 +22,6 @@ namespace THE.SceneUis
             Fold,
             Call,
             Raise,
-            ConfirmHand,
             Quit,
         }
         
@@ -37,7 +36,6 @@ namespace THE.SceneUis
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private List<CardClass> communityCardList;
         [SerializeField] private List<ButtonClass> buttonList;
-        [SerializeField] private Button confirmHandButton;
         [SerializeField] private Button quitButton;
         [SerializeField] private Text currentTurnText;
         [SerializeField] private Text potText;
@@ -63,10 +61,6 @@ namespace THE.SceneUis
                     .Subscribe(_ => OnClickButton(button.ButtonType))
                     .AddTo(this.GetCancellationTokenOnDestroy());
             }
-            
-            confirmHandButton.OnClickAsAsyncEnumerable()
-                .Subscribe(_ => OnClickButton(ButtonTypeEnum.ConfirmHand))
-                .AddTo(this.GetCancellationTokenOnDestroy());
             
             quitButton.OnClickAsAsyncEnumerable()
                 .Subscribe(_ => OnClickButton(ButtonTypeEnum.Quit))
@@ -97,7 +91,6 @@ namespace THE.SceneUis
                 .Subscribe(_ => CancelBet())
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
-            confirmHandButton.gameObject.SetActive(false);
             betRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
@@ -128,35 +121,31 @@ namespace THE.SceneUis
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType == ButtonTypeEnum.Bet));
                     break;
                 case Enums.GameStateEnum.PreFlop:
-                    playerList.ForEach(player => player.InitializeCards(OnCardSelected));
+                    playerList.ForEach(player => player.InitializeCards());
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
                     break;
                 case Enums.GameStateEnum.TheFlop:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     communityCardList[0].gameObject.SetActive(true);
-                    communityCardList[0].Initialize(communityCards[0], true, OnCardSelected);
+                    communityCardList[0].Initialize(communityCards[0], true);
                     communityCardList[1].gameObject.SetActive(true);
-                    communityCardList[1].Initialize(communityCards[1], true, OnCardSelected);
+                    communityCardList[1].Initialize(communityCards[1], true);
                     communityCardList[2].gameObject.SetActive(true);
-                    communityCardList[2].Initialize(communityCards[2], true, OnCardSelected);
+                    communityCardList[2].Initialize(communityCards[2], true);
                     break;
                 case Enums.GameStateEnum.TheTurn:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     communityCardList[3].gameObject.SetActive(true);
-                    communityCardList[3].Initialize(communityCards[3], true, OnCardSelected);
+                    communityCardList[3].Initialize(communityCards[3], true);
                     break;
                 case Enums.GameStateEnum.TheRiver:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     communityCardList[4].gameObject.SetActive(true);
-                    communityCardList[4].Initialize(communityCards[4], true, OnCardSelected);
+                    communityCardList[4].Initialize(communityCards[4], true);
                     break;
                 case Enums.GameStateEnum.Showdown:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
-                    confirmHandButton.gameObject.SetActive(true);
-                    confirmHandButton.interactable = false;
-                    gamingHubReceiver.Self.CanSelectCard = true;
-                    HighlightCards();
-                    ShowMessage("Choose your hand");
+                    //HighlightCards();
                     break;
             }
 
@@ -174,17 +163,6 @@ namespace THE.SceneUis
             playerList.First(x => x.PlayerId == playerData.Id).UpdateBetAndChips(playerData);
         }
 
-        private void OnCardSelected(bool isSelected, CardData cardEntity)
-        {
-            if (isSelected)
-                selectedCards.Add(cardEntity);
-            else
-                selectedCards.Remove(cardEntity);
-
-            confirmHandButton.interactable = selectedCards.Count == 5;
-            gamingHubReceiver.Self.CanSelectCard = selectedCards.Count < 5;
-        }
-
         private void ShowMessage(string message)
         {
             popupUi = FindFirstObjectByType<PopupUi>();
@@ -196,14 +174,6 @@ namespace THE.SceneUis
             if (buttonType == ButtonTypeEnum.Quit)
             {
                 await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);
-                return;
-            }
-
-            if (buttonType == ButtonTypeEnum.ConfirmHand)
-            {
-                gameStateText.text = "Current state: Waiting";
-                confirmHandButton.interactable = false;
-                await gamingHubReceiver.ChooseHand(gamingHubReceiver.Self.Id, selectedCards, OnDisconnect);
                 return;
             }
 

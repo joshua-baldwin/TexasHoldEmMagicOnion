@@ -16,7 +16,6 @@ namespace THE.Player
         public List<CardData> HoleCards { get; set; }
         public /*List<ChipData>*/int Chips { get; }
         public /*List<ChipData>*/int CurrentBet { get; }
-        public bool CanSelectCard { get; set; }
         
         public PlayerData(PlayerEntity playerEntity)
         {

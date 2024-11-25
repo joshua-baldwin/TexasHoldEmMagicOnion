@@ -43,7 +43,7 @@ namespace THE.Player
             }
         }
 
-        public void InitializeCards(Action<bool, CardData> onCardSelected)
+        public void InitializeCards()
         {
             if (cardsInitialized)
                 return;
@@ -51,8 +51,8 @@ namespace THE.Player
             ChangeCardVisibility(true);
             var playerEntity = MySceneManager.Instance.HubReceiver.GetPlayerList().First(x => x.Id == PlayerId);
             var isSelf = playerEntity.Id == gamingHubReceiver.Self.Id;
-            cardList[0].Initialize(playerEntity.HoleCards[0], isSelf, onCardSelected);
-            cardList[1].Initialize(playerEntity.HoleCards[1], isSelf, onCardSelected);
+            cardList[0].Initialize(playerEntity.HoleCards[0], isSelf);
+            cardList[1].Initialize(playerEntity.HoleCards[1], isSelf);
             cardsInitialized = true;
         }
 
