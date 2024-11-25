@@ -185,9 +185,10 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(2);
+            writer.WriteArrayHeader(3);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CardSuitEnum>(formatterResolver).Serialize(ref writer, value.Suit, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CardRankEnum>(formatterResolver).Serialize(ref writer, value.Rank, options);
+            writer.Write(value.IsFinalHand);
         }
 
         public global::THE.MagicOnion.Shared.Entities.CardEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -202,6 +203,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var length = reader.ReadArrayHeader();
             var __Suit__ = default(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum);
             var __Rank__ = default(global::TexasHoldEmShared.Enums.Enums.CardRankEnum);
+            var __IsFinalHand__ = default(bool);
 
             for (int i = 0; i < length; i++)
             {
@@ -213,6 +215,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                     case 1:
                         __Rank__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CardRankEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
+                    case 2:
+                        __IsFinalHand__ = reader.ReadBoolean();
+                        break;
                     default:
                         reader.Skip();
                         break;
@@ -220,6 +225,14 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             var ____result = new global::THE.MagicOnion.Shared.Entities.CardEntity(__Suit__, __Rank__);
+            if (length <= 2)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.IsFinalHand = __IsFinalHand__;
+
+        MEMBER_ASSIGNMENT_END:
             reader.Depth--;
             return ____result;
         }
