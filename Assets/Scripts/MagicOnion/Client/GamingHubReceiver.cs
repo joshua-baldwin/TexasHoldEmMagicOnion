@@ -262,8 +262,14 @@ namespace THE.MagicOnion.Client
         {
             Debug.Log("Hand chosen");
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
-            var player = playerEntities.First(x => x.Id == winnerId);
-            ShowMessage?.Invoke($"{player.Name} is the winner with a {winningHand}!");
+            if (winnerId == Guid.Empty)
+                ShowMessage?.Invoke("It is a tie!");
+            else
+            {
+                var player = playerEntities.First(x => x.Id == winnerId);
+                ShowMessage?.Invoke($"{player.Name} is the winner with a {winningHand}!");
+            }
+
             OnGameOverAction?.Invoke();
         }
 
