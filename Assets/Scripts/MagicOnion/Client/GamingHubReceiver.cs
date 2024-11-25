@@ -208,6 +208,7 @@ namespace THE.MagicOnion.Client
         public void OnLeaveRoom(PlayerEntity player, int playerCount)
         {
             Debug.Log($"{player.Name}:{player.Id} left");
+            Self = null;
             UpdatePlayerCount?.Invoke(playerCount);
         }
 
@@ -236,6 +237,7 @@ namespace THE.MagicOnion.Client
         public void OnQuitGame()
         {
             Debug.Log("Game quit");
+            Self = null;
         }
 
         public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage)
