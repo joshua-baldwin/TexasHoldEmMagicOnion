@@ -111,11 +111,6 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTaskVoid QuitGame()
-        {
-            await CallQuitGame();
-        }
-
         public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId, Action onDisconnect)
         {
             try
@@ -176,12 +171,6 @@ namespace THE.MagicOnion.Client
             await client.CancelStart(Self.Id);
         }
 
-        private async UniTask CallQuitGame()
-        {
-            Debug.Log("Calling QuitGame");
-            await client.QuitGame(Self.Id);
-        }
-
         private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int chipsBet, Guid targetPlayerId)
         {
             Debug.Log("Calling DoAction");
@@ -208,7 +197,8 @@ namespace THE.MagicOnion.Client
         public void OnLeaveRoom(PlayerEntity player, int playerCount)
         {
             Debug.Log($"{player.Name}:{player.Id} left");
-            Self = null;
+            if (player.Id == Self.Id)
+                Self = null;
             UpdatePlayerCount?.Invoke(playerCount);
         }
 
@@ -232,12 +222,6 @@ namespace THE.MagicOnion.Client
         public void OnCancelGameStart()
         {
             Debug.Log("Cancelled");
-        }
-
-        public void OnQuitGame()
-        {
-            Debug.Log("Game quit");
-            Self = null;
         }
 
         public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage)
