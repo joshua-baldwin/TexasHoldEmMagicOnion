@@ -18,7 +18,6 @@ namespace THE.Player
         [SerializeField] private Text dealer;
         [SerializeField] private GameObject cardListRoot;
         [SerializeField] private List<CardClass> cardList;
-        [SerializeField] private Text currentBetText;
         
         private GamingHubReceiver gamingHubReceiver;
         public Guid PlayerId;
@@ -60,7 +59,6 @@ namespace THE.Player
         {
             chipsText.text = $"Chips: {playerData.Chips}";
             //chipsText.text = ClientUtilityMethods.GetChipText(playerData.Chips);
-            currentBetText.text = $"Current bet: {playerData.CurrentBet}";
         }
 
         public void ChangeCardVisibility(bool visible)

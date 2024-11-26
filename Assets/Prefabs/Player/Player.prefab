@@ -285,7 +285,6 @@ MonoBehaviour:
   cardList:
   - {fileID: 2140700609155272802}
   - {fileID: 753536995672265907}
-  currentBetText: {fileID: 8745119077433477424}
 --- !u!114 &7009261771748941266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,7 +468,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Current bet: 0'
+  m_Text: 
 --- !u!1 &5083201660261361485
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2608263158416668606
 RectTransform:
   m_ObjectHideFlags: 0
@@ -503,9 +502,9 @@ RectTransform:
   - {fileID: 3844062276639825634}
   m_Father: {fileID: 3066682062083469556}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 65, y: -147.5}
   m_SizeDelta: {x: 130, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7417686210633413915
