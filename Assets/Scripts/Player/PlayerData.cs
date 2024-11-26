@@ -16,6 +16,7 @@ namespace THE.Player
         public List<CardData> HoleCards { get; set; }
         public /*List<ChipData>*/int Chips { get; }
         public /*List<ChipData>*/int CurrentBet { get; }
+        public Enums.CommandTypeEnum LastCommand { get; }
         
         public PlayerData(PlayerEntity playerEntity)
         {
@@ -28,6 +29,7 @@ namespace THE.Player
                 HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();
             Chips = playerEntity.Chips;
             CurrentBet = playerEntity.CurrentBet;
+            LastCommand = playerEntity.LastCommand;
             //playerEntity.Chips.ForEach(x => Chips.Add(new ChipData(x.ChipType, x.ChipCount)));
             //playerEntity.CurrentBet.ForEach(x => CurrentBet.Add(new ChipData(x.ChipType, x.ChipCount)));
         }

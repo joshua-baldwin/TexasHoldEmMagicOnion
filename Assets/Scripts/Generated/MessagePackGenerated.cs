@@ -47,14 +47,15 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(6)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(7)
             {
                 { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>), 0 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 1 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 2 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 3 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 4 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 5 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum), 3 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 4 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 5 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 6 },
             };
         }
 
@@ -71,9 +72,10 @@ namespace MessagePack.Resolvers
                 case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
                 case 1: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
                 case 2: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
-                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
-                case 4: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
-                case 5: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
+                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CommandTypeEnumFormatter();
+                case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
+                case 5: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
+                case 6: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
                 default: return null;
             }
         }
@@ -128,6 +130,19 @@ namespace MessagePack.Formatters.TexasHoldEmShared.Enums
         public global::TexasHoldEmShared.Enums.Enums.CardSuitEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             return (global::TexasHoldEmShared.Enums.Enums.CardSuitEnum)reader.ReadInt32();
+        }
+    }
+
+    public sealed class Enums_CommandTypeEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>
+    {
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            writer.Write((global::System.Int32)value);
+        }
+
+        public global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            return (global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum)reader.ReadInt32();
         }
     }
 
@@ -262,7 +277,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.CurrentBet);
             writer.Write(value.HasTakenAction);
             writer.Write(value.HasFolded);
-            writer.Write(value.HasChecked);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Serialize(ref writer, value.LastCommand, options);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -286,7 +301,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __CurrentBet__ = default(int);
             var __HasTakenAction__ = default(bool);
             var __HasFolded__ = default(bool);
-            var __HasChecked__ = default(bool);
+            var __LastCommand__ = default(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum);
 
             for (int i = 0; i < length; i++)
             {
@@ -326,7 +341,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __HasFolded__ = reader.ReadBoolean();
                         break;
                     case 11:
-                        __HasChecked__ = reader.ReadBoolean();
+                        __LastCommand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -388,7 +403,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.HasChecked = __HasChecked__;
+            ____result.LastCommand = __LastCommand__;
 
         MEMBER_ASSIGNMENT_END:
             reader.Depth--;
