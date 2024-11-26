@@ -100,7 +100,7 @@ namespace THE.SceneUis
             gamingHubReceiver.OnGameOverAction = OnGameOver;
         }
 
-        public void Initialize(bool isMyTurn, PlayerData currentPlayerEntity)
+        public void Initialize(bool isMyTurn, Guid currentPlayerEntityId)
         {
             foreach (var player in gamingHubReceiver.GetPlayerList())
             {
@@ -108,11 +108,11 @@ namespace THE.SceneUis
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
             }
-            UpdateUi(isMyTurn, null, currentPlayerEntity, 0, null);
+            UpdateUi(isMyTurn, Guid.Empty, currentPlayerEntityId, 0, null);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
 
-        private void UpdateUi(bool isMyTurn, PlayerData previousPlayerEntity, PlayerData currentPlayerEntity, int currentPot, List<CardData> communityCards)
+        private void UpdateUi(bool isMyTurn, Guid previousPlayerEntityId, Guid currentPlayerEntityId, int currentPot, List<CardData> communityCards)
         {
             gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
             switch (gamingHubReceiver.GameState)
@@ -151,16 +151,22 @@ namespace THE.SceneUis
 
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
-            
-            currentTurnText.text = $"Current player: {currentPlayerEntity.Name}";
+
+            var players = gamingHubReceiver.GetPlayerList();
+            var currentPlayer = players.First(x => x.Id == currentPlayerEntityId);
+            currentTurnText.text = $"Current player: {currentPlayer.Name}";
             potText.text = $"Pot: {currentPot}";
-            if (previousPlayerEntity != null)
-                UpdateBets(previousPlayerEntity);
+            if (previousPlayerEntityId != Guid.Empty)
+                UpdateBets();
         }
         
-        private void UpdateBets(PlayerData playerData)
+        private void UpdateBets()
         {
-            playerList.First(x => x.PlayerId == playerData.Id).UpdateBetAndChips(playerData);
+            var players = gamingHubReceiver.GetPlayerList();
+            foreach (var player in playerList)
+            {
+                player.UpdateBetAndChips(players.First(x => x.Id == player.PlayerId));
+            }
         }
 
         private void ShowMessage(string message)
