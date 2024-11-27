@@ -224,24 +224,30 @@ namespace THE.MagicOnion.Client
             Debug.Log("Cancelled");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, Guid winnerId)
         {
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             if (isError)
                 ShowMessage?.Invoke(actionMessage);
-            else
+            else if (winnerId != Guid.Empty)
             {
-                var cards = new List<CardData>();
-                foreach (var card in communityCards)
-                {
-                    if (card != null)
-                        cards.Add(new CardData(card));
-                }
-                
-                UpdateGameUi?.Invoke(currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, currentPot, cards);
+                Debug.Log("Game over");
+                players = playerEntities.Select(p => new PlayerData(p)).ToArray();
+                var player = playerEntities.First(x => x.Id == winnerId);
+                ShowMessage?.Invoke($"{player.Name} is the winner!");
+                OnGameOverAction?.Invoke();
             }
+
+            var cards = new List<CardData>();
+            foreach (var card in communityCards)
+            {
+                if (card != null)
+                    cards.Add(new CardData(card));
+            }
+
+            UpdateGameUi?.Invoke(currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, currentPot, cards);
         }
 
         public void OnChooseHand(Guid winnerId, Enums.HandRankingType winningHand, PlayerEntity[] playerEntities)
@@ -256,15 +262,6 @@ namespace THE.MagicOnion.Client
                 ShowMessage?.Invoke($"{player.Name} is the winner with a {winningHand}!");
             }
 
-            OnGameOverAction?.Invoke();
-        }
-
-        public void OnGameOver(Guid winnerId, PlayerEntity[] playerEntities)
-        {
-            Debug.Log("Game over");
-            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
-            var player = playerEntities.First(x => x.Id == winnerId);
-            ShowMessage?.Invoke($"{player.Name} is the winner!");
             OnGameOverAction?.Invoke();
         }
 
