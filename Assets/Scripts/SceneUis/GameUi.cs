@@ -135,12 +135,17 @@ namespace THE.SceneUis
                 case Enums.GameStateEnum.PreFlop:
                     playerList.ForEach(player => player.InitializeCards());
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
-                    if (gamingHubReceiver.Self.PlayerRole == Enums.PlayerRoleEnum.BigBlind && players.All(x => x.LastCommand != Enums.CommandTypeEnum.Raise))
-                        buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(true);
+                    if (gamingHubReceiver.Self.PlayerRole == Enums.PlayerRoleEnum.BigBlind)
+                    {
+                        buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(false);
+                        if (players.Any(x => x.LastCommand == Enums.CommandTypeEnum.Call) && players.All(x => x.LastCommand != Enums.CommandTypeEnum.Raise))
+                            buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(true);
+                    }
                     break;
                 case Enums.GameStateEnum.TheFlop:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
-                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand == Enums.CommandTypeEnum.Raise));
+                    var canCall = players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.Call) && gamingHubReceiver.Self.PlayerRole != Enums.PlayerRoleEnum.SmallBlind;
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(canCall);
                     communityCardList[0].gameObject.SetActive(true);
                     communityCardList[0].Initialize(communityCards[0], true);
                     communityCardList[1].gameObject.SetActive(true);
@@ -150,13 +155,15 @@ namespace THE.SceneUis
                     break;
                 case Enums.GameStateEnum.TheTurn:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
-                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand == Enums.CommandTypeEnum.Raise));
+                    canCall = players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.Call) && gamingHubReceiver.Self.PlayerRole != Enums.PlayerRoleEnum.SmallBlind;
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(canCall);
                     communityCardList[3].gameObject.SetActive(true);
                     communityCardList[3].Initialize(communityCards[3], true);
                     break;
                 case Enums.GameStateEnum.TheRiver:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
-                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand == Enums.CommandTypeEnum.Raise));
+                    canCall = players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.Call) && gamingHubReceiver.Self.PlayerRole != Enums.PlayerRoleEnum.SmallBlind;
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(canCall);
                     communityCardList[4].gameObject.SetActive(true);
                     communityCardList[4].Initialize(communityCards[4], true);
                     break;
