@@ -14,6 +14,7 @@ namespace THE.SceneUis
         [SerializeField] private Button cancelJoinRoom;
         
         private GamingHubReceiver gamingHubReceiver;
+        private PopupUi popupUi;
 
         private void Awake()
         {
@@ -36,6 +37,7 @@ namespace THE.SceneUis
         public void Initialize()
         {
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
+            gamingHubReceiver.ShowMessage = ShowMessage;
         }
         
         private async UniTaskVoid JoinRoom()
@@ -60,6 +62,12 @@ namespace THE.SceneUis
         private void SetCancelButton(bool isActive)
         {
             cancelJoinRoom.interactable = isActive;
+        }
+        
+        private void ShowMessage(string message)
+        {
+            popupUi = FindFirstObjectByType<PopupUi>();
+            popupUi.ShowMessage(message);
         }
     }
 }

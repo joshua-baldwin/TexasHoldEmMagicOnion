@@ -48,12 +48,19 @@ namespace THE.MagicOnion.Client
             if (shutdownCancellation.IsCancellationRequested)
                 return;
 
+            bool roomJoined = false;
             try
             {
-                await CallJoinRoom(UserName.Value);
+                roomJoined = await CallJoinRoom(UserName.Value);
             }
             catch (Exception)
             {
+                OnRoomConnectFailed?.Invoke();
+            }
+
+            if (!roomJoined)
+            {
+                ShowMessage?.Invoke("All rooms full. Try again later.\nルームがいっぱいになってます。時間空いてから再試してください");
                 OnRoomConnectFailed?.Invoke();
             }
         }
@@ -137,10 +144,10 @@ namespace THE.MagicOnion.Client
 
         #region RPC calls
         
-        private async UniTask CallJoinRoom(string userName)
+        private async UniTask<bool> CallJoinRoom(string userName)
         {
             Debug.Log("Calling JoinRoom");
-            await client.JoinRoomAsync(userName);
+            return await client.JoinRoomAsync(userName);
         }
         
         private async UniTask CallLeaveRoom()
