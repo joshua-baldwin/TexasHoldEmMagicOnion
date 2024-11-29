@@ -47,15 +47,19 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(7)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(11)
             {
                 { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>), 0 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 1 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 2 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum), 3 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 4 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 5 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 6 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>), 1 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 2 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 3 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum), 4 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.HandRankingType), 5 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 6 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.BestHandEntity), 7 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 8 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 9 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.WinningHandEntity), 10 },
             };
         }
 
@@ -70,12 +74,16 @@ namespace MessagePack.Resolvers
             switch (key)
             {
                 case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
-                case 1: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
-                case 2: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
-                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CommandTypeEnumFormatter();
-                case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
-                case 5: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
-                case 6: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
+                case 1: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.PlayerEntity>();
+                case 2: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
+                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
+                case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CommandTypeEnumFormatter();
+                case 5: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandRankingTypeFormatter();
+                case 6: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
+                case 7: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.BestHandEntityFormatter();
+                case 8: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
+                case 9: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
+                case 10: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.WinningHandEntityFormatter();
                 default: return null;
             }
         }
@@ -146,6 +154,19 @@ namespace MessagePack.Formatters.TexasHoldEmShared.Enums
         }
     }
 
+    public sealed class Enums_HandRankingTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TexasHoldEmShared.Enums.Enums.HandRankingType>
+    {
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::TexasHoldEmShared.Enums.Enums.HandRankingType value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            writer.Write((global::System.Int32)value);
+        }
+
+        public global::TexasHoldEmShared.Enums.Enums.HandRankingType Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            return (global::TexasHoldEmShared.Enums.Enums.HandRankingType)reader.ReadInt32();
+        }
+    }
+
     public sealed class Enums_PlayerRoleEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>
     {
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum value, global::MessagePack.MessagePackSerializerOptions options)
@@ -188,6 +209,56 @@ namespace MessagePack.Formatters.TexasHoldEmShared.Enums
 
 namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
 {
+    public sealed class BestHandEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.BestHandEntity>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::THE.MagicOnion.Shared.Entities.BestHandEntity value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(2);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.Cards, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandRankingType>(formatterResolver).Serialize(ref writer, value.HandRanking, options);
+        }
+
+        public global::THE.MagicOnion.Shared.Entities.BestHandEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::THE.MagicOnion.Shared.Entities.BestHandEntity();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        ____result.Cards = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 1:
+                        ____result.HandRanking = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandRankingType>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
     public sealed class CardEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>
     {
 
@@ -265,7 +336,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(12);
+            writer.WriteArrayHeader(15);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
@@ -278,6 +349,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.HasTakenAction);
             writer.Write(value.HasFolded);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Serialize(ref writer, value.LastCommand, options);
+            writer.Write(value.IsAllIn);
+            writer.WriteNil();
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Serialize(ref writer, value.BestHand, options);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -302,6 +376,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __HasTakenAction__ = default(bool);
             var __HasFolded__ = default(bool);
             var __LastCommand__ = default(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum);
+            var __IsAllIn__ = default(bool);
+            var __BestHand__ = default(global::THE.MagicOnion.Shared.Entities.BestHandEntity);
 
             for (int i = 0; i < length; i++)
             {
@@ -342,6 +418,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         break;
                     case 11:
                         __LastCommand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 12:
+                        __IsAllIn__ = reader.ReadBoolean();
+                        break;
+                    case 14:
+                        __BestHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -404,8 +486,86 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             ____result.LastCommand = __LastCommand__;
+            if (length <= 12)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.IsAllIn = __IsAllIn__;
+            if (length <= 14)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.BestHand = __BestHand__;
 
         MEMBER_ASSIGNMENT_END:
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class WinningHandEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.WinningHandEntity>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::THE.MagicOnion.Shared.Entities.WinningHandEntity value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(6);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerEntity>(formatterResolver).Serialize(ref writer, value.Winner, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.Cards, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandRankingType>(formatterResolver).Serialize(ref writer, value.HandRanking, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>>(formatterResolver).Serialize(ref writer, value.TiedWith, options);
+            writer.Write(value.PotToWinner);
+            writer.Write(value.PotToTiedWith);
+        }
+
+        public global::THE.MagicOnion.Shared.Entities.WinningHandEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::THE.MagicOnion.Shared.Entities.WinningHandEntity();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        ____result.Winner = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerEntity>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 1:
+                        ____result.Cards = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 2:
+                        ____result.HandRanking = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandRankingType>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 3:
+                        ____result.TiedWith = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 4:
+                        ____result.PotToWinner = reader.ReadInt32();
+                        break;
+                    case 5:
+                        ____result.PotToTiedWith = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
             reader.Depth--;
             return ____result;
         }

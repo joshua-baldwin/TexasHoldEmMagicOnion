@@ -231,36 +231,40 @@ namespace THE.MagicOnion.Client
             Debug.Log("Cancelled");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, int currentPot, CardEntity[] communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<Guid> winnerIds, Enums.HandRankingType winningHand)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, List<(Guid, int)> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
         {
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             if (isError)
                 ShowMessage?.Invoke(actionMessage);
-            else if (winnerIds.Count == 1 && winningHand == Enums.HandRankingType.Nothing)
+            else if (winnerList.Count == 1 && winnerList.First().HandRanking == Enums.HandRankingType.Nothing)
             {
                 Debug.Log("Game over");
                 players = playerEntities.Select(p => new PlayerData(p)).ToArray();
-                var player = playerEntities.First(x => x.Id == winnerIds.First());
+                var player = playerEntities.First(x => x.Id == winnerList.First().Winner.Id);
                 ShowMessage?.Invoke($"{player.Name} is the winner!");
                 OnGameOverAction?.Invoke();
             }
-            else if (winningHand != Enums.HandRankingType.Nothing)
+            else if (winnerList.First().HandRanking != Enums.HandRankingType.Nothing)
             {
                 Debug.Log("Hand chosen");
                 players = playerEntities.Select(p => new PlayerData(p)).ToArray();
-                if (winnerIds.Count == 2)
-                {
-                    var p1 = players.First(x => x.Id == winnerIds[0]);
-                    var p2 = players.First(x => x.Id == winnerIds[1]);
-                    ShowMessage?.Invoke($"Player {p1.Name} and player {p2.Name} tied with {winningHand}!");
-                }
-                else
-                {
-                    var player = playerEntities.First(x => x.Id == winnerIds.First());
-                    ShowMessage?.Invoke($"{player.Name} is the winner with a {winningHand}!");
-                }
+                //TODO TODO TODO TODO
+                
+                
+                
+                // if (winnerIds.Count == 2)
+                // {
+                //     var p1 = players.First(x => x.Id == winnerIds[0]);
+                //     var p2 = players.First(x => x.Id == winnerIds[1]);
+                //     ShowMessage?.Invoke($"Player {p1.Name} and player {p2.Name} tied with {winningHand}!");
+                // }
+                // else
+                // {
+                //     var player = playerEntities.First(x => x.Id == winnerIds.First());
+                //     ShowMessage?.Invoke($"{player.Name} is the winner with a {winningHand}!");
+                // }
 
                 OnGameOverAction?.Invoke();
             }
