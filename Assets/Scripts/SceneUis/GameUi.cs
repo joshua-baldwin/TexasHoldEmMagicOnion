@@ -23,6 +23,7 @@ namespace THE.SceneUis
             Fold,
             Call,
             Raise,
+            AllIn,
             Quit,
         }
         
@@ -224,6 +225,7 @@ namespace THE.SceneUis
                 ButtonTypeEnum.Fold => Enums.CommandTypeEnum.Fold,
                 ButtonTypeEnum.Call => Enums.CommandTypeEnum.Call,
                 ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,
+                ButtonTypeEnum.AllIn => Enums.CommandTypeEnum.AllIn,
                 _ => throw new ArgumentOutOfRangeException()
             };
             
