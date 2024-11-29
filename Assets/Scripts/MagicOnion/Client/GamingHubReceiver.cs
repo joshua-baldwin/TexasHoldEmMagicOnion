@@ -247,7 +247,7 @@ namespace THE.MagicOnion.Client
                 ShowMessage?.Invoke($"{player.Name} is the winner!");
                 OnGameOverAction?.Invoke();
             }
-            else if (winnerList.First().HandRanking != Enums.HandRankingType.Nothing)
+            else if (winnerList.Count > 0 && winnerList.First().HandRanking != Enums.HandRankingType.Nothing)
             {
                 Debug.Log("Hand chosen");
                 players = playerEntities.Select(p => new PlayerData(p)).ToArray();
