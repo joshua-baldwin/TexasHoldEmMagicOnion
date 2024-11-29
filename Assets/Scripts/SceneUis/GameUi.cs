@@ -109,7 +109,7 @@ namespace THE.SceneUis
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
             }
-            UpdateUi(0, isMyTurn, Guid.Empty, currentPlayerEntityId, null, null);
+            UpdateUi(0, isMyTurn, Guid.Empty, currentPlayerEntityId, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
 
@@ -177,7 +177,7 @@ namespace THE.SceneUis
             currentTurnText.text = $"Current player: {currentPlayer.Name}";
             var sb = new StringBuilder();
             var index = 'A';
-            for (var i = pots.Count; i >= 0; i--)
+            for (var i = pots.Count - 1; i >= 0; i--)
             {
                 if (i == pots.Count - 1)
                     sb.Append($"Main pot: {pots[i].Item2} ");
