@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using TexasHoldEmShared.Enums;
@@ -108,11 +109,11 @@ namespace THE.SceneUis
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
             }
-            UpdateUi(0, isMyTurn, Guid.Empty, currentPlayerEntityId, 0, null);
+            UpdateUi(0, isMyTurn, Guid.Empty, currentPlayerEntityId, null, null);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
 
-        private void UpdateUi(Enums.CommandTypeEnum previousCommand, bool isMyTurn, Guid previousPlayerEntityId, Guid currentPlayerEntityId, int currentPot, List<CardData> communityCards)
+        private void UpdateUi(Enums.CommandTypeEnum previousCommand, bool isMyTurn, Guid previousPlayerEntityId, Guid currentPlayerEntityId, List<(Guid, int)> pots, List<CardData> communityCards)
         {
             var players = gamingHubReceiver.GetPlayerList();
             var currentPlayer = players.First(x => x.Id == currentPlayerEntityId);
@@ -166,7 +167,6 @@ namespace THE.SceneUis
                     break;
                 case Enums.GameStateEnum.Showdown:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
-                    //HighlightCards();
                     break;
             }
 
@@ -175,7 +175,19 @@ namespace THE.SceneUis
 
             
             currentTurnText.text = $"Current player: {currentPlayer.Name}";
-            potText.text = $"Pot: {currentPot}";
+            var sb = new StringBuilder();
+            var index = 'A';
+            for (var i = pots.Count; i >= 0; i--)
+            {
+                if (i == pots.Count - 1)
+                    sb.Append($"Main pot: {pots[i].Item2} ");
+                else
+                {
+                    sb.Append($"Side pot {index}: {pots[i].Item2} ");
+                    index++;
+                }
+            }
+            potText.text = sb.ToString();
             if (previousPlayerEntityId != Guid.Empty)
                 UpdateBets();
         }

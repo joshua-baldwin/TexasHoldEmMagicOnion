@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace THE.MagicOnion.Client
         public Action OnRoomConnectFailed;
         public Action OnCancelRoomConnect;
         public Action<int> UpdatePlayerCount;
-        public Action<Enums.CommandTypeEnum, bool, Guid, Guid, int, List<CardData>> UpdateGameUi;
+        public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<(Guid, int)>, List<CardData>> UpdateGameUi;
         public Action<string> ShowMessage;
         public Action OnGameOverAction;
         
@@ -250,21 +251,20 @@ namespace THE.MagicOnion.Client
             {
                 Debug.Log("Hand chosen");
                 players = playerEntities.Select(p => new PlayerData(p)).ToArray();
-                //TODO TODO TODO TODO
-                
-                
-                
-                // if (winnerIds.Count == 2)
-                // {
-                //     var p1 = players.First(x => x.Id == winnerIds[0]);
-                //     var p2 = players.First(x => x.Id == winnerIds[1]);
-                //     ShowMessage?.Invoke($"Player {p1.Name} and player {p2.Name} tied with {winningHand}!");
-                // }
-                // else
-                // {
-                //     var player = playerEntities.First(x => x.Id == winnerIds.First());
-                //     ShowMessage?.Invoke($"{player.Name} is the winner with a {winningHand}!");
-                // }
+                var sb = new StringBuilder();
+                foreach (var winner in winnerList)
+                {
+                    if (winner.Winner != null)
+                        sb.Append($"Player {winner.Winner} had a {winner.HandRanking} and won {winner.PotToWinner}.");
+                    else if (winner.TiedWith.Count > 0)
+                    {
+                        var sb2 = new StringBuilder();
+                        foreach (var tie in winner.TiedWith)
+                            sb2.Append($"{tie} ");
+
+                        sb.Append($"Players {sb2} tied with {winner.HandRanking} and won {winner.PotToTiedWith} each.");
+                    }
+                }
 
                 OnGameOverAction?.Invoke();
             }
@@ -276,7 +276,7 @@ namespace THE.MagicOnion.Client
                     cards.Add(new CardData(card));
             }
 
-            UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, currentPot, cards);
+            UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, pots, cards);
         }
 
         #endregion
