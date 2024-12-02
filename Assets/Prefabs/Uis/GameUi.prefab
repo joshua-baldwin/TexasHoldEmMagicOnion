@@ -428,7 +428,7 @@ MonoBehaviour:
     ButtonObject: {fileID: 7727756229971856926}
   quitButton: {fileID: 5252650392203420373}
   currentTurnText: {fileID: 3411148938598562873}
-  potText: {fileID: 0}
+  potText: {fileID: 3913136639939167163}
   gameStateText: {fileID: 9008563858170190126}
   betRoot: {fileID: 7839554019549905105}
   betAmountInput: {fileID: 1918262873776116991}
