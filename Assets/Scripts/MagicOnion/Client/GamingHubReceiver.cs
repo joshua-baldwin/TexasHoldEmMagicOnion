@@ -30,6 +30,7 @@ namespace THE.MagicOnion.Client
         public PlayerData Self { get; private set; }
         public PlayerData CurrentPlayer { get; private set; }
         public Enums.GameStateEnum GameState { get; private set; }
+        public int CurrentRound { get; private set; }
         
         public Action OnRoomConnectSuccess;
         public Action OnRoomConnectFailed;
@@ -215,10 +216,11 @@ namespace THE.MagicOnion.Client
             Debug.Log($"Player count: {playerEntities.Length}");
         }
 
-        public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer, Enums.GameStateEnum gameState, bool isFirstRound)
+        public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer, Enums.GameStateEnum gameState, int roundNumber, bool isFirstRound)
         {
             Debug.Log("Game started");
             GameState = gameState;
+            CurrentRound = roundNumber;
             UpdatePlayerCount = null;
             OnFinishStart?.Invoke();
             //do this in scene manager

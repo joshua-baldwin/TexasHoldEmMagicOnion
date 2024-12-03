@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
+using THE.MagicOnion.Shared.Utilities;
 using THE.Player;
 using THE.SceneControllers;
 using THE.Utilities;
@@ -310,7 +311,8 @@ namespace THE.SceneUis
         private void OnGameOver()
         {
             buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
-            playAgainButton.gameObject.SetActive(true);
+            if (gamingHubReceiver.CurrentRound <= Constants.MaxRounds)
+                playAgainButton.gameObject.SetActive(true);
             playerList.ForEach(player => player.ShowCards());
         }
 
