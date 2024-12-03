@@ -25,6 +25,7 @@ namespace THE.SceneUis
             Raise,
             AllIn,
             Quit,
+            PlayAgain
         }
         
         [Serializable]
@@ -39,6 +40,7 @@ namespace THE.SceneUis
         [SerializeField] private List<CardClass> communityCardList;
         [SerializeField] private List<ButtonClass> buttonList;
         [SerializeField] private Button quitButton;
+        [SerializeField] private Button playAgainButton;
         [SerializeField] private Text currentTurnText;
         [SerializeField] private Text potText;
         [SerializeField] private Text gameStateText;
@@ -66,6 +68,10 @@ namespace THE.SceneUis
             
             quitButton.OnClickAsAsyncEnumerable()
                 .Subscribe(_ => OnClickButton(ButtonTypeEnum.Quit))
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            playAgainButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => OnClickButton(ButtonTypeEnum.PlayAgain))
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             betAmountInput.OnValueChangedAsAsyncEnumerable()
@@ -102,7 +108,7 @@ namespace THE.SceneUis
             gamingHubReceiver.OnGameOverAction = OnGameOver;
         }
 
-        public void Initialize(bool isMyTurn, Guid currentPlayerEntityId)
+        public void Initialize()
         {
             foreach (var player in gamingHubReceiver.GetPlayerList())
             {
@@ -110,7 +116,7 @@ namespace THE.SceneUis
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
             }
-            UpdateUi(0, isMyTurn, Guid.Empty, currentPlayerEntityId, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
+            UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
 
@@ -213,6 +219,19 @@ namespace THE.SceneUis
             if (buttonType == ButtonTypeEnum.Quit)
             {
                 await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);
+                return;
+            }
+
+            if (buttonType == ButtonTypeEnum.PlayAgain)
+            {
+                await gamingHubReceiver.StartGame(false, () =>
+                {
+                    betRoot.gameObject.SetActive(false);
+                    confirmAmountButton.gameObject.SetActive(false);
+                    cancelButton.gameObject.SetActive(false);
+                    UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
+                    playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
+                }, OnDisconnect);
                 return;
             }
 

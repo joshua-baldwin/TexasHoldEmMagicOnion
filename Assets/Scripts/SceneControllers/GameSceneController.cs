@@ -11,9 +11,8 @@ namespace THE.SceneControllers
 
         private void Start()
         {
-            var hubReceiver = MySceneManager.Instance.HubReceiver;
             var ui = Instantiate(gameUiPrefab, canvas.transform).GetComponent<GameUi>();
-            ui.Initialize(hubReceiver.IsMyTurn, hubReceiver.CurrentPlayer.Id);
+            ui.Initialize();
             Instantiate(popupPrefab, canvas.transform);
         }
     }
