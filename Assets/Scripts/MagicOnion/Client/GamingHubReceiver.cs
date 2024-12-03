@@ -38,6 +38,7 @@ namespace THE.MagicOnion.Client
         public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<(Guid, int)>, List<CardData>> UpdateGameUi;
         public Action<string> ShowMessage;
         public Action OnGameOverAction;
+        public Action OnFinishStart;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
@@ -168,9 +169,8 @@ namespace THE.MagicOnion.Client
         private async UniTask CallStartGame(Action onFinish, bool isFirstRound)
         {
             Debug.Log("Calling StartGame");
-            var canStart = await client.StartGame(Self.Id, isFirstRound);
-            if (canStart)
-                onFinish?.Invoke();
+            OnFinishStart = onFinish;
+            await client.StartGame(Self.Id, isFirstRound);
         }
 
         private async UniTask CallCancelGame()
@@ -218,14 +218,15 @@ namespace THE.MagicOnion.Client
         public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer, Enums.GameStateEnum gameState, bool isFirstRound)
         {
             Debug.Log("Game started");
+            GameState = gameState;
             UpdatePlayerCount = null;
+            OnFinishStart?.Invoke();
             //do this in scene manager
             if (isFirstRound)
                 SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             CurrentPlayer = new PlayerData(currentPlayer);
-            GameState = gameState;
         }
 
         public void OnCancelGameStart()
