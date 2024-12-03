@@ -215,12 +215,13 @@ namespace THE.MagicOnion.Client
             Debug.Log($"Player count: {playerEntities.Length}");
         }
 
-        public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer, Enums.GameStateEnum gameState)
+        public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer, Enums.GameStateEnum gameState, bool isFirstRound)
         {
             Debug.Log("Game started");
             UpdatePlayerCount = null;
             //do this in scene manager
-            SceneManager.LoadSceneAsync("GameScene");
+            if (isFirstRound)
+                SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             CurrentPlayer = new PlayerData(currentPlayer);

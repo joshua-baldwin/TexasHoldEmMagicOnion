@@ -33,6 +33,14 @@ namespace THE.Player
         {
             cover.SetActive(false);
         }
+
+        public void Clear()
+        {
+            CardData = null;
+            cardRank.text = "";
+            cover.SetActive(false);
+            cardImage.sprite = null;
+        }
         
         private IEnumerator LoadFromResourcesFolder(Enums.CardSuitEnum suit)
         {

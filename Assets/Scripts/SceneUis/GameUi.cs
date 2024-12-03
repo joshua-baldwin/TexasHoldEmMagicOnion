@@ -102,6 +102,7 @@ namespace THE.SceneUis
             betRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
+            playAgainButton.gameObject.SetActive(false);
 
             gamingHubReceiver.UpdateGameUi = UpdateUi;
             gamingHubReceiver.ShowMessage = ShowMessage;
@@ -224,11 +225,20 @@ namespace THE.SceneUis
 
             if (buttonType == ButtonTypeEnum.PlayAgain)
             {
+                playAgainButton.interactable = false;
                 await gamingHubReceiver.StartGame(false, () =>
                 {
                     betRoot.gameObject.SetActive(false);
                     confirmAmountButton.gameObject.SetActive(false);
                     cancelButton.gameObject.SetActive(false);
+                    playAgainButton.gameObject.SetActive(false);
+                    playAgainButton.interactable = true;
+                    commandText.text = string.Empty;
+                    communityCardList.ForEach(card =>
+                    {
+                        card.Clear();
+                        card.gameObject.SetActive(false);
+                    });
                     UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
                     playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
                 }, OnDisconnect);
@@ -294,6 +304,7 @@ namespace THE.SceneUis
 
         private void OnGameOver()
         {
+            playAgainButton.gameObject.SetActive(true);
             playerList.ForEach(player => player.ShowCards());
             buttonList.ForEach(x => x.ButtonObject.interactable = false);
         }
