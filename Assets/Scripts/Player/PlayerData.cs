@@ -14,8 +14,9 @@ namespace THE.Player
         public Guid RoomId { get; set; }
         public bool IsDealer { get; set; }
         public List<CardData> HoleCards { get; set; }
-        public /*List<ChipData>*/int Chips { get; }
-        public /*List<ChipData>*/int CurrentBet { get; }
+        public int Chips { get; }
+        public int CurrentBetBeforeAllIn { get; }
+        public int CurrentBetAfterAllIn { get; }
         public Enums.CommandTypeEnum LastCommand { get; }
         
         public PlayerData(PlayerEntity playerEntity)
@@ -28,10 +29,9 @@ namespace THE.Player
             if (playerEntity.HoleCards != null)
                 HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();
             Chips = playerEntity.Chips;
-            CurrentBet = playerEntity.CurrentBet;
+            CurrentBetBeforeAllIn = playerEntity.CurrentBetBeforeAllIn;
+            CurrentBetAfterAllIn = playerEntity.CurrentBetAfterAllIn;
             LastCommand = playerEntity.LastCommand;
-            //playerEntity.Chips.ForEach(x => Chips.Add(new ChipData(x.ChipType, x.ChipCount)));
-            //playerEntity.CurrentBet.ForEach(x => CurrentBet.Add(new ChipData(x.ChipType, x.ChipCount)));
         }
     }
 }

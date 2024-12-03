@@ -345,12 +345,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.HoleCards, options);
             writer.Write(value.IsReady);
             writer.Write(value.Chips);
-            writer.Write(value.CurrentBet);
+            writer.Write(value.CurrentBetBeforeAllIn);
+            writer.Write(value.CurrentBetAfterAllIn);
             writer.Write(value.HasTakenAction);
             writer.Write(value.HasFolded);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Serialize(ref writer, value.LastCommand, options);
             writer.Write(value.IsAllIn);
-            writer.WriteNil();
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Serialize(ref writer, value.BestHand, options);
         }
 
@@ -372,7 +372,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __HoleCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
             var __IsReady__ = default(bool);
             var __Chips__ = default(int);
-            var __CurrentBet__ = default(int);
+            var __CurrentBetBeforeAllIn__ = default(int);
+            var __CurrentBetAfterAllIn__ = default(int);
             var __HasTakenAction__ = default(bool);
             var __HasFolded__ = default(bool);
             var __LastCommand__ = default(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum);
@@ -408,18 +409,21 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __Chips__ = reader.ReadInt32();
                         break;
                     case 8:
-                        __CurrentBet__ = reader.ReadInt32();
+                        __CurrentBetBeforeAllIn__ = reader.ReadInt32();
                         break;
                     case 9:
-                        __HasTakenAction__ = reader.ReadBoolean();
+                        __CurrentBetAfterAllIn__ = reader.ReadInt32();
                         break;
                     case 10:
-                        __HasFolded__ = reader.ReadBoolean();
+                        __HasTakenAction__ = reader.ReadBoolean();
                         break;
                     case 11:
-                        __LastCommand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        __HasFolded__ = reader.ReadBoolean();
                         break;
                     case 12:
+                        __LastCommand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 13:
                         __IsAllIn__ = reader.ReadBoolean();
                         break;
                     case 14:
@@ -467,26 +471,32 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.CurrentBet = __CurrentBet__;
+            ____result.CurrentBetBeforeAllIn = __CurrentBetBeforeAllIn__;
             if (length <= 9)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.HasTakenAction = __HasTakenAction__;
+            ____result.CurrentBetAfterAllIn = __CurrentBetAfterAllIn__;
             if (length <= 10)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.HasFolded = __HasFolded__;
+            ____result.HasTakenAction = __HasTakenAction__;
             if (length <= 11)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.LastCommand = __LastCommand__;
+            ____result.HasFolded = __HasFolded__;
             if (length <= 12)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.LastCommand = __LastCommand__;
+            if (length <= 13)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }

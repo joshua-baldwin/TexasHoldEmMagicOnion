@@ -255,17 +255,18 @@ namespace THE.MagicOnion.Client
                 foreach (var winner in winnerList)
                 {
                     if (winner.Winner != null)
-                        sb.Append($"Player {winner.Winner} had a {winner.HandRanking} and won {winner.PotToWinner}.");
+                        sb.Append($"Player {winner.Winner.Name} had a {winner.HandRanking} and won {winner.PotToWinner}.");
                     else if (winner.TiedWith.Count > 0)
                     {
                         var sb2 = new StringBuilder();
                         foreach (var tie in winner.TiedWith)
-                            sb2.Append($"{tie} ");
+                            sb2.Append($"{tie.Name} ");
 
                         sb.Append($"Players {sb2} tied with {winner.HandRanking} and won {winner.PotToTiedWith} each.");
                     }
                 }
 
+                ShowMessage?.Invoke(sb.ToString());
                 OnGameOverAction?.Invoke();
             }
 

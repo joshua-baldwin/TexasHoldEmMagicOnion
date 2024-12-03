@@ -123,9 +123,9 @@ namespace THE.SceneUis
             {
                 var previousPlayer = players.First(x => x.Id == previousPlayerEntityId);
                 commandText.text = previousCommand == Enums.CommandTypeEnum.Raise
-                    ? $"Player {previousPlayer.Name} raised {previousPlayer.CurrentBet}"
+                    ? $"Player {previousPlayer.Name} raised {previousPlayer.CurrentBetBeforeAllIn}"
                     : previousPlayer.LastCommand is Enums.CommandTypeEnum.SmallBlindBet or Enums.CommandTypeEnum.BigBlindBet
-                        ? $"Player {previousPlayer.Name} bet {previousPlayer.CurrentBet}"
+                        ? $"Player {previousPlayer.Name} bet {previousPlayer.CurrentBetBeforeAllIn}"
                         : $"Player {previousPlayer.Name} {previousCommand}ed";
             }
 
