@@ -153,7 +153,8 @@ namespace THE.SceneUis
                     break;
                 case Enums.GameStateEnum.TheFlop:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
-                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise));
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.AllIn));
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(players.All(x => x.LastCommand != Enums.CommandTypeEnum.Call && x.LastCommand != Enums.CommandTypeEnum.Raise && x.LastCommand != Enums.CommandTypeEnum.AllIn));
                     communityCardList[0].gameObject.SetActive(true);
                     communityCardList[0].Initialize(communityCards[0], true);
                     communityCardList[1].gameObject.SetActive(true);
@@ -163,18 +164,22 @@ namespace THE.SceneUis
                     break;
                 case Enums.GameStateEnum.TheTurn:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
-                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise));
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.AllIn));
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(players.All(x => x.LastCommand != Enums.CommandTypeEnum.Call && x.LastCommand != Enums.CommandTypeEnum.Raise && x.LastCommand != Enums.CommandTypeEnum.AllIn));
                     communityCardList[3].gameObject.SetActive(true);
                     communityCardList[3].Initialize(communityCards[3], true);
                     break;
                 case Enums.GameStateEnum.TheRiver:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
-                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise));
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.AllIn));
+                    buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(players.All(x => x.LastCommand != Enums.CommandTypeEnum.Call && x.LastCommand != Enums.CommandTypeEnum.Raise && x.LastCommand != Enums.CommandTypeEnum.AllIn));
                     communityCardList[4].gameObject.SetActive(true);
                     communityCardList[4].Initialize(communityCards[4], true);
                     break;
                 case Enums.GameStateEnum.Showdown:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
+                    break;
+                case Enums.GameStateEnum.GameOver:
                     break;
             }
 
@@ -304,9 +309,9 @@ namespace THE.SceneUis
 
         private void OnGameOver()
         {
+            buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
             playAgainButton.gameObject.SetActive(true);
             playerList.ForEach(player => player.ShowCards());
-            buttonList.ForEach(x => x.ButtonObject.interactable = false);
         }
 
         private void OnDisconnect()
