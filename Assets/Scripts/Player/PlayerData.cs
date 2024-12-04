@@ -15,8 +15,7 @@ namespace THE.Player
         public bool IsDealer { get; set; }
         public List<CardData> HoleCards { get; set; }
         public int Chips { get; }
-        public int CurrentBetBeforeAllIn { get; }
-        public int CurrentBetAfterAllIn { get; }
+        public List<int> CurrentBets { get; }
         public Enums.CommandTypeEnum LastCommand { get; }
         
         public PlayerData(PlayerEntity playerEntity)
@@ -29,8 +28,7 @@ namespace THE.Player
             if (playerEntity.HoleCards != null)
                 HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();
             Chips = playerEntity.Chips;
-            CurrentBetBeforeAllIn = playerEntity.CurrentBetBeforeAllIn;
-            CurrentBetAfterAllIn = playerEntity.CurrentBetAfterAllIn;
+            CurrentBets = playerEntity.CurrentBets;
             LastCommand = playerEntity.LastCommand;
         }
     }
