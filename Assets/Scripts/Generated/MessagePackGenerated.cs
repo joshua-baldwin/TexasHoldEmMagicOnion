@@ -338,7 +338,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(16);
+            writer.WriteArrayHeader(17);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
@@ -355,6 +355,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.IsAllIn);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Serialize(ref writer, value.BestHand, options);
             writer.Write(value.RaiseAmount);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Serialize(ref writer, value.CurrentBestHand, options);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -383,6 +384,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __IsAllIn__ = default(bool);
             var __BestHand__ = default(global::THE.MagicOnion.Shared.Entities.BestHandEntity);
             var __RaiseAmount__ = default(int);
+            var __CurrentBestHand__ = default(global::THE.MagicOnion.Shared.Entities.BestHandEntity);
 
             for (int i = 0; i < length; i++)
             {
@@ -435,6 +437,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         break;
                     case 15:
                         __RaiseAmount__ = reader.ReadInt32();
+                        break;
+                    case 16:
+                        __CurrentBestHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -521,6 +526,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             ____result.RaiseAmount = __RaiseAmount__;
+            if (length <= 16)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.CurrentBestHand = __CurrentBestHand__;
 
         MEMBER_ASSIGNMENT_END:
             reader.Depth--;
