@@ -131,10 +131,12 @@ namespace THE.SceneUis
             {
                 var previousPlayer = players.First(x => x.Id == previousPlayerEntityId);
                 commandText.text = previousCommand == Enums.CommandTypeEnum.Raise
-                    ? $"Player {previousPlayer.Name} raised {previousPlayer.CurrentBets.Last()}"
-                    : previousPlayer.LastCommand is Enums.CommandTypeEnum.SmallBlindBet or Enums.CommandTypeEnum.BigBlindBet
-                        ? $"Player {previousPlayer.Name} bet {previousPlayer.CurrentBets.Last()}"
-                        : $"Player {previousPlayer.Name} {previousCommand}ed";
+                    ? $"Player {previousPlayer.Name} raised {previousPlayer.RaiseAmount}"
+                    : previousCommand == Enums.CommandTypeEnum.AllIn
+                        ? $"Player {previousPlayer.Name} went all in"
+                        : previousPlayer.LastCommand is Enums.CommandTypeEnum.SmallBlindBet or Enums.CommandTypeEnum.BigBlindBet
+                            ? $"Player {previousPlayer.Name} bet {previousPlayer.CurrentBets.Last()}"
+                            : $"Player {previousPlayer.Name} {previousCommand}ed";
             }
 
             switch (gamingHubReceiver.GameState)

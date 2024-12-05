@@ -17,6 +17,7 @@ namespace THE.Player
         public int Chips { get; }
         public List<int> CurrentBets { get; }
         public Enums.CommandTypeEnum LastCommand { get; }
+        public int RaiseAmount { get; }
         
         public PlayerData(PlayerEntity playerEntity)
         {
@@ -30,6 +31,7 @@ namespace THE.Player
             Chips = playerEntity.Chips;
             CurrentBets = playerEntity.CurrentBets;
             LastCommand = playerEntity.LastCommand;
+            RaiseAmount = playerEntity.RaiseAmount;
         }
     }
 }
