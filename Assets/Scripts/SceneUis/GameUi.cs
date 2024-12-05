@@ -130,13 +130,12 @@ namespace THE.SceneUis
             if (previousPlayerEntityId != Guid.Empty)
             {
                 var previousPlayer = players.First(x => x.Id == previousPlayerEntityId);
-                commandText.text = previousCommand == Enums.CommandTypeEnum.Raise
-                    ? $"Player {previousPlayer.Name} raised {previousPlayer.RaiseAmount}"
-                    : previousCommand == Enums.CommandTypeEnum.AllIn
-                        ? $"Player {previousPlayer.Name} went all in"
-                        : previousPlayer.LastCommand is Enums.CommandTypeEnum.SmallBlindBet or Enums.CommandTypeEnum.BigBlindBet
-                            ? $"Player {previousPlayer.Name} bet {previousPlayer.CurrentBets.Last()}"
-                            : $"Player {previousPlayer.Name} {previousCommand}ed";
+                commandText.text = previousCommand switch
+                {
+                    Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.SmallBlindBet or Enums.CommandTypeEnum.BigBlindBet => $"Player {previousPlayer.Name} raised {previousPlayer.RaiseAmount}",
+                    Enums.CommandTypeEnum.AllIn => $"Player {previousPlayer.Name} went all in",
+                    _ => $"Player {previousPlayer.Name} {previousCommand}ed"
+                };
             }
 
             switch (gamingHubReceiver.GameState)
@@ -247,6 +246,11 @@ namespace THE.SceneUis
                         card.Clear();
                         card.gameObject.SetActive(false);
                     });
+                    
+                    //re-initialize
+                    foreach (var player in gamingHubReceiver.GetPlayerList())
+                        playerList.First(x => x.PlayerId == player.Id).Initialize(player);
+                    
                     UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
                     playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
                 }, OnDisconnect);
