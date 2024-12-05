@@ -95,23 +95,23 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask<bool> StartGame(bool isFirstRound, Action onFinish, Action onDisconnect)
+        public async UniTask<Enums.StartResponseTypeEnum> StartGame(bool isFirstRound, Action onFinish, Action onDisconnect)
         {
             try
             {
-                var canPlayAgain = await CallStartGame(onFinish, isFirstRound);
-                if (canPlayAgain)
-                    return true;
-                
-                await Disconnect();
-                onDisconnect?.Invoke();
-                return false;
+                var response = await CallStartGame(onFinish, isFirstRound);
+                if (response is Enums.StartResponseTypeEnum.NotEnoughChips or Enums.StartResponseTypeEnum.GroupDoesNotExist)
+                {
+                    await Disconnect();
+                    onDisconnect?.Invoke();
+                }
+                return response;
             }
             catch (ObjectDisposedException)
             {
                 await Disconnect();
                 onDisconnect?.Invoke();
-                return false;
+                return Enums.StartResponseTypeEnum.Failed;
             }
         }
 
@@ -176,7 +176,7 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke(players.Length);
         }
 
-        private async UniTask<bool> CallStartGame(Action onFinish, bool isFirstRound)
+        private async UniTask<Enums.StartResponseTypeEnum> CallStartGame(Action onFinish, bool isFirstRound)
         {
             Debug.Log("Calling StartGame");
             OnFinishStart = onFinish;
