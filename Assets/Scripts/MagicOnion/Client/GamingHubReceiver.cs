@@ -95,16 +95,23 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask StartGame(bool isFirstRound, Action onFinish, Action onDisconnect)
+        public async UniTask<bool> StartGame(bool isFirstRound, Action onFinish, Action onDisconnect)
         {
             try
             {
-                await CallStartGame(onFinish, isFirstRound);
+                var canPlayAgain = await CallStartGame(onFinish, isFirstRound);
+                if (canPlayAgain)
+                    return true;
+                
+                await Disconnect();
+                onDisconnect?.Invoke();
+                return false;
             }
             catch (ObjectDisposedException)
             {
                 await Disconnect();
                 onDisconnect?.Invoke();
+                return false;
             }
         }
 
@@ -169,11 +176,11 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke(players.Length);
         }
 
-        private async UniTask CallStartGame(Action onFinish, bool isFirstRound)
+        private async UniTask<bool> CallStartGame(Action onFinish, bool isFirstRound)
         {
             Debug.Log("Calling StartGame");
             OnFinishStart = onFinish;
-            await client.StartGame(Self.Id, isFirstRound);
+            return await client.StartGame(Self.Id, isFirstRound);
         }
 
         private async UniTask CallCancelGame()

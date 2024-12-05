@@ -240,7 +240,7 @@ namespace THE.SceneUis
             if (buttonType == ButtonTypeEnum.PlayAgain)
             {
                 playAgainButton.interactable = false;
-                await gamingHubReceiver.StartGame(false, () =>
+                var canPlayAgain = await gamingHubReceiver.StartGame(false, () =>
                 {
                     betRoot.gameObject.SetActive(false);
                     confirmAmountButton.gameObject.SetActive(false);
@@ -261,6 +261,10 @@ namespace THE.SceneUis
                     UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
                     playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
                 }, OnDisconnect);
+                
+                if (!canPlayAgain)
+                    ShowMessage("Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります");
+                
                 return;
             }
 
