@@ -271,8 +271,8 @@ namespace THE.MagicOnion.Client
                 {
                     if (winner.Winner != null)
                     {
-                        sbEng.Append($"Player {winner.Winner.Name} had a {winner.HandRanking} and won {winner.PotToWinner}.");
-                        sbJap.Append($"プレイヤー{winner.Winner.Name}は{winner.HandRanking.GetDescription()}があって{winner.PotToWinner}をもらった。");
+                        sbEng.Append($"Player {winner.Winner.Name} had a {winner.HandRanking} and won {winner.PotToWinner} from {winner.PotName}.");
+                        sbJap.Append($"プレイヤー{winner.Winner.Name}は{winner.HandRanking.GetDescription()}があって{winner.PotName}から{winner.PotToWinner}をもらった。");
                     }
                     else if (winner.TiedWith.Count > 0)
                     {
@@ -284,8 +284,8 @@ namespace THE.MagicOnion.Client
                             sb2Jap.Append($"{tie.Name}と");
                         }
 
-                        sbEng.Append($"Players {sb2Eng} tied with {winner.HandRanking} and won {winner.PotToTiedWith} each.");
-                        sbJap.Append($"プレイヤー{sb2Jap}が{winner.HandRanking.GetDescription()}で引き分けしてそれぞれ{winner.PotToTiedWith}をもらった。");
+                        sbEng.Append($"Players {sb2Eng} tied with {winner.HandRanking} and won {winner.PotToTiedWith} each from {winner.PotName}.");
+                        sbJap.Append($"プレイヤー{sb2Jap}が{winner.HandRanking.GetDescription()}で引き分けしてそれぞれ{winner.PotName}から{winner.PotToTiedWith}をもらった。");
                     }
                 }
 

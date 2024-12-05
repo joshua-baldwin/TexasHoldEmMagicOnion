@@ -551,13 +551,14 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(6);
+            writer.WriteArrayHeader(7);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.PlayerEntity>(formatterResolver).Serialize(ref writer, value.Winner, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.Cards, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandRankingType>(formatterResolver).Serialize(ref writer, value.HandRanking, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>>(formatterResolver).Serialize(ref writer, value.TiedWith, options);
             writer.Write(value.PotToWinner);
             writer.Write(value.PotToTiedWith);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.PotName, options);
         }
 
         public global::THE.MagicOnion.Shared.Entities.WinningHandEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -593,6 +594,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         break;
                     case 5:
                         ____result.PotToTiedWith = reader.ReadInt32();
+                        break;
+                    case 6:
+                        ____result.PotName = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
