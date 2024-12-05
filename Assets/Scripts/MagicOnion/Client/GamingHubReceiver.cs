@@ -63,7 +63,7 @@ namespace THE.MagicOnion.Client
 
             if (!roomJoined)
             {
-                ShowMessage?.Invoke("All rooms full. Try again later.\nルームがいっぱいになってます。時間空いてから再試してください");
+                ShowMessage?.Invoke("All rooms full. Try again later.\nルームがいっぱいになってます。時間空いてから改めて試してください");
                 OnRoomConnectFailed?.Invoke();
             }
         }
@@ -77,7 +77,7 @@ namespace THE.MagicOnion.Client
             }
             catch (ObjectDisposedException)
             {
-                Disconnect();
+                await Disconnect();
                 onDisconnect?.Invoke();
             }
         }
@@ -90,7 +90,7 @@ namespace THE.MagicOnion.Client
             }
             catch (ObjectDisposedException)
             {
-                Disconnect();
+                await Disconnect();
                 onDisconnect?.Invoke();
             }
         }
@@ -103,7 +103,7 @@ namespace THE.MagicOnion.Client
             }
             catch (ObjectDisposedException)
             {
-                Disconnect();
+                await Disconnect();
                 onDisconnect?.Invoke();
             }
         }
@@ -116,7 +116,7 @@ namespace THE.MagicOnion.Client
             }
             catch (ObjectDisposedException)
             {
-                Disconnect();
+                await Disconnect();
                 onDisconnect?.Invoke();
             }
         }
@@ -130,7 +130,7 @@ namespace THE.MagicOnion.Client
             }
             catch (ObjectDisposedException)
             {
-                Disconnect();
+                await Disconnect();
                 onDisconnect?.Invoke();
             }
         }
@@ -139,9 +139,9 @@ namespace THE.MagicOnion.Client
         
         public bool CanPlaceBet() => BetAmount.Value <= Self.Chips;
 
-        private void Disconnect()
+        private async UniTask Disconnect()
         {
-            client.DisposeAsync();
+            await client.DisposeAsync();
             client = null;
         }
 
