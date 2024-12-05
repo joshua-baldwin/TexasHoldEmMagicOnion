@@ -148,7 +148,7 @@ namespace THE.SceneUis
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Check && x.ButtonType != ButtonTypeEnum.Bet));
                     if (gamingHubReceiver.Self.PlayerRole == Enums.PlayerRoleEnum.BigBlind)
                     {
-                        buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(false);
+                        buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand == Enums.CommandTypeEnum.Raise));
                         if (players.Any(x => x.LastCommand == Enums.CommandTypeEnum.Call) && players.All(x => x.LastCommand != Enums.CommandTypeEnum.Raise))
                             buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(true);
                     }
