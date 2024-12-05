@@ -25,6 +25,7 @@ namespace THE.Player
 
         public void Initialize(PlayerData player)
         {
+            cardsInitialized = false;
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             if (player.Id == gamingHubReceiver.Self.Id)
                 nameColor.color = Color.green;
