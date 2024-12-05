@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using THE.MagicOnion.Client;
+using THE.MagicOnion.Shared.Utilities;
 using THE.SceneControllers;
 using THE.Utilities;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace THE.SceneUis
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             userName.text = $"Name: {gamingHubReceiver.Self.Name}";
             roomName.text = $"Room id:\n{gamingHubReceiver.Self.RoomId}";
-            startButton.interactable = playerCount > 1;
+            startButton.interactable = playerCount >= Constants.MinimumPlayers;
             cancelButton.interactable = false;
             startButton.OnClickAsAsyncEnumerable()
                 .Subscribe(_ => StartAction())
@@ -52,9 +53,9 @@ namespace THE.SceneUis
 
         private void UpdatePlayerCount(int count)
         {
-            currentPlayerCount.text = $"{count}/10";
+            currentPlayerCount.text = $"{count}/{Constants.MaxPlayers}";
             playerCount = count;
-            startButton.interactable = playerCount > 1;
+            startButton.interactable = playerCount >= Constants.MinimumPlayers;
         }
         
         private void ShowMessage(string message)

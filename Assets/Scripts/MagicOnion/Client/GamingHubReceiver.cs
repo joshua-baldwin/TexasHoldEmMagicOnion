@@ -100,7 +100,7 @@ namespace THE.MagicOnion.Client
             try
             {
                 var response = await CallStartGame(onFinish, isFirstRound);
-                if (response is Enums.StartResponseTypeEnum.NotEnoughChips or Enums.StartResponseTypeEnum.GroupDoesNotExist)
+                if (response is Enums.StartResponseTypeEnum.NotEnoughChips or Enums.StartResponseTypeEnum.GroupDoesNotExist or Enums.StartResponseTypeEnum.NotEnoughPlayers)
                 {
                     await Disconnect();
                     onDisconnect?.Invoke();
