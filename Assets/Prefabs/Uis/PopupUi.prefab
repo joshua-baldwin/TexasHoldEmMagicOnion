@@ -386,7 +386,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contents: {fileID: 7000417580659393450}
-  messageText: {fileID: 0}
+  messageText: {fileID: 256863160171337762}
   okButton: {fileID: 7505879656323781593}
 --- !u!1 &7000417580659393450
 GameObject:

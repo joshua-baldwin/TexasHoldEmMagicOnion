@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ namespace THE.SceneUis
     public class PopupUi : MonoBehaviour
     {
         [SerializeField] private GameObject contents;
-        [SerializeField] private Text messageText;
+        [SerializeField] private TextMeshProUGUI messageText;
         [SerializeField] private Button okButton;
         
         private void Awake()
