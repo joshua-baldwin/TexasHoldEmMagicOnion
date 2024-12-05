@@ -180,6 +180,13 @@ namespace THE.SceneUis
                     break;
                 case Enums.GameStateEnum.Showdown:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
+                    for (var i = 0; i < communityCardList.Count; i++)
+                    {
+                        if (communityCardList[i].gameObject.activeSelf)
+                            continue;
+                        communityCardList[i].gameObject.SetActive(true);
+                        communityCardList[i].Initialize(communityCards[i], true);
+                    }
                     break;
                 case Enums.GameStateEnum.GameOver:
                     break;
