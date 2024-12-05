@@ -143,6 +143,8 @@ namespace THE.MagicOnion.Client
         {
             await client.DisposeAsync();
             client = null;
+            Self = null;
+            CurrentPlayer = null;
         }
 
         #region RPC calls
