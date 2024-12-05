@@ -12,6 +12,7 @@ using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
 using THE.Player;
+using THE.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -264,22 +265,31 @@ namespace THE.MagicOnion.Client
             {
                 Debug.Log("Hand chosen");
                 players = playerEntities.Select(p => new PlayerData(p)).ToArray();
-                var sb = new StringBuilder();
+                var sbEng = new StringBuilder();
+                var sbJap = new StringBuilder();
                 foreach (var winner in winnerList)
                 {
                     if (winner.Winner != null)
-                        sb.Append($"Player {winner.Winner.Name} had a {winner.HandRanking} and won {winner.PotToWinner}.");
+                    {
+                        sbEng.Append($"Player {winner.Winner.Name} had a {winner.HandRanking} and won {winner.PotToWinner}.");
+                        sbJap.Append($"プレイヤー{winner.Winner.Name}は{winner.HandRanking.GetDescription()}があって{winner.PotToWinner}をもらった。");
+                    }
                     else if (winner.TiedWith.Count > 0)
                     {
-                        var sb2 = new StringBuilder();
+                        var sb2Eng = new StringBuilder();
+                        var sb2Jap = new StringBuilder();
                         foreach (var tie in winner.TiedWith)
-                            sb2.Append($"{tie.Name} ");
+                        {
+                            sb2Eng.Append($"{tie.Name} and");
+                            sb2Jap.Append($"{tie.Name}と");
+                        }
 
-                        sb.Append($"Players {sb2} tied with {winner.HandRanking} and won {winner.PotToTiedWith} each.");
+                        sbEng.Append($"Players {sb2Eng} tied with {winner.HandRanking} and won {winner.PotToTiedWith} each.");
+                        sbJap.Append($"プレイヤー{sb2Jap}が{winner.HandRanking.GetDescription()}で引き分けしてそれぞれ{winner.PotToTiedWith}をもらった。");
                     }
                 }
 
-                ShowMessage?.Invoke(sb.ToString());
+                ShowMessage?.Invoke($"{sbEng}\n{sbJap}");
                 OnGameOverAction?.Invoke();
             }
 
