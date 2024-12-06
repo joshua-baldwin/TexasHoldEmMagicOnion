@@ -60,6 +60,7 @@ namespace THE.MagicOnion.Client
             catch (Exception)
             {
                 response = Enums.JoinRoomResponseTypeEnum.Failed;
+                ShowMessage?.Invoke($"Failed to join room.\nジョイン失敗しました。");
                 OnRoomConnectFailed?.Invoke();
             }
 
