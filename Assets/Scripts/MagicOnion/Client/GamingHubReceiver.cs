@@ -282,12 +282,20 @@ namespace THE.MagicOnion.Client
                         var sb2Jap = new StringBuilder();
                         foreach (var tie in winner.TiedWith)
                         {
-                            sb2Eng.Append($"{tie.Name} and");
-                            sb2Jap.Append($"{tie.Name}と");
+                            if (tie == winner.TiedWith.Last())
+                            {
+                                sb2Eng.Append($"{tie.Name}");
+                                sb2Jap.Append($"{tie.Name}");
+                            }
+                            else
+                            {
+                                sb2Eng.Append($"{tie.Name} and");
+                                sb2Jap.Append($"{tie.Name}と");
+                            }
                         }
 
-                        sbEng.Append($"Players {sb2Eng} tied with {winner.HandRanking} and won {winner.PotToTiedWith} each from {winner.PotName}.");
-                        sbJap.Append($"プレイヤー{sb2Jap}が{winner.HandRanking.GetDescription()}で引き分けしてそれぞれ{winner.PotName}から{winner.PotToTiedWith}をもらった。");
+                        sbEng.Append($"Players {sb2Eng} tied with a {winner.HandRanking} and won {winner.PotToTiedWith} each from {winner.PotName}.");
+                        sbJap.Append($"プレイヤー{sb2Jap}は{winner.HandRanking.GetDescription()}のハンドを持って引き分けしてそれぞれ{winner.PotName}から{winner.PotToTiedWith}をもらった。");
                     }
                 }
 
