@@ -338,10 +338,11 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(17);
+            writer.WriteArrayHeader(18);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
+            writer.Write(value.OrderInQueue);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.RoomId, options);
             writer.Write(value.IsDealer);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.HoleCards, options);
@@ -371,6 +372,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __Name__ = default(string);
             var __Id__ = default(global::System.Guid);
             var __PlayerRole__ = default(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum);
+            var __OrderInQueue__ = default(int);
             var __RoomId__ = default(global::System.Guid);
             var __IsDealer__ = default(bool);
             var __HoleCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
@@ -400,45 +402,48 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __PlayerRole__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 3:
-                        __RoomId__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Deserialize(ref reader, options);
+                        __OrderInQueue__ = reader.ReadInt32();
                         break;
                     case 4:
-                        __IsDealer__ = reader.ReadBoolean();
+                        __RoomId__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 5:
-                        __HoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        __IsDealer__ = reader.ReadBoolean();
                         break;
                     case 6:
-                        __IsReady__ = reader.ReadBoolean();
+                        __HoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 7:
-                        __Chips__ = reader.ReadInt32();
+                        __IsReady__ = reader.ReadBoolean();
                         break;
                     case 8:
-                        __CurrentBet__ = reader.ReadInt32();
+                        __Chips__ = reader.ReadInt32();
                         break;
                     case 9:
-                        __CurrentBetIndex__ = reader.ReadInt32();
+                        __CurrentBet__ = reader.ReadInt32();
                         break;
                     case 10:
-                        __HasTakenAction__ = reader.ReadBoolean();
+                        __CurrentBetIndex__ = reader.ReadInt32();
                         break;
                     case 11:
-                        __HasFolded__ = reader.ReadBoolean();
+                        __HasTakenAction__ = reader.ReadBoolean();
                         break;
                     case 12:
-                        __LastCommand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        __HasFolded__ = reader.ReadBoolean();
                         break;
                     case 13:
-                        __IsAllIn__ = reader.ReadBoolean();
+                        __LastCommand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 14:
-                        __BestHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Deserialize(ref reader, options);
+                        __IsAllIn__ = reader.ReadBoolean();
                         break;
                     case 15:
-                        __RaiseAmount__ = reader.ReadInt32();
+                        __BestHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 16:
+                        __RaiseAmount__ = reader.ReadInt32();
+                        break;
+                    case 17:
                         __CurrentBestHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
@@ -453,80 +458,86 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.RoomId = __RoomId__;
+            ____result.OrderInQueue = __OrderInQueue__;
             if (length <= 4)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.IsDealer = __IsDealer__;
+            ____result.RoomId = __RoomId__;
             if (length <= 5)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.HoleCards = __HoleCards__;
+            ____result.IsDealer = __IsDealer__;
             if (length <= 6)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.IsReady = __IsReady__;
+            ____result.HoleCards = __HoleCards__;
             if (length <= 7)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.Chips = __Chips__;
+            ____result.IsReady = __IsReady__;
             if (length <= 8)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.CurrentBet = __CurrentBet__;
+            ____result.Chips = __Chips__;
             if (length <= 9)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.CurrentBetIndex = __CurrentBetIndex__;
+            ____result.CurrentBet = __CurrentBet__;
             if (length <= 10)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.HasTakenAction = __HasTakenAction__;
+            ____result.CurrentBetIndex = __CurrentBetIndex__;
             if (length <= 11)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.HasFolded = __HasFolded__;
+            ____result.HasTakenAction = __HasTakenAction__;
             if (length <= 12)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.LastCommand = __LastCommand__;
+            ____result.HasFolded = __HasFolded__;
             if (length <= 13)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.IsAllIn = __IsAllIn__;
+            ____result.LastCommand = __LastCommand__;
             if (length <= 14)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.BestHand = __BestHand__;
+            ____result.IsAllIn = __IsAllIn__;
             if (length <= 15)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.RaiseAmount = __RaiseAmount__;
+            ____result.BestHand = __BestHand__;
             if (length <= 16)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.RaiseAmount = __RaiseAmount__;
+            if (length <= 17)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
