@@ -51,15 +51,15 @@ namespace MessagePack.Resolvers
             {
                 { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>), 0 },
                 { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>), 1 },
-                { typeof(global::System.Collections.Generic.List<int>), 2 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 3 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 4 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum), 5 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.HandRankingType), 6 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 7 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.BestHandEntity), 8 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 9 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 10 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 2 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 3 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum), 4 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.HandRankingType), 5 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 6 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.BestHandEntity), 7 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 8 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 9 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PotEntity), 10 },
                 { typeof(global::THE.MagicOnion.Shared.Entities.WinningHandEntity), 11 },
             };
         }
@@ -76,15 +76,15 @@ namespace MessagePack.Resolvers
             {
                 case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
                 case 1: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.PlayerEntity>();
-                case 2: return new global::MessagePack.Formatters.ListFormatter<int>();
-                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
-                case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
-                case 5: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CommandTypeEnumFormatter();
-                case 6: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandRankingTypeFormatter();
-                case 7: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
-                case 8: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.BestHandEntityFormatter();
-                case 9: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
-                case 10: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
+                case 2: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
+                case 3: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
+                case 4: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CommandTypeEnumFormatter();
+                case 5: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandRankingTypeFormatter();
+                case 6: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
+                case 7: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.BestHandEntityFormatter();
+                case 8: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
+                case 9: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
+                case 10: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PotEntityFormatter();
                 case 11: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.WinningHandEntityFormatter();
                 default: return null;
             }
@@ -347,7 +347,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.HoleCards, options);
             writer.Write(value.IsReady);
             writer.Write(value.Chips);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Serialize(ref writer, value.CurrentBets, options);
+            writer.Write(value.CurrentBet);
             writer.Write(value.CurrentBetIndex);
             writer.Write(value.HasTakenAction);
             writer.Write(value.HasFolded);
@@ -376,7 +376,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __HoleCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
             var __IsReady__ = default(bool);
             var __Chips__ = default(int);
-            var __CurrentBets__ = default(global::System.Collections.Generic.List<int>);
+            var __CurrentBet__ = default(int);
             var __CurrentBetIndex__ = default(int);
             var __HasTakenAction__ = default(bool);
             var __HasFolded__ = default(bool);
@@ -415,7 +415,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __Chips__ = reader.ReadInt32();
                         break;
                     case 8:
-                        __CurrentBets__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Deserialize(ref reader, options);
+                        __CurrentBet__ = reader.ReadInt32();
                         break;
                     case 9:
                         __CurrentBetIndex__ = reader.ReadInt32();
@@ -483,7 +483,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.CurrentBets = __CurrentBets__;
+            ____result.CurrentBet = __CurrentBet__;
             if (length <= 9)
             {
                 goto MEMBER_ASSIGNMENT_END;
@@ -534,6 +534,68 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             ____result.CurrentBestHand = __CurrentBestHand__;
 
         MEMBER_ASSIGNMENT_END:
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class PotEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.PotEntity>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::THE.MagicOnion.Shared.Entities.PotEntity value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(4);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.GoesToPlayer, options);
+            writer.Write(value.PotAmount);
+            writer.Write(value.AllInAmount);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>>(formatterResolver).Serialize(ref writer, value.EligiblePlayers, options);
+        }
+
+        public global::THE.MagicOnion.Shared.Entities.PotEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var __GoesToPlayer__ = default(global::System.Guid);
+            var __PotAmount__ = default(int);
+            var __AllInAmount__ = default(int);
+            var __EligiblePlayers__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>);
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        __GoesToPlayer__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 1:
+                        __PotAmount__ = reader.ReadInt32();
+                        break;
+                    case 2:
+                        __AllInAmount__ = reader.ReadInt32();
+                        break;
+                    case 3:
+                        __EligiblePlayers__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            var ____result = new global::THE.MagicOnion.Shared.Entities.PotEntity(__GoesToPlayer__, __PotAmount__, __AllInAmount__, __EligiblePlayers__);
             reader.Depth--;
             return ____result;
         }

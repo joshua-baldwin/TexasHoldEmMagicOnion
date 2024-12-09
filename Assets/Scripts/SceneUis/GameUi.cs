@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
+using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Utilities;
 using THE.Player;
 using THE.SceneControllers;
@@ -118,11 +119,11 @@ namespace THE.SceneUis
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
             }
-            UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
+            UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, null) }, null);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
 
-        private void UpdateUi(Enums.CommandTypeEnum previousCommand, bool isMyTurn, Guid previousPlayerEntityId, Guid currentPlayerEntityId, List<(Guid, int)> pots, List<CardData> communityCards)
+        private void UpdateUi(Enums.CommandTypeEnum previousCommand, bool isMyTurn, Guid previousPlayerEntityId, Guid currentPlayerEntityId, List<PotEntity> pots, List<CardData> communityCards)
         {
             var players = gamingHubReceiver.GetPlayerList();
             var currentPlayer = players.First(x => x.Id == currentPlayerEntityId);
@@ -202,10 +203,10 @@ namespace THE.SceneUis
             for (var i = pots.Count - 1; i >= 0; i--)
             {
                 if (i == pots.Count - 1)
-                    sb.Append($"Main pot: {pots[i].Item2} ");
+                    sb.Append($"Main pot: {pots[i].PotAmount} ");
                 else
                 {
-                    sb.Append($"Side pot {index}: {pots[i].Item2} ");
+                    sb.Append($"Side pot {index}: {pots[i].PotAmount} ");
                     index++;
                 }
             }
@@ -258,7 +259,7 @@ namespace THE.SceneUis
                     foreach (var player in gamingHubReceiver.GetPlayerList())
                         playerList.First(x => x.PlayerId == player.Id).Initialize(player);
                     
-                    UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<(Guid, int)> { (Guid.Empty, 0) }, null);
+                    UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, null) }, null);
                     playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
                 }, OnDisconnect);
                 

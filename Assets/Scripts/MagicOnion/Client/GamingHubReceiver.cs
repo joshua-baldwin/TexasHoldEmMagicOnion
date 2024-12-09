@@ -25,6 +25,7 @@ namespace THE.MagicOnion.Client
         private GrpcChannel channel;
         private IGamingHub client;
         private PlayerData[] players;
+        private Action onFinishStart;
         
         public AsyncReactiveProperty<string> UserName { get; } = new("");
         public AsyncReactiveProperty<int> BetAmount { get; } = new(0);
@@ -37,10 +38,9 @@ namespace THE.MagicOnion.Client
         public Action OnRoomConnectFailed;
         public Action OnCancelRoomConnect;
         public Action<int> UpdatePlayerCount;
-        public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<(Guid, int)>, List<CardData>> UpdateGameUi;
+        public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<PotEntity>, List<CardData>> UpdateGameUi;
         public Action<string> ShowMessage;
         public Action OnGameOverAction;
-        public Action OnFinishStart;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
@@ -182,7 +182,7 @@ namespace THE.MagicOnion.Client
         private async UniTask<Enums.StartResponseTypeEnum> CallStartGame(Action onFinish, bool isFirstRound)
         {
             Debug.Log("Calling StartGame");
-            OnFinishStart = onFinish;
+            onFinishStart = onFinish;
             return await client.StartGame(Self.Id, isFirstRound);
         }
 
@@ -240,7 +240,7 @@ namespace THE.MagicOnion.Client
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             CurrentPlayer = new PlayerData(currentPlayer);
-            OnFinishStart?.Invoke();
+            onFinishStart?.Invoke();
         }
 
         public void OnCancelGameStart()
@@ -248,7 +248,7 @@ namespace THE.MagicOnion.Client
             Debug.Log("Cancelled");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, List<(Guid, int)> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, List<PotEntity> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
         {
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
