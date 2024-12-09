@@ -60,8 +60,9 @@ namespace THE.Player
 
         public void UpdatePlayerUi(PlayerData playerData)
         {
+            PlayerData = playerData;
             chipsText.text = $"Chips: {playerData.Chips}";
-            if (playerData.HasFolded)
+            if (PlayerData.HasFolded)
                 foldCover.SetActive(true);
             //chipsText.text = ClientUtilityMethods.GetChipText(playerData.Chips);
         }
@@ -78,7 +79,8 @@ namespace THE.Player
 
         public void ShowCards()
         {
-            cardList.ForEach(card => card.ShowCard());
+            if (!PlayerData.HasFolded)
+                cardList.ForEach(card => card.ShowCard());
         }
     }
 }

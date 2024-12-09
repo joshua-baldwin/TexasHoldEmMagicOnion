@@ -250,6 +250,7 @@ namespace THE.MagicOnion.Client
 
         public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, List<PotEntity> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
         {
+            var isGameOver = false;
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
@@ -258,15 +259,13 @@ namespace THE.MagicOnion.Client
             else if (winnerList.Count == 1 && winnerList.First().HandRanking == Enums.HandRankingType.Nothing)
             {
                 Debug.Log("Game over");
-                players = playerEntities.Select(p => new PlayerData(p)).ToArray();
                 var player = playerEntities.First(x => x.Id == winnerList.First().Winner.Id);
                 ShowMessage?.Invoke($"{player.Name} is the winner!");
-                OnGameOverAction?.Invoke();
+                isGameOver = true;
             }
             else if (winnerList.Count > 0 && winnerList.First().HandRanking != Enums.HandRankingType.Nothing)
             {
                 Debug.Log("Hand chosen");
-                players = playerEntities.Select(p => new PlayerData(p)).ToArray();
                 var sbEng = new StringBuilder();
                 var sbJap = new StringBuilder();
                 foreach (var winner in winnerList)
@@ -300,7 +299,7 @@ namespace THE.MagicOnion.Client
                 }
 
                 ShowMessage?.Invoke($"{sbEng}\n{sbJap}");
-                OnGameOverAction?.Invoke();
+                isGameOver = true;
             }
 
             var cards = new List<CardData>();
@@ -311,6 +310,8 @@ namespace THE.MagicOnion.Client
             }
 
             UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, pots, cards);
+            if (isGameOver)
+                OnGameOverAction?.Invoke();
         }
 
         #endregion

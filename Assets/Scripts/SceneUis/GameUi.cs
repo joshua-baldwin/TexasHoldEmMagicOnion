@@ -333,8 +333,7 @@ namespace THE.SceneUis
                 playAgainButton.gameObject.SetActive(true);
             playerList.ForEach(player =>
             {
-                if (!player.PlayerData.HasFolded)
-                    player.ShowCards();
+                player.ShowCards();
             });
         }
 
