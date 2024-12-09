@@ -39,7 +39,7 @@ namespace THE.MagicOnion.Client
         public Action OnCancelRoomConnect;
         public Action<int> UpdatePlayerCount;
         public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<PotEntity>, List<CardData>> UpdateGameUi;
-        public Action<string> ShowMessage;
+        public Action<string, Action> ShowMessage;
         public Action OnGameOverAction;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
@@ -60,13 +60,13 @@ namespace THE.MagicOnion.Client
             catch (Exception)
             {
                 response = Enums.JoinRoomResponseTypeEnum.Failed;
-                ShowMessage?.Invoke($"Failed to join room.\nジョイン失敗しました。");
+                ShowMessage?.Invoke($"Failed to join room.\nジョイン失敗しました。", null);
                 OnRoomConnectFailed?.Invoke();
             }
 
             if (response == Enums.JoinRoomResponseTypeEnum.AllRoomsFull)
             {
-                ShowMessage?.Invoke("All rooms full. Try again later.\nルームがいっぱいになってます。時間空いてから改めて試してください");
+                ShowMessage?.Invoke("All rooms full. Try again later.\nルームがいっぱいになってます。時間空いてから改めて試してください", null);
                 OnRoomConnectFailed?.Invoke();
             }
         }
@@ -255,12 +255,12 @@ namespace THE.MagicOnion.Client
             GameState = gameState;
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             if (isError)
-                ShowMessage?.Invoke(actionMessage);
+                ShowMessage?.Invoke(actionMessage, null);
             else if (winnerList.Count == 1 && winnerList.First().HandRanking == Enums.HandRankingType.Nothing)
             {
                 Debug.Log("Game over");
                 var player = playerEntities.First(x => x.Id == winnerList.First().Winner.Id);
-                ShowMessage?.Invoke($"{player.Name} is the winner!");
+                ShowMessage?.Invoke($"{player.Name} is the winner!", null);
                 isGameOver = true;
             }
             else if (winnerList.Count > 0 && winnerList.First().HandRanking != Enums.HandRankingType.Nothing)
@@ -298,7 +298,7 @@ namespace THE.MagicOnion.Client
                     }
                 }
 
-                ShowMessage?.Invoke($"{sbEng}\n{sbJap}");
+                ShowMessage?.Invoke($"{sbEng}\n{sbJap}", null);
                 isGameOver = true;
             }
 

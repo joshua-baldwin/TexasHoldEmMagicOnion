@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using THE.MagicOnion.Client;
@@ -58,10 +59,10 @@ namespace THE.SceneUis
             startButton.interactable = playerCount >= Constants.MinimumPlayers;
         }
         
-        private void ShowMessage(string message)
+        private void ShowMessage(string message, Action onClose)
         {
             popupUi = FindFirstObjectByType<PopupUi>();
-            popupUi.ShowMessage(message);
+            popupUi.ShowMessage(message, onClose);
         }
 
         private async UniTaskVoid StartAction()
@@ -89,8 +90,10 @@ namespace THE.SceneUis
 
         private void OnDisconnect()
         {
-            StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));
-            ShowMessage("Disconnected from server");
+            ShowMessage("Disconnected from server", () =>
+            {
+                StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));    
+            });
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using THE.MagicOnion.Client;
@@ -64,10 +65,10 @@ namespace THE.SceneUis
             cancelJoinRoom.interactable = isActive;
         }
         
-        private void ShowMessage(string message)
+        private void ShowMessage(string message, Action onClose)
         {
             popupUi = FindFirstObjectByType<PopupUi>();
-            popupUi.ShowMessage(message);
+            popupUi.ShowMessage(message, onClose);
         }
     }
 }

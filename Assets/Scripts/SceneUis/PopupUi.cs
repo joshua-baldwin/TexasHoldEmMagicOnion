@@ -12,7 +12,8 @@ namespace THE.SceneUis
         [SerializeField] private GameObject contents;
         [SerializeField] private TextMeshProUGUI messageText;
         [SerializeField] private Button okButton;
-        
+        private Action onCloseAction;
+
         private void Awake()
         {
             okButton.OnClickAsAsyncEnumerable()
@@ -20,15 +21,16 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void ShowMessage(string message)
+        public void ShowMessage(string message, Action onClose = null)
         {
-            //TODO do action on close
+            onCloseAction = onClose;
             contents.SetActive(true);
             messageText.text = message;
         }
 
         public void CloseMessage()
         {
+            onCloseAction?.Invoke();
             contents.SetActive(false);
         }
     }

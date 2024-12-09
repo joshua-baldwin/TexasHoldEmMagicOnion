@@ -224,10 +224,10 @@ namespace THE.SceneUis
             }
         }
 
-        private void ShowMessage(string message)
+        private void ShowMessage(string message, Action onClose)
         {
             popupUi = FindFirstObjectByType<PopupUi>();
-            popupUi.ShowMessage(message);
+            popupUi.ShowMessage(message, onClose);
         }
 
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)
@@ -241,30 +241,10 @@ namespace THE.SceneUis
             if (buttonType == ButtonTypeEnum.PlayAgain)
             {
                 playAgainButton.interactable = false;
-                var response = await gamingHubReceiver.StartGame(false, () =>
-                {
-                    betRoot.gameObject.SetActive(false);
-                    confirmAmountButton.gameObject.SetActive(false);
-                    cancelButton.gameObject.SetActive(false);
-                    playAgainButton.gameObject.SetActive(false);
-                    playAgainButton.interactable = true;
-                    commandText.text = string.Empty;
-                    communityCardList.ForEach(card =>
-                    {
-                        card.Clear();
-                        card.gameObject.SetActive(false);
-                    });
-                    
-                    //re-initialize
-                    foreach (var player in gamingHubReceiver.GetPlayerList())
-                        playerList.First(x => x.PlayerData.Id == player.Id).Initialize(player);
-                    
-                    UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, false, null) }, null);
-                    playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
-                }, OnDisconnect);
+                var response = await gamingHubReceiver.StartGame(false, OnGameStarted, OnDisconnect);
                 
                 if (response == Enums.StartResponseTypeEnum.NotEnoughChips)
-                    ShowMessage("Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります");
+                    ShowMessage("Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります", null);
                 
                 return;
             }
@@ -300,7 +280,7 @@ namespace THE.SceneUis
         {
             if (!gamingHubReceiver.CanPlaceBet())
             {
-                ShowMessage("Not enough chips");
+                ShowMessage("Not enough chips", null);
                 return;
             }
             buttonList.ForEach(x => x.ButtonObject.interactable = true);
@@ -326,6 +306,28 @@ namespace THE.SceneUis
             playerList.First(player => player.PlayerData.Id == gamingHubReceiver.Self.Id).HighlightCards();
         }
 
+        private void OnGameStarted()
+        {
+            betRoot.gameObject.SetActive(false);
+            confirmAmountButton.gameObject.SetActive(false);
+            cancelButton.gameObject.SetActive(false);
+            playAgainButton.gameObject.SetActive(false);
+            playAgainButton.interactable = true;
+            commandText.text = string.Empty;
+            communityCardList.ForEach(card =>
+            {
+                card.Clear();
+                card.gameObject.SetActive(false);
+            });
+                    
+            //re-initialize
+            foreach (var player in gamingHubReceiver.GetPlayerList())
+                playerList.First(x => x.PlayerData.Id == player.Id).Initialize(player);
+                    
+            UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, false, null) }, null);
+            playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
+        }
+
         private void OnGameOver()
         {
             buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
@@ -339,8 +341,10 @@ namespace THE.SceneUis
 
         private void OnDisconnect()
         {
-            StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));
-            ShowMessage("Disconnected from server");
+            ShowMessage("Disconnected from server", () =>
+            {
+                StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));    
+            });
         }
     }
 }
