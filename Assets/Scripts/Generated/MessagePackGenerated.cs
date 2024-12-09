@@ -551,10 +551,11 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(4);
+            writer.WriteArrayHeader(5);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.GoesToPlayer, options);
             writer.Write(value.PotAmount);
             writer.Write(value.AllInAmount);
+            writer.Write(value.ForcedAllIn);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>>(formatterResolver).Serialize(ref writer, value.EligiblePlayers, options);
         }
 
@@ -571,6 +572,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __GoesToPlayer__ = default(global::System.Guid);
             var __PotAmount__ = default(int);
             var __AllInAmount__ = default(int);
+            var __ForcedAllIn__ = default(bool);
             var __EligiblePlayers__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>);
 
             for (int i = 0; i < length; i++)
@@ -587,6 +589,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __AllInAmount__ = reader.ReadInt32();
                         break;
                     case 3:
+                        __ForcedAllIn__ = reader.ReadBoolean();
+                        break;
+                    case 4:
                         __EligiblePlayers__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
@@ -595,7 +600,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 }
             }
 
-            var ____result = new global::THE.MagicOnion.Shared.Entities.PotEntity(__GoesToPlayer__, __PotAmount__, __AllInAmount__, __EligiblePlayers__);
+            var ____result = new global::THE.MagicOnion.Shared.Entities.PotEntity(__GoesToPlayer__, __PotAmount__, __AllInAmount__, __ForcedAllIn__, __EligiblePlayers__);
             reader.Depth--;
             return ____result;
         }
