@@ -18,6 +18,7 @@ namespace THE.Player
         public int CurrentBet { get; }
         public Enums.CommandTypeEnum LastCommand { get; }
         public int RaiseAmount { get; }
+        public bool HasFolded { get; set; }
         
         public PlayerData(PlayerEntity playerEntity)
         {
@@ -32,6 +33,7 @@ namespace THE.Player
             CurrentBet = playerEntity.CurrentBet;
             LastCommand = playerEntity.LastCommand;
             RaiseAmount = playerEntity.RaiseAmount;
+            HasFolded = playerEntity.HasFolded;
         }
     }
 }

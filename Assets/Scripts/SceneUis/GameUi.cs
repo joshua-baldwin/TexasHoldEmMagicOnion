@@ -212,15 +212,15 @@ namespace THE.SceneUis
             }
             potText.text = sb.ToString();
             if (previousPlayerEntityId != Guid.Empty)
-                UpdateBets();
+                UpdatePlayers();
         }
         
-        private void UpdateBets()
+        private void UpdatePlayers()
         {
             var players = gamingHubReceiver.GetPlayerList();
             foreach (var player in playerList)
             {
-                player.UpdateBetAndChips(players.First(x => x.Id == player.PlayerId));
+                player.UpdatePlayerUi(players.First(x => x.Id == player.PlayerData.Id));
             }
         }
 
@@ -257,7 +257,7 @@ namespace THE.SceneUis
                     
                     //re-initialize
                     foreach (var player in gamingHubReceiver.GetPlayerList())
-                        playerList.First(x => x.PlayerId == player.Id).Initialize(player);
+                        playerList.First(x => x.PlayerData.Id == player.Id).Initialize(player);
                     
                     UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, false, null) }, null);
                     playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
@@ -323,7 +323,7 @@ namespace THE.SceneUis
         private void HighlightCards()
         {
             communityCardList.ForEach(card => card.HighlightCard());
-            playerList.First(player => player.PlayerId == gamingHubReceiver.Self.Id).HighlightCards();
+            playerList.First(player => player.PlayerData.Id == gamingHubReceiver.Self.Id).HighlightCards();
         }
 
         private void OnGameOver()
@@ -331,7 +331,11 @@ namespace THE.SceneUis
             buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
             if (gamingHubReceiver.CurrentRound <= Constants.MaxRounds)
                 playAgainButton.gameObject.SetActive(true);
-            playerList.ForEach(player => player.ShowCards());
+            playerList.ForEach(player =>
+            {
+                if (!player.PlayerData.HasFolded)
+                    player.ShowCards();
+            });
         }
 
         private void OnDisconnect()

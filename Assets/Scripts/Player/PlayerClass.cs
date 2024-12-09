@@ -18,9 +18,10 @@ namespace THE.Player
         [SerializeField] private Text dealer;
         [SerializeField] private GameObject cardListRoot;
         [SerializeField] private List<CardClass> cardList;
+        [SerializeField] private GameObject foldCover;
         
         private GamingHubReceiver gamingHubReceiver;
-        public Guid PlayerId;
+        public PlayerData PlayerData { get; private set; }
         private bool cardsInitialized;
 
         public void Initialize(PlayerData player)
@@ -29,12 +30,13 @@ namespace THE.Player
             gamingHubReceiver = MySceneManager.Instance.HubReceiver;
             if (player.Id == gamingHubReceiver.Self.Id)
                 nameColor.color = Color.green;
-            PlayerId = player.Id;
+            PlayerData = player;
             nameText.text = player.Name;
             chipsText.text = $"Chips: {player.Chips}";
             //chipsText.text = ClientUtilityMethods.GetChipText(player.Chips);
             dealer.gameObject.SetActive(player.IsDealer);
             role.gameObject.SetActive(player.PlayerRole != Enums.PlayerRoleEnum.None);
+            foldCover.SetActive(false);
             if (player.PlayerRole != Enums.PlayerRoleEnum.None)
             {
                 role.text = player.PlayerRole == Enums.PlayerRoleEnum.SmallBlind
@@ -49,16 +51,18 @@ namespace THE.Player
                 return;
             
             ChangeCardVisibility(true);
-            var playerEntity = MySceneManager.Instance.HubReceiver.GetPlayerList().First(x => x.Id == PlayerId);
+            var playerEntity = MySceneManager.Instance.HubReceiver.GetPlayerList().First(x => x.Id == PlayerData.Id);
             var isSelf = playerEntity.Id == gamingHubReceiver.Self.Id;
             cardList[0].Initialize(playerEntity.HoleCards[0], isSelf);
             cardList[1].Initialize(playerEntity.HoleCards[1], isSelf);
             cardsInitialized = true;
         }
 
-        public void UpdateBetAndChips(PlayerData playerData)
+        public void UpdatePlayerUi(PlayerData playerData)
         {
             chipsText.text = $"Chips: {playerData.Chips}";
+            if (playerData.HasFolded)
+                foldCover.SetActive(true);
             //chipsText.text = ClientUtilityMethods.GetChipText(playerData.Chips);
         }
 
