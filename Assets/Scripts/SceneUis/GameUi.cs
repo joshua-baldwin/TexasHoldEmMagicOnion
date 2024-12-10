@@ -119,16 +119,16 @@ namespace THE.SceneUis
                 playerObject.Initialize(player);
                 playerList.Add(playerObject);
             }
-            UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, false, null) }, null);
+            UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, false, null) }, null, false);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
 
-        private void UpdateUi(Enums.CommandTypeEnum previousCommand, bool isMyTurn, Guid previousPlayerEntityId, Guid currentPlayerEntityId, List<PotEntity> pots, List<CardData> communityCards)
+        private void UpdateUi(Enums.CommandTypeEnum previousCommand, bool isMyTurn, Guid previousPlayerEntityId, Guid currentPlayerEntityId, List<PotEntity> pots, List<CardData> communityCards, bool isError)
         {
             var players = gamingHubReceiver.GetPlayerList();
             var currentPlayer = players.First(x => x.Id == currentPlayerEntityId);
             gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
-            if (previousPlayerEntityId != Guid.Empty)
+            if (previousPlayerEntityId != Guid.Empty && !isError)
             {
                 var previousPlayer = players.First(x => x.Id == previousPlayerEntityId);
                 commandText.text = previousCommand switch
@@ -320,7 +320,7 @@ namespace THE.SceneUis
             foreach (var player in gamingHubReceiver.GetPlayerList())
                 playerList.First(x => x.PlayerData.Id == player.Id).Initialize(player);
                     
-            UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, false, null) }, null);
+            UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, new List<PotEntity> { new(Guid.Empty, 0, 0, false, null) }, null, false);
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
 

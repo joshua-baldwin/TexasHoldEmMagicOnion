@@ -38,7 +38,7 @@ namespace THE.MagicOnion.Client
         public Action OnRoomConnectFailed;
         public Action OnCancelRoomConnect;
         public Action<int> UpdatePlayerCount;
-        public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<PotEntity>, List<CardData>> UpdateGameUi;
+        public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<PotEntity>, List<CardData>, bool> UpdateGameUi;
         public Action<string, Action> ShowMessage;
         public Action<bool> OnGameOverAction;
         
@@ -319,7 +319,7 @@ namespace THE.MagicOnion.Client
                     cards.Add(new CardData(card));
             }
 
-            UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, pots, cards);
+            UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, pots, cards, isError);
             if (isGameOver)
                 OnGameOverAction?.Invoke(gameOverByFold);
         }
