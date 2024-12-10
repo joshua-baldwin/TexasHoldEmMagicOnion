@@ -241,9 +241,6 @@ namespace THE.MagicOnion.Client
             GameState = gameState;
             CurrentRound = roundNumber;
             UpdatePlayerCount = null;
-            //do this in scene manager
-            if (isFirstRound)
-                SceneManager.LoadSceneAsync("GameScene");
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             CurrentPlayer = new PlayerData(currentPlayer);
