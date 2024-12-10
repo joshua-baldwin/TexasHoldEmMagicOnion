@@ -341,7 +341,7 @@ namespace THE.SceneUis
         private void OnGameOver(bool gameOverByFold)
         {
             buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
-            if (gamingHubReceiver.CurrentRound <= Constants.MaxRounds)
+            if (gamingHubReceiver.CurrentRound <= Constants.MaxRounds && gamingHubReceiver.Self.Chips > Constants.MinBet)
                 playAgainButton.gameObject.SetActive(true);
             playerList.ForEach(player =>
             {
