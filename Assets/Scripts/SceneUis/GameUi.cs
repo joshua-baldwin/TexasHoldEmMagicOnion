@@ -242,9 +242,17 @@ namespace THE.SceneUis
             {
                 playAgainButton.interactable = false;
                 var response = await gamingHubReceiver.StartGame(false, OnGameStarted, OnDisconnect);
-                
+
+                var message = "";
                 if (response == Enums.StartResponseTypeEnum.NotEnoughChips)
-                    ShowMessage("Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります", null);
+                    message = "Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります";
+                else if (response == Enums.StartResponseTypeEnum.NotEnoughPlayers)
+                    message = "Not enough players to play again. Disconnecting.\nプレイヤーが足りないのでプレイできません。接続切ります";
+                else if (response == Enums.StartResponseTypeEnum.GroupDoesNotExist)
+                    message = "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。";
+                
+                if (!string.IsNullOrEmpty(message))
+                    ShowMessage(message, null);
                 
                 return;
             }
