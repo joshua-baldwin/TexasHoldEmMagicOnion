@@ -88,9 +88,9 @@ namespace THE.SceneUis
             await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);
         }
 
-        private void OnDisconnect()
+        private void OnDisconnect(string disconnectMessage)
         {
-            ShowMessage("Disconnected from server", () =>
+            ShowMessage(disconnectMessage, () =>
             {
                 StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));    
             });

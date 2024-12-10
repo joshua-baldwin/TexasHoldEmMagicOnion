@@ -71,7 +71,7 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask LeaveRoom(Action onFinish, Action onDisconnect)
+        public async UniTask LeaveRoom(Action onFinish, Action<string> onDisconnect)
         {
             try
             {
@@ -81,11 +81,11 @@ namespace THE.MagicOnion.Client
             catch (ObjectDisposedException)
             {
                 await Disconnect();
-                onDisconnect?.Invoke();
+                onDisconnect?.Invoke("Disconnected from server.");
             }
         }
 
-        public async UniTask GetPlayers(Action<int> onFinish, Action onDisconnect)
+        public async UniTask GetPlayers(Action<int> onFinish, Action<string> onDisconnect)
         {
             try
             {
@@ -94,31 +94,39 @@ namespace THE.MagicOnion.Client
             catch (ObjectDisposedException)
             {
                 await Disconnect();
-                onDisconnect?.Invoke();
+                onDisconnect?.Invoke("Disconnected from server.");
             }
         }
 
-        public async UniTask<Enums.StartResponseTypeEnum> StartGame(bool isFirstRound, Action onFinish, Action onDisconnect)
+        public async UniTask<Enums.StartResponseTypeEnum> StartGame(bool isFirstRound, Action onFinish, Action<string> onDisconnect)
         {
             try
             {
                 var response = await CallStartGame(onFinish, isFirstRound);
                 if (response is Enums.StartResponseTypeEnum.NotEnoughChips or Enums.StartResponseTypeEnum.GroupDoesNotExist or Enums.StartResponseTypeEnum.NotEnoughPlayers)
                 {
+                    var message = "";
+                    if (response == Enums.StartResponseTypeEnum.NotEnoughChips)
+                        message = "Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります";
+                    else if (response == Enums.StartResponseTypeEnum.NotEnoughPlayers)
+                        message = "Not enough players to play again. Disconnecting.\nプレイヤーが足りないのでプレイできません。接続切ります";
+                    else if (response == Enums.StartResponseTypeEnum.GroupDoesNotExist)
+                        message = "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。";
+                    
                     await Disconnect();
-                    onDisconnect?.Invoke();
+                    onDisconnect?.Invoke(message);
                 }
                 return response;
             }
             catch (ObjectDisposedException)
             {
                 await Disconnect();
-                onDisconnect?.Invoke();
+                onDisconnect?.Invoke("Disconnected form server.");
                 return Enums.StartResponseTypeEnum.Failed;
             }
         }
 
-        public async UniTask CancelStartGame(Action onDisconnect)
+        public async UniTask CancelStartGame(Action<string> onDisconnect)
         {
             try
             {
@@ -127,11 +135,11 @@ namespace THE.MagicOnion.Client
             catch (ObjectDisposedException)
             {
                 await Disconnect();
-                onDisconnect?.Invoke();
+                onDisconnect?.Invoke("Disconnected from server.");
             }
         }
 
-        public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId, Action onDisconnect)
+        public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId, Action<string> onDisconnect)
         {
             try
             {
@@ -141,7 +149,7 @@ namespace THE.MagicOnion.Client
             catch (ObjectDisposedException)
             {
                 await Disconnect();
-                onDisconnect?.Invoke();
+                onDisconnect?.Invoke("Disconnected from server.");
             }
         }
 
