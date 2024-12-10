@@ -25,7 +25,7 @@ namespace THE.MagicOnion.Client
         private GrpcChannel channel;
         private IGamingHub client;
         private PlayerData[] players;
-        private Action onFinishStart;
+        private Action<bool> onFinishStart;
         
         public AsyncReactiveProperty<string> UserName { get; } = new("");
         public AsyncReactiveProperty<int> BetAmount { get; } = new(0);
@@ -98,21 +98,20 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask<Enums.StartResponseTypeEnum> StartGame(bool isFirstRound, Action onFinish, Action<string> onDisconnect)
+        public async UniTask<Enums.StartResponseTypeEnum> StartGame(bool isFirstRound, Action<bool> onFinish, Action<string> onDisconnect)
         {
             try
             {
                 var response = await CallStartGame(onFinish, isFirstRound);
                 if (response is Enums.StartResponseTypeEnum.NotEnoughChips or Enums.StartResponseTypeEnum.GroupDoesNotExist or Enums.StartResponseTypeEnum.NotEnoughPlayers)
                 {
-                    var message = "";
-                    if (response == Enums.StartResponseTypeEnum.NotEnoughChips)
-                        message = "Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります";
-                    else if (response == Enums.StartResponseTypeEnum.NotEnoughPlayers)
-                        message = "Not enough players to play again. Disconnecting.\nプレイヤーが足りないのでプレイできません。接続切ります";
-                    else if (response == Enums.StartResponseTypeEnum.GroupDoesNotExist)
-                        message = "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。";
-                    
+                    var message = response switch
+                    {
+                        Enums.StartResponseTypeEnum.NotEnoughChips => "Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります",
+                        Enums.StartResponseTypeEnum.NotEnoughPlayers => "Not enough players to play again. Disconnecting.\nプレイヤーが足りないのでプレイできません。接続切ります",
+                        _ => "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。"
+                    };
+
                     await Disconnect();
                     onDisconnect?.Invoke(message);
                 }
@@ -187,7 +186,7 @@ namespace THE.MagicOnion.Client
             onFinish?.Invoke(players.Length);
         }
 
-        private async UniTask<Enums.StartResponseTypeEnum> CallStartGame(Action onFinish, bool isFirstRound)
+        private async UniTask<Enums.StartResponseTypeEnum> CallStartGame(Action<bool> onFinish, bool isFirstRound)
         {
             Debug.Log("Calling StartGame");
             onFinishStart = onFinish;
@@ -248,7 +247,7 @@ namespace THE.MagicOnion.Client
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             CurrentPlayer = new PlayerData(currentPlayer);
-            onFinishStart?.Invoke();
+            onFinishStart?.Invoke(isFirstRound);
         }
 
         public void OnCancelGameStart()

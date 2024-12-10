@@ -69,7 +69,7 @@ namespace THE.SceneUis
         {
             startButton.interactable = false;
             cancelButton.interactable = true;
-            await gamingHubReceiver.StartGame(true, () =>
+            await gamingHubReceiver.StartGame(true, _ =>
             {
                 gamingHubReceiver.UpdatePlayerCount = null;
                 StartCoroutine(ClientUtilityMethods.LoadAsyncScene("GameScene"));

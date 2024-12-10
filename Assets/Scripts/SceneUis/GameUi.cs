@@ -302,7 +302,7 @@ namespace THE.SceneUis
             playerList.First(player => player.PlayerData.Id == gamingHubReceiver.Self.Id).HighlightCards();
         }
 
-        private void OnGameStarted()
+        private void OnGameStarted(bool isFirstRound)
         {
             betRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
@@ -315,7 +315,21 @@ namespace THE.SceneUis
                 card.Clear();
                 card.gameObject.SetActive(false);
             });
+
+            if (!isFirstRound)
+            {
+                var allPlayers = gamingHubReceiver.GetPlayerList();
+                foreach (Transform child in playerRoot.transform)
+                {
+                    var playerClass = child.GetComponent<PlayerClass>();
+                    if (allPlayers.Find(x => x.Id == playerClass.PlayerData.Id) != null)
+                        continue;
                     
+                    Destroy(child.gameObject);
+                    playerList.RemoveAll(x => x.PlayerData.Id == playerClass.PlayerData.Id);
+                }
+            }
+
             //re-initialize
             foreach (var player in gamingHubReceiver.GetPlayerList())
                 playerList.First(x => x.PlayerData.Id == player.Id).Initialize(player);
