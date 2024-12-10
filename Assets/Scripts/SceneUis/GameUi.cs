@@ -324,14 +324,15 @@ namespace THE.SceneUis
             playerList.ForEach(x => x.ChangeCardVisibility(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet));
         }
 
-        private void OnGameOver()
+        private void OnGameOver(bool gameOverByFold)
         {
             buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
             if (gamingHubReceiver.CurrentRound <= Constants.MaxRounds)
                 playAgainButton.gameObject.SetActive(true);
             playerList.ForEach(player =>
             {
-                player.ShowCards();
+                if (!gameOverByFold)
+                    player.ShowCards();
             });
         }
 

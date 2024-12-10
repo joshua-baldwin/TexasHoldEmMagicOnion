@@ -40,7 +40,7 @@ namespace THE.MagicOnion.Client
         public Action<int> UpdatePlayerCount;
         public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<PotEntity>, List<CardData>> UpdateGameUi;
         public Action<string, Action> ShowMessage;
-        public Action OnGameOverAction;
+        public Action<bool> OnGameOverAction;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
@@ -259,6 +259,7 @@ namespace THE.MagicOnion.Client
         public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, Guid targetPlayerId, List<PotEntity> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
         {
             var isGameOver = false;
+            var gameOverByFold = false;
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
@@ -270,6 +271,7 @@ namespace THE.MagicOnion.Client
                 var player = playerEntities.First(x => x.Id == winnerList.First().Winner.Id);
                 ShowMessage?.Invoke($"{player.Name} is the winner!", null);
                 isGameOver = true;
+                gameOverByFold = true;
             }
             else if (winnerList.Count > 0 && winnerList.First().HandRanking != Enums.HandRankingType.Nothing)
             {
@@ -319,7 +321,7 @@ namespace THE.MagicOnion.Client
 
             UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, pots, cards);
             if (isGameOver)
-                OnGameOverAction?.Invoke();
+                OnGameOverAction?.Invoke(gameOverByFold);
         }
 
         #endregion
