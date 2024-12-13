@@ -16,9 +16,11 @@ namespace THE.Player
         public List<CardData> HoleCards { get; set; }
         public int Chips { get; }
         public int CurrentBet { get; }
+        public bool HasFolded { get; set; }
         public Enums.CommandTypeEnum LastCommand { get; }
         public int RaiseAmount { get; }
-        public bool HasFolded { get; set; }
+        public BestHandEntity CurrentBestHand { get; set; }
+        public int AllInAmount { get; set; }
         
         public PlayerData(PlayerEntity playerEntity)
         {
@@ -31,9 +33,11 @@ namespace THE.Player
                 HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();
             Chips = playerEntity.Chips;
             CurrentBet = playerEntity.CurrentBet;
+            HasFolded = playerEntity.HasFolded;
             LastCommand = playerEntity.LastCommand;
             RaiseAmount = playerEntity.RaiseAmount;
-            HasFolded = playerEntity.HasFolded;
+            CurrentBestHand = playerEntity.CurrentBestHand;
+            AllInAmount = playerEntity.AllInAmount;
         }
     }
 }
