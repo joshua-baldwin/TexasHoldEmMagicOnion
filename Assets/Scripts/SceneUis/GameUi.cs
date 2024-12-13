@@ -230,11 +230,24 @@ namespace THE.SceneUis
             popupUi.ShowMessage(message, onClose);
         }
 
+        private async UniTaskVoid ShowConfirmation(string message, Action onConfirm, Action onCancel)
+        {
+            popupUi = FindFirstObjectByType<PopupUi>();
+            popupUi.ShowConfirmation(message, onConfirm, onCancel);
+        }
+
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)
         {
             if (buttonType == ButtonTypeEnum.Quit)
             {
-                await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);
+                ShowConfirmation("Are you sure you want to quit?\nやめますか？", async () =>
+                {
+                    await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);    
+                }, () =>
+                {
+                    
+                });
+                
                 return;
             }
 
