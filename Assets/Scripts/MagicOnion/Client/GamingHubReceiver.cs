@@ -238,7 +238,8 @@ namespace THE.MagicOnion.Client
             }
             
             Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomId}");
-            OnRoomConnectSuccess?.Invoke();
+            if (Self.Id == player.Id)
+                OnRoomConnectSuccess?.Invoke();
             UpdatePlayerCount?.Invoke(playerCount);
         }
 
