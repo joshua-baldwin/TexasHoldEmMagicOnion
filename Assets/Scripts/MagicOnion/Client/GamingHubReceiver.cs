@@ -11,6 +11,7 @@ using MagicOnion.Client;
 using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Shared.Entities;
 using THE.MagicOnion.Shared.Interfaces;
+using THE.MagicOnion.Shared.Utilities;
 using THE.Player;
 using THE.Utilities;
 using UnityEngine;
@@ -44,7 +45,7 @@ namespace THE.MagicOnion.Client
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         
-        public async UniTask JoinRoom()
+        public async UniTask JoinRoom(int retryCount = 0)
         {
             if (client == null)
                 await InitializeClientAsync();
@@ -52,12 +53,26 @@ namespace THE.MagicOnion.Client
             if (shutdownCancellation.IsCancellationRequested)
                 return;
 
-            Enums.JoinRoomResponseTypeEnum response;
+            var response = Enums.JoinRoomResponseTypeEnum.Success;
             try
             {
                 response = await CallJoinRoom(UserName.Value);
             }
-            catch (Exception)
+            catch (ObjectDisposedException)
+            {
+                if (retryCount < MaxRetry)
+                {
+                    retryCount++;
+                    await Disconnect();
+                    await JoinRoom(retryCount);
+                    return;
+                }
+                
+                await Disconnect();
+                ShowMessage?.Invoke("Disconnected from server.", null);
+                OnRoomConnectFailed?.Invoke();
+            }
+            catch (Exception ex)
             {
                 response = Enums.JoinRoomResponseTypeEnum.Failed;
                 ShowMessage?.Invoke($"Failed to join room.\nジョイン失敗しました。", null);
@@ -79,6 +94,11 @@ namespace THE.MagicOnion.Client
                 onFinish?.Invoke();
             }
             catch (ObjectDisposedException)
+            {
+                await Disconnect();
+                onDisconnect?.Invoke("Disconnected from server.");
+            }
+            catch (Exception)
             {
                 await Disconnect();
                 onDisconnect?.Invoke("Disconnected from server.");
