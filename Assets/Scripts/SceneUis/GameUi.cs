@@ -125,6 +125,7 @@ namespace THE.SceneUis
 
         private void UpdateUi(Enums.CommandTypeEnum previousCommand, bool isMyTurn, Guid previousPlayerEntityId, Guid currentPlayerEntityId, List<PotEntity> pots, List<CardData> communityCards, bool isError)
         {
+            quitButton.interactable = true;
             var players = gamingHubReceiver.GetPlayerList();
             var currentPlayer = players.First(x => x.Id == currentPlayerEntityId);
             gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
@@ -238,6 +239,9 @@ namespace THE.SceneUis
 
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)
         {
+            quitButton.interactable = false;
+            buttonList.ForEach(x => x.ButtonObject.interactable = false);
+            
             if (buttonType == ButtonTypeEnum.Quit)
             {
                 ShowConfirmation("Are you sure you want to quit?\nやめますか？", async () =>
@@ -245,7 +249,8 @@ namespace THE.SceneUis
                     await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);    
                 }, () =>
                 {
-                    
+                    quitButton.interactable = true;
+                    buttonList.ForEach(x => x.ButtonObject.interactable = true);
                 });
                 
                 return;
@@ -273,7 +278,6 @@ namespace THE.SceneUis
             
             if (buttonType is ButtonTypeEnum.Raise)
             {
-                buttonList.ForEach(x => x.ButtonObject.interactable = false);
                 betRoot.gameObject.SetActive(true);
                 confirmAmountButton.gameObject.SetActive(true);
                 cancelButton.gameObject.SetActive(true);
@@ -303,6 +307,7 @@ namespace THE.SceneUis
         private void CancelBet()
         {
             buttonList.ForEach(x => x.ButtonObject.interactable = true);
+            quitButton.interactable = true;
             betRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
