@@ -461,6 +461,7 @@ MonoBehaviour:
   costText: {fileID: 7827224081887875494}
   descriptionText: {fileID: 3221957641664694213}
   buyButton: {fileID: 633577298508368997}
+  buyButtonText: {fileID: 4636794234240966111}
 --- !u!1 &6324054774722448470
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,25 +9,20 @@ namespace THE.Player
 {
     public class JokerData
     {
-        public Guid Id { get; set; }
-        
+        public Guid UniqueId { get; set; }
+        public int JokerId { get; set; }
         public int BuyCost { get; set; }
-        
         public int UseCost { get; set; }
-        
         public int MaxUses { get; set; }
-        
         public int CurrentUses { get; set; }
-        
         public List<JokerAbilityEntity> JokerAbilities { get; set; }
-        
         public bool CanUse { get; set; }
-        
         public Enums.JokerTypeEnum JokerType { get; set; }
         
         public JokerData(JokerEntity joker)
         {
-            Id = joker.Id;
+            UniqueId = joker.UniqueId;
+            JokerId = joker.JokerId;
             BuyCost = joker.BuyCost;
             UseCost = joker.UseCost;
             MaxUses = joker.MaxUses;

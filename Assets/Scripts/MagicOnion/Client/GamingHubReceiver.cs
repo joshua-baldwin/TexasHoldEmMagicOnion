@@ -188,7 +188,7 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask<Enums.BuyJokerResponseTypeEnum> BuyJoker(Guid jokerId, Action<string> onDisconnect)
+        public async UniTask<Enums.BuyJokerResponseTypeEnum> BuyJoker(int jokerId, Action<string> onDisconnect)
         {
             try
             {
@@ -266,7 +266,7 @@ namespace THE.MagicOnion.Client
             await client.DoAction(commandType, chipsBet, jokerId, targetPlayerId);
         }
 
-        private async UniTask<Enums.BuyJokerResponseTypeEnum> BuyJokerAction(Guid jokerId)
+        private async UniTask<Enums.BuyJokerResponseTypeEnum> BuyJokerAction(int jokerId)
         {
             Debug.Log("Calling BuyJokerAction");
             return await client.BuyJoker(Self.Id, jokerId);
@@ -391,7 +391,7 @@ namespace THE.MagicOnion.Client
 
         public void OnBuyJoker(PlayerEntity player, JokerEntity joker)
         {
-            
+            Self = new PlayerData(player);
         }
 
         #endregion

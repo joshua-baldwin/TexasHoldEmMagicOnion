@@ -16,10 +16,11 @@ namespace THE.Player
         [SerializeField] private TextMeshProUGUI costText;
         [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private Button buyButton;
+        [SerializeField] private Text buyButtonText;
         
         private GamingHubReceiver gamingHubReceiver;
         public JokerData JokerData { get; private set; }
-        public Func<Guid, UniTask> BuyJokerAction;
+        public Func<int, UniTask> BuyJokerAction;
 
         private void Awake()
         {
@@ -36,9 +37,29 @@ namespace THE.Player
             descriptionText.text = JokerData.JokerAbilities.First().GetDescription();
         }
 
+        public void SetButtonActive(bool isActive)
+        {
+            buyButton.gameObject.SetActive(isActive);
+        }
+
+        public void SetButtonInteractable(bool isInteractable)
+        {
+            if (isInteractable)
+            {
+                buyButton.interactable = true;
+                buyButtonText.text = "Buy";
+            }
+            else
+            {
+                buyButton.interactable = false;
+                buyButtonText.text = "Purchased";
+            }
+        }
+
         private void BuyJoker()
         {
-            BuyJokerAction?.Invoke(JokerData.Id);
+            buyButton.interactable = false;
+            BuyJokerAction?.Invoke(JokerData.JokerId);
         }
     }
 }

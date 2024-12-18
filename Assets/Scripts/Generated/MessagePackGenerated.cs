@@ -509,8 +509,9 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(8);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
+            writer.WriteArrayHeader(9);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.UniqueId, options);
+            writer.Write(value.JokerId);
             writer.Write(value.BuyCost);
             writer.Write(value.UseCost);
             writer.Write(value.MaxUses);
@@ -530,7 +531,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             options.Security.DepthStep(ref reader);
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
-            var __Id__ = default(global::System.Guid);
+            var __UniqueId__ = default(global::System.Guid);
+            var __JokerId__ = default(int);
             var __BuyCost__ = default(int);
             var __UseCost__ = default(int);
             var __MaxUses__ = default(int);
@@ -544,27 +546,30 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 switch (i)
                 {
                     case 0:
-                        __Id__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Deserialize(ref reader, options);
+                        __UniqueId__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 1:
-                        __BuyCost__ = reader.ReadInt32();
+                        __JokerId__ = reader.ReadInt32();
                         break;
                     case 2:
-                        __UseCost__ = reader.ReadInt32();
+                        __BuyCost__ = reader.ReadInt32();
                         break;
                     case 3:
-                        __MaxUses__ = reader.ReadInt32();
+                        __UseCost__ = reader.ReadInt32();
                         break;
                     case 4:
-                        __CurrentUses__ = reader.ReadInt32();
+                        __MaxUses__ = reader.ReadInt32();
                         break;
                     case 5:
-                        __JokerAbilityEntities__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        __CurrentUses__ = reader.ReadInt32();
                         break;
                     case 6:
-                        __CanUse__ = reader.ReadBoolean();
+                        __JokerAbilityEntities__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 7:
+                        __CanUse__ = reader.ReadBoolean();
+                        break;
+                    case 8:
                         __JokerType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
@@ -573,7 +578,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 }
             }
 
-            var ____result = new global::THE.MagicOnion.Shared.Entities.JokerEntity(__Id__, __BuyCost__, __UseCost__, __MaxUses__, __CurrentUses__, __JokerAbilityEntities__, __CanUse__, __JokerType__);
+            var ____result = new global::THE.MagicOnion.Shared.Entities.JokerEntity(__UniqueId__, __JokerId__, __BuyCost__, __UseCost__, __MaxUses__, __CurrentUses__, __JokerAbilityEntities__, __CanUse__, __JokerType__);
             reader.Depth--;
             return ____result;
         }
