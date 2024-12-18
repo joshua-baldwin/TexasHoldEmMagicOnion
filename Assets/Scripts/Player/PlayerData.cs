@@ -21,6 +21,7 @@ namespace THE.Player
         public int RaiseAmount { get; }
         public BestHandEntity CurrentBestHand { get; set; }
         public int AllInAmount { get; set; }
+        public List<JokerEntity> JokerCards { get; set; }
         
         public PlayerData(PlayerEntity playerEntity)
         {
@@ -38,6 +39,7 @@ namespace THE.Player
             RaiseAmount = playerEntity.RaiseAmount;
             CurrentBestHand = playerEntity.CurrentBestHand;
             AllInAmount = playerEntity.AllInAmount;
+            JokerCards = playerEntity.JokerCards;
         }
     }
 }

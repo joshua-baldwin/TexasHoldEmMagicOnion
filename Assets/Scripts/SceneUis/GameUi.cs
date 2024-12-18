@@ -285,7 +285,7 @@ namespace THE.SceneUis
             else
             {
                 //todo get target id
-                await gamingHubReceiver.DoAction(currentAction, Guid.Empty, OnDisconnect);
+                await gamingHubReceiver.DoAction(currentAction, Guid.Empty, Guid.Empty, OnDisconnect);
             }
         }
 
@@ -301,7 +301,7 @@ namespace THE.SceneUis
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
             //todo get target id
-            await gamingHubReceiver.DoAction(currentAction, Guid.Empty, OnDisconnect);
+            await gamingHubReceiver.DoAction(currentAction, Guid.Empty, Guid.Empty, OnDisconnect);
         }
 
         private void CancelBet()

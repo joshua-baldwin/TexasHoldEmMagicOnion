@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
+using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Utilities;
+using THE.Player;
 using THE.SceneControllers;
 using THE.Utilities;
 using UnityEngine;
@@ -18,9 +21,16 @@ namespace THE.SceneUis
         [SerializeField] private Button startButton;
         [SerializeField] private Button cancelButton;
         [SerializeField] private Button leaveButton;
+        [SerializeField] private Button buyJokerButton;
+        [SerializeField] private Button closeJokerListButton;
+        [SerializeField] private GameObject scrollerRoot;
+        [SerializeField] private GameObject jokerListRoot;
+        [SerializeField] private GameObject jokerPrefab;
         
         private int playerCount;
         private GamingHubReceiver gamingHubReceiver;
+        private List<JokerClass> jokers = new();
+        private bool jokerListIsOpen;
         
         private PopupUi popupUi;
 
@@ -43,13 +53,36 @@ namespace THE.SceneUis
                 .Subscribe(_ => LeaveRoom())
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
+            buyJokerButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => BuyJokerAction())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            closeJokerListButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => CloseList())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
             gamingHubReceiver.UpdatePlayerCount = UpdatePlayerCount;
             gamingHubReceiver.ShowMessage = ShowMessage;
         }
 
         public async UniTask Initialize()
         {
+            foreach (var jokerData in gamingHubReceiver.GetJokerList())
+            {
+                var joker = Instantiate(jokerPrefab, jokerListRoot.transform).GetComponent<JokerClass>();
+                joker.Initialize(jokerData);
+                joker.BuyJokerAction = BuyJokerAction;
+                jokers.Add(joker);
+            }
+            
             await gamingHubReceiver.GetPlayers(UpdatePlayerCount, OnDisconnect);
+        }
+
+        private async UniTask BuyJokerAction(Guid jokerId)
+        {
+            var response = await gamingHubReceiver.BuyJoker(jokerId, OnDisconnect);
+            if (response == Enums.BuyJokerResponseTypeEnum.Success)
+                await CloseList();
         }
 
         private void UpdatePlayerCount(int count)
@@ -86,6 +119,16 @@ namespace THE.SceneUis
         private async UniTaskVoid LeaveRoom()
         {
             await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);
+        }
+        
+        private async UniTask BuyJokerAction()
+        {
+            scrollerRoot.SetActive(true);
+        }
+
+        private async UniTask CloseList()
+        {
+            scrollerRoot.SetActive(false);
         }
 
         private void OnDisconnect(string disconnectMessage)

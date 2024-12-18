@@ -26,6 +26,7 @@ namespace THE.MagicOnion.Client
         private GrpcChannel channel;
         private IGamingHub client;
         private PlayerData[] players;
+        private List<JokerData> jokers;
         private Action<bool> onFinishStart;
         
         public AsyncReactiveProperty<string> UserName { get; } = new("");
@@ -44,6 +45,8 @@ namespace THE.MagicOnion.Client
         public Action<bool> OnGameOverAction;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
+        public List<PlayerData> GetPlayerList() => players.ToList();
+        public List<JokerData> GetJokerList() => jokers.ToList();
         
         public async UniTask JoinRoom(int retryCount = 0)
         {
@@ -82,6 +85,18 @@ namespace THE.MagicOnion.Client
             if (response == Enums.JoinRoomResponseTypeEnum.AllRoomsFull)
             {
                 ShowMessage?.Invoke("All rooms full. Try again later.\nルームがいっぱいになってます。時間空いてから改めて試してください", null);
+                OnRoomConnectFailed?.Invoke();
+            }
+            
+            if (response == Enums.JoinRoomResponseTypeEnum.Failed)
+            {
+                ShowMessage?.Invoke($"Failed to join room.\nジョイン失敗しました。", null);
+                OnRoomConnectFailed?.Invoke();
+            }
+            
+            if (response == Enums.JoinRoomResponseTypeEnum.InternalServerError)
+            {
+                ShowMessage?.Invoke($"Internal server error.", null);
                 OnRoomConnectFailed?.Invoke();
             }
         }
@@ -158,11 +173,11 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid targetPlayerId, Action<string> onDisconnect)
+        public async UniTask DoAction(Enums.CommandTypeEnum commandType, Guid selectedJokerId, Guid targetPlayerId, Action<string> onDisconnect)
         {
             try
             {
-                await CallDoAction(commandType, BetAmount.Value, targetPlayerId);
+                await CallDoAction(commandType, BetAmount.Value, selectedJokerId, targetPlayerId);
                 BetAmount.Value = 0;
             }
             catch (ObjectDisposedException)
@@ -172,7 +187,31 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public List<PlayerData> GetPlayerList() => players.ToList();
+        public async UniTask<Enums.BuyJokerResponseTypeEnum> BuyJoker(Guid jokerId, Action<string> onDisconnect)
+        {
+            try
+            {
+                var response = await BuyJokerAction(jokerId);
+                if (response is Enums.BuyJokerResponseTypeEnum.GroupDoesNotExist or Enums.BuyJokerResponseTypeEnum.NotEnoughChips)
+                {
+                    var message = response switch
+                    {
+                        Enums.BuyJokerResponseTypeEnum.NotEnoughChips => "You don't have enough chips.\nチップが足りない。",
+                        Enums.BuyJokerResponseTypeEnum.GroupDoesNotExist => "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。"
+                    };
+
+                    await Disconnect();
+                    onDisconnect?.Invoke(message);
+                }
+                return response;
+            }
+            catch (ObjectDisposedException)
+            {
+                await Disconnect();
+                onDisconnect?.Invoke("Disconnected from server.");
+                return Enums.BuyJokerResponseTypeEnum.Failed;
+            }
+        }
         
         public bool CanPlaceBet() => BetAmount.Value <= Self.Chips;
 
@@ -219,17 +258,23 @@ namespace THE.MagicOnion.Client
             await client.CancelStart(Self.Id);
         }
 
-        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int chipsBet, Guid targetPlayerId)
+        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int chipsBet, Guid jokerId, Guid targetPlayerId)
         {
             Debug.Log("Calling DoAction");
-            await client.DoAction(commandType, chipsBet, targetPlayerId);
+            await client.DoAction(commandType, chipsBet, jokerId, targetPlayerId);
+        }
+
+        private async UniTask<Enums.BuyJokerResponseTypeEnum> BuyJokerAction(Guid jokerId)
+        {
+            Debug.Log("Calling BuyJokerAction");
+            return await client.BuyJoker(Self.Id, jokerId);
         }
         
         #endregion
         
         #region RPC callbacks
         
-        public void OnJoinRoom(PlayerEntity player, int playerCount)
+        public void OnJoinRoom(PlayerEntity player, int playerCount, List<JokerEntity> jokerEntities)
         {
             if (Self == null)
             {
@@ -237,6 +282,7 @@ namespace THE.MagicOnion.Client
                 UserName.Value = "";
             }
             
+            jokers = jokerEntities.Select(x => new JokerData(x)).ToList();
             Debug.Log($"{player.Name}:{player.Id} joined room {player.RoomId}");
             if (Self.Id == player.Id)
                 OnRoomConnectSuccess?.Invoke();
@@ -339,6 +385,11 @@ namespace THE.MagicOnion.Client
             UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, pots, cards, isError);
             if (isGameOver)
                 OnGameOverAction?.Invoke(gameOverByFold);
+        }
+
+        public void OnBuyJoker(PlayerEntity player, JokerEntity joker)
+        {
+            
         }
 
         #endregion
