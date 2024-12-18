@@ -157,7 +157,7 @@ namespace THE.MagicOnion.Client
             catch (ObjectDisposedException)
             {
                 await Disconnect();
-                onDisconnect?.Invoke("Disconnected form server.");
+                onDisconnect?.Invoke("Disconnected from server.");
             }
         }
 
@@ -218,6 +218,7 @@ namespace THE.MagicOnion.Client
 
         private async UniTask Disconnect()
         {
+            await client.LeaveRoomAsync();
             await client.DisposeAsync();
             client = null;
             Self = null;
