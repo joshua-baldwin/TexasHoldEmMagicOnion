@@ -122,14 +122,8 @@ MonoBehaviour:
   cancelButton: {fileID: 1490949762051138195}
   leaveButton: {fileID: 1531096912403901228}
   buyJokerButton: {fileID: 4537664976050935951}
-  closeJokerListButton: {fileID: 8555040212244466329}
-  allJokerScrollerRoot: {fileID: 3392181479356420194}
-  allJokerListRoot: {fileID: 3180624767981591273}
+  jokerListUi: {fileID: 86019227476179508}
   myJokerListButton: {fileID: 2883437462824620116}
-  closeMyJokerListButton: {fileID: 3469241214499795266}
-  myJokerScrollerRoot: {fileID: 1546100380849043264}
-  myJokerListRoot: {fileID: 6218754801635181760}
-  jokerPrefab: {fileID: 5549089927933801352, guid: dc71d20d9e3694da2a47797a6d5944e5, type: 3}
 --- !u!1 &1316255797415607630
 GameObject:
   m_ObjectHideFlags: 0
@@ -2353,36 +2347,58 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3277121902422565130, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
       propertyPath: m_Name
-      value: MyJokerList
+      value: JokerList
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042732919532236222, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042732919532236222, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042732919532236222, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042732919532236222, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042732919532236222, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5304533495659716140, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5741943647726636059, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5741943647726636059, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
---- !u!1 &1546100380849043264 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3277121902422565130, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
-  m_PrefabInstance: {fileID: 4039296873848559178}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3469241214499795266 stripped
+--- !u!114 &86019227476179508 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 588651707642242824, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4125276449915858046, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
   m_PrefabInstance: {fileID: 4039296873848559178}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 172b7abee2194f968f4556163cb45972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &3577900585508347417 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 696147795483412563, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
-  m_PrefabInstance: {fileID: 4039296873848559178}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6218754801635181760 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7945198085639934602, guid: 98513a69aac544e3cac86ad5c065bfa6, type: 3}
   m_PrefabInstance: {fileID: 4039296873848559178}
   m_PrefabAsset: {fileID: 0}

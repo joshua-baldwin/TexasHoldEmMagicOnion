@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
-using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
 using TMPro;
 using UnityEngine;
@@ -17,15 +16,21 @@ namespace THE.Player
         [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private Button buyButton;
         [SerializeField] private Text buyButtonText;
+        [SerializeField] private Button useButton;
         
         private GamingHubReceiver gamingHubReceiver;
         public JokerData JokerData { get; private set; }
         public Func<int, UniTask> BuyJokerAction;
+        public Func<Guid, Guid, UniTask> UseJokerAction;
 
         private void Awake()
         {
             buyButton.OnClickAsAsyncEnumerable()
                 .Subscribe(_ => BuyJoker())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
+            useButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => UseJoker())
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
@@ -37,9 +42,14 @@ namespace THE.Player
             descriptionText.text = JokerData.JokerAbilities.First().GetDescription();
         }
 
-        public void SetButtonActive(bool isActive)
+        public void SetBuyButtonActive(bool isActive)
         {
             buyButton.gameObject.SetActive(isActive);
+        }
+        
+        public void SetUseButtonActive(bool isActive)
+        {
+            useButton.gameObject.SetActive(isActive);
         }
 
         public void SetButtonInteractable(bool isInteractable)
@@ -60,6 +70,12 @@ namespace THE.Player
         {
             buyButton.interactable = false;
             BuyJokerAction?.Invoke(JokerData.JokerId);
+        }
+        
+        private void UseJoker()
+        {
+            useButton.interactable = false;
+            UseJokerAction?.Invoke(JokerData.UniqueId, Guid.Empty);
         }
     }
 }

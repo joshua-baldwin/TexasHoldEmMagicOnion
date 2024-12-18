@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
@@ -23,19 +22,11 @@ namespace THE.SceneUis
         [SerializeField] private Button cancelButton;
         [SerializeField] private Button leaveButton;
         [SerializeField] private Button buyJokerButton;
-        [SerializeField] private Button closeJokerListButton;
-        [SerializeField] private GameObject allJokerScrollerRoot;
-        [SerializeField] private GameObject allJokerListRoot;
+        [SerializeField] private JokerListUi jokerListUi;
         [SerializeField] private Button myJokerListButton;
-        [SerializeField] private Button closeMyJokerListButton;
-        [SerializeField] private GameObject myJokerScrollerRoot;
-        [SerializeField] private GameObject myJokerListRoot;
-        [SerializeField] private GameObject jokerPrefab;
         
         private int playerCount;
         private GamingHubReceiver gamingHubReceiver;
-        private List<JokerClass> allJokerList = new();
-        private List<JokerClass> myJokerList = new();
         private bool jokerListIsOpen;
         
         private PopupUi popupUi;
@@ -63,16 +54,8 @@ namespace THE.SceneUis
                 .Subscribe(_ => OpenJokerList())
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
-            closeJokerListButton.OnClickAsAsyncEnumerable()
-                .Subscribe(_ => CloseJokerList())
-                .AddTo(this.GetCancellationTokenOnDestroy());
-            
             myJokerListButton.OnClickAsAsyncEnumerable()
                 .Subscribe(_ => OpenMyJokerList())
-                .AddTo(this.GetCancellationTokenOnDestroy());
-            
-            closeMyJokerListButton.OnClickAsAsyncEnumerable()
-                .Subscribe(_ => CloseMyJokerList())
                 .AddTo(this.GetCancellationTokenOnDestroy());
             
             gamingHubReceiver.UpdatePlayerCount = UpdatePlayerCount;
@@ -81,23 +64,13 @@ namespace THE.SceneUis
 
         public async UniTask Initialize()
         {
-            foreach (var jokerData in gamingHubReceiver.GetJokerList())
-            {
-                var joker = Instantiate(jokerPrefab, allJokerListRoot.transform).GetComponent<JokerClass>();
-                joker.Initialize(jokerData);
-                joker.BuyJokerAction = BuyJokerAction;
-                allJokerList.Add(joker);
-            }
-
-            
-            
             await gamingHubReceiver.GetPlayers(UpdatePlayerCount, OnDisconnect);
         }
 
         private async UniTask BuyJokerAction(int jokerId)
         {
             var response = await gamingHubReceiver.BuyJoker(jokerId, OnDisconnect);
-            allJokerList.First(x => x.JokerData.JokerId == jokerId).SetButtonInteractable(response != Enums.BuyJokerResponseTypeEnum.Success);
+            jokerListUi.UpdateJokerButton(jokerId, response != Enums.BuyJokerResponseTypeEnum.Success);
         }
 
         private void UpdatePlayerCount(int count)
@@ -135,43 +108,17 @@ namespace THE.SceneUis
         {
             await gamingHubReceiver.LeaveRoom(() => StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene")), OnDisconnect);
         }
-        
+
         private void OpenJokerList()
         {
-            var heldJokers = gamingHubReceiver.Self.JokerCards;
-            foreach (var joker in allJokerList)
-                joker.SetButtonInteractable(heldJokers.Count == 0 || !heldJokers.Select(card => card.JokerId).Contains(joker.JokerData.JokerId));
-            
-            allJokerScrollerRoot.SetActive(true);
-        }
-
-        private void CloseJokerList()
-        {
-            allJokerScrollerRoot.SetActive(false);
+            jokerListUi.ShowListForWaitingRoom(gamingHubReceiver.GetJokerList(), gamingHubReceiver.Self.JokerCards, BuyJokerAction, true);
         }
         
         private void OpenMyJokerList()
         {
-            foreach (Transform child in myJokerListRoot.transform)
-                Destroy(child.gameObject);
-            myJokerList.Clear();
-            
-            foreach (var jokerData in gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x)))
-            {
-                var joker = Instantiate(jokerPrefab, myJokerListRoot.transform).GetComponent<JokerClass>();
-                joker.Initialize(jokerData);
-                joker.SetButtonActive(false);
-                myJokerList.Add(joker);
-            }
-            
-            myJokerScrollerRoot.SetActive(true);
+            jokerListUi.ShowListForWaitingRoom(gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x)), null, null, false);
         }
-
-        private void CloseMyJokerList()
-        {
-            myJokerScrollerRoot.SetActive(false);
-        }
-
+        
         private void OnDisconnect(string disconnectMessage)
         {
             ShowMessage(disconnectMessage, () =>

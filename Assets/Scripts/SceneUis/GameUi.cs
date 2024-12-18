@@ -26,6 +26,7 @@ namespace THE.SceneUis
             Call,
             Raise,
             AllIn,
+            UseJoker,
             Quit,
             PlayAgain
         }
@@ -51,6 +52,7 @@ namespace THE.SceneUis
         [SerializeField] private Button confirmAmountButton;
         [SerializeField] private Button cancelButton;
         [SerializeField] private Text commandText;
+        [SerializeField] private JokerListUi jokerListUi;
         
         private readonly List<PlayerClass> playerList = new();
         private GamingHubReceiver gamingHubReceiver;
@@ -194,6 +196,7 @@ namespace THE.SceneUis
                     break;
             }
 
+            buttonList.First(button => button.ButtonType == ButtonTypeEnum.UseJoker).ButtonObject.gameObject.SetActive(true);
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
 
@@ -273,6 +276,7 @@ namespace THE.SceneUis
                 ButtonTypeEnum.Call => Enums.CommandTypeEnum.Call,
                 ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,
                 ButtonTypeEnum.AllIn => Enums.CommandTypeEnum.AllIn,
+                ButtonTypeEnum.UseJoker => Enums.CommandTypeEnum.UseJoker,
                 _ => throw new ArgumentOutOfRangeException()
             };
             
@@ -282,11 +286,10 @@ namespace THE.SceneUis
                 confirmAmountButton.gameObject.SetActive(true);
                 cancelButton.gameObject.SetActive(true);
             }
+            else if (buttonType is ButtonTypeEnum.UseJoker)
+                OpenMyJokerList();
             else
-            {
-                //todo get target id
                 await gamingHubReceiver.DoAction(currentAction, Guid.Empty, Guid.Empty, OnDisconnect);
-            }
         }
 
         private async UniTaskVoid ConfirmAmount()
@@ -300,8 +303,12 @@ namespace THE.SceneUis
             betRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
-            //todo get target id
             await gamingHubReceiver.DoAction(currentAction, Guid.Empty, Guid.Empty, OnDisconnect);
+        }
+        
+        private async UniTask UseJokerAction(Guid jokerUniqueId, Guid targetPlayerId)
+        {
+            await gamingHubReceiver.DoAction(Enums.CommandTypeEnum.UseJoker, jokerUniqueId, targetPlayerId, OnDisconnect);
         }
 
         private void CancelBet()
@@ -373,6 +380,15 @@ namespace THE.SceneUis
             ShowMessage(disconnectMessage, () =>
             {
                 StartCoroutine(ClientUtilityMethods.LoadAsyncScene("StartScene"));    
+            });
+        }
+        
+        private void OpenMyJokerList()
+        {
+            jokerListUi.ShowListForGame(gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x)), UseJokerAction, () =>
+            {
+                quitButton.interactable = true;
+                buttonList.ForEach(x => x.ButtonObject.interactable = true);
             });
         }
     }
