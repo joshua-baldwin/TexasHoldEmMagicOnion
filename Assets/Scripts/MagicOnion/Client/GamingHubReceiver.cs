@@ -133,30 +133,31 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask<Enums.StartResponseTypeEnum> StartGame(bool isFirstRound, Action<bool> onFinish, Action<string> onDisconnect)
+        public async UniTask StartGame(bool isFirstRound, Action<bool> onFinish, Action<string> onDisconnect)
         {
             try
             {
                 var response = await CallStartGame(onFinish, isFirstRound);
-                if (response is Enums.StartResponseTypeEnum.NotEnoughChips or Enums.StartResponseTypeEnum.GroupDoesNotExist or Enums.StartResponseTypeEnum.NotEnoughPlayers)
+                if (response is not Enums.StartResponseTypeEnum.Success && response is not Enums.StartResponseTypeEnum.AllPlayersNotReady)
                 {
                     var message = response switch
                     {
                         Enums.StartResponseTypeEnum.NotEnoughChips => "Not enough chips to play again. Disconnecting.\nチップが足りないのでプレイできません。接続切ります",
                         Enums.StartResponseTypeEnum.NotEnoughPlayers => "Not enough players to play again. Disconnecting.\nプレイヤーが足りないのでプレイできません。接続切ります",
-                        _ => "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。"
+                        Enums.StartResponseTypeEnum.GroupDoesNotExist => "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。",
+                        Enums.StartResponseTypeEnum.AlreadyPlayedMaxRounds => "Already played max rounds. Disconnecting.\nラウンドの制限を超えた。接続を切ります。",
+                        Enums.StartResponseTypeEnum.InternalServerError => "Internal server error.",
+                        _ => throw new ArgumentOutOfRangeException()
                     };
 
                     await Disconnect();
                     onDisconnect?.Invoke(message);
                 }
-                return response;
             }
             catch (ObjectDisposedException)
             {
                 await Disconnect();
                 onDisconnect?.Invoke("Disconnected form server.");
-                return Enums.StartResponseTypeEnum.Failed;
             }
         }
 
