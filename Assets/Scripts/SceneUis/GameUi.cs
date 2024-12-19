@@ -266,6 +266,12 @@ namespace THE.SceneUis
                 return;
             }
 
+            if (buttonType is ButtonTypeEnum.UseJoker)
+            {
+                OpenMyJokerList();
+                return;
+            }
+
             currentAction = buttonType switch
             {
                 ButtonTypeEnum.Check => Enums.CommandTypeEnum.Check,
@@ -276,7 +282,6 @@ namespace THE.SceneUis
                 ButtonTypeEnum.Call => Enums.CommandTypeEnum.Call,
                 ButtonTypeEnum.Raise => Enums.CommandTypeEnum.Raise,
                 ButtonTypeEnum.AllIn => Enums.CommandTypeEnum.AllIn,
-                ButtonTypeEnum.UseJoker => Enums.CommandTypeEnum.UseJoker,
                 _ => throw new ArgumentOutOfRangeException()
             };
             
@@ -286,10 +291,8 @@ namespace THE.SceneUis
                 confirmAmountButton.gameObject.SetActive(true);
                 cancelButton.gameObject.SetActive(true);
             }
-            else if (buttonType is ButtonTypeEnum.UseJoker)
-                OpenMyJokerList();
             else
-                await gamingHubReceiver.DoAction(currentAction, Guid.Empty, Guid.Empty, OnDisconnect);
+                await gamingHubReceiver.DoAction(currentAction, OnDisconnect);
         }
 
         private async UniTaskVoid ConfirmAmount()
@@ -303,12 +306,55 @@ namespace THE.SceneUis
             betRoot.gameObject.SetActive(false);
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
-            await gamingHubReceiver.DoAction(currentAction, Guid.Empty, Guid.Empty, OnDisconnect);
+            await gamingHubReceiver.DoAction(currentAction, OnDisconnect);
+        }
+
+        private Guid selectedJokerUniqueId;
+        private void UseJokerAction(Guid jokerUniqueId)
+        {
+            selectedJokerUniqueId = jokerUniqueId;
+            OpenChooseTargetList();
         }
         
-        private async UniTask UseJokerAction(Guid jokerUniqueId, Guid targetPlayerId)
+        private void OpenChooseTargetList()
         {
-            await gamingHubReceiver.DoAction(Enums.CommandTypeEnum.UseJoker, jokerUniqueId, targetPlayerId, OnDisconnect);
+            
+        }
+
+        private void CloseChooseTargetList()
+        {
+            
+        }
+
+        private Guid selectedTarget;
+        private void OnSelectTarget(Guid id)
+        {
+            selectedTarget = id;
+        }
+
+        private void OpenChooseCardList()
+        {
+            
+        }
+
+        private void CloseChooseCardList()
+        {
+            
+        }
+
+        private List<CardEntity> selectedCards;
+
+        private void OnSelectCards(List<CardEntity> cards)
+        {
+            selectedCards = cards;
+        }
+
+        private async UniTask SendAction()
+        {
+            await gamingHubReceiver.UseJoker(selectedJokerUniqueId, selectedTarget, selectedCards, OnDisconnect);
+            selectedJokerUniqueId = Guid.Empty;
+            selectedTarget = Guid.Empty;
+            selectedCards = null;
         }
 
         private void CancelBet()
@@ -385,7 +431,7 @@ namespace THE.SceneUis
         
         private void OpenMyJokerList()
         {
-            jokerListUi.ShowListForGame(gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x)), UseJokerAction, () =>
+            jokerListUi.ShowListForGame(gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x)), gamingHubReceiver.GetPlayerList().ToList(), UseJokerAction, () =>
             {
                 quitButton.interactable = true;
                 buttonList.ForEach(x => x.ButtonObject.interactable = true);

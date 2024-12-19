@@ -57,7 +57,7 @@ namespace MessagePack.Resolvers
                 { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 5 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 6 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum), 7 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.EffectTargetTypeEnum), 8 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum), 8 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.HandRankingType), 9 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum), 10 },
                 { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 11 },
@@ -90,7 +90,7 @@ namespace MessagePack.Resolvers
                 case 5: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
                 case 6: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
                 case 7: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CommandTypeEnumFormatter();
-                case 8: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_EffectTargetTypeEnumFormatter();
+                case 8: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandInfluenceTypeEnumFormatter();
                 case 9: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandRankingTypeFormatter();
                 case 10: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_JokerTypeEnumFormatter();
                 case 11: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
@@ -172,16 +172,16 @@ namespace MessagePack.Formatters.TexasHoldEmShared.Enums
         }
     }
 
-    public sealed class Enums_EffectTargetTypeEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TexasHoldEmShared.Enums.Enums.EffectTargetTypeEnum>
+    public sealed class Enums_HandInfluenceTypeEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>
     {
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::TexasHoldEmShared.Enums.Enums.EffectTargetTypeEnum value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum value, global::MessagePack.MessagePackSerializerOptions options)
         {
             writer.Write((global::System.Int32)value);
         }
 
-        public global::TexasHoldEmShared.Enums.Enums.EffectTargetTypeEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
-            return (global::TexasHoldEmShared.Enums.Enums.EffectTargetTypeEnum)reader.ReadInt32();
+            return (global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum)reader.ReadInt32();
         }
     }
 
@@ -269,8 +269,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.Id);
             writer.Write(value.AbilityId);
             writer.Write(value.EffectValue);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.EffectTargetTypeEnum>(formatterResolver).Serialize(ref writer, value.TargetType, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Serialize(ref writer, value.CommandType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.HandInfluenceType, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Description, options);
         }
 
@@ -287,8 +287,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __Id__ = default(int);
             var __AbilityId__ = default(int);
             var __EffectValue__ = default(int);
-            var __TargetType__ = default(global::TexasHoldEmShared.Enums.Enums.EffectTargetTypeEnum);
             var __CommandType__ = default(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum);
+            var __HandInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum);
             var __Description__ = default(string);
 
             for (int i = 0; i < length; i++)
@@ -305,10 +305,10 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __EffectValue__ = reader.ReadInt32();
                         break;
                     case 3:
-                        __TargetType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.EffectTargetTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        __CommandType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 4:
-                        __CommandType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        __HandInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 5:
                         __Description__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
@@ -319,7 +319,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 }
             }
 
-            var ____result = new global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity(__Id__, __AbilityId__, __EffectValue__, __TargetType__, __CommandType__, __Description__);
+            var ____result = new global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity(__Id__, __AbilityId__, __EffectValue__, __CommandType__, __HandInfluenceType__, __Description__);
             reader.Depth--;
             return ____result;
         }

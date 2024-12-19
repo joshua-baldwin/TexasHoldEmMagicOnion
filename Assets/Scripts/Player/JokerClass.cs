@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
@@ -21,7 +22,7 @@ namespace THE.Player
         private GamingHubReceiver gamingHubReceiver;
         public JokerData JokerData { get; private set; }
         public Func<int, UniTask> BuyJokerAction;
-        public Func<Guid, Guid, UniTask> UseJokerAction;
+        public Action<Guid> UseJokerAction;
 
         private void Awake()
         {
@@ -75,7 +76,7 @@ namespace THE.Player
         private void UseJoker()
         {
             useButton.interactable = false;
-            UseJokerAction?.Invoke(JokerData.UniqueId, Guid.Empty);
+            UseJokerAction?.Invoke(JokerData.UniqueId);
         }
     }
 }
