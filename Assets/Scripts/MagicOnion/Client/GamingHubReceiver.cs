@@ -41,6 +41,7 @@ namespace THE.MagicOnion.Client
         public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<PotEntity>, List<CardData>, bool> UpdateGameUi;
         public Action<string, Action> ShowMessage;
         public Action<bool> OnGameOverAction;
+        public Action OnUseJokerAction;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         public List<PlayerData> GetPlayerList() => players.ToList();
@@ -212,11 +213,11 @@ namespace THE.MagicOnion.Client
             }
         }
         
-        public async UniTask<Enums.UseJokerResponseTypeEnum> UseJoker(Guid targetId, Guid jokerUniqueId, List<CardEntity> cardsToDiscard, Action<string> onDisconnect)
+        public async UniTask<Enums.UseJokerResponseTypeEnum> UseJoker(Guid jokerUniqueId, List<Guid> targetIds, List<int> cardsToDiscard, Action<string> onDisconnect)
         {
             try
             {
-                var response = await CallUseJokerAction(targetId, jokerUniqueId, cardsToDiscard);
+                var response = await CallUseJokerAction(jokerUniqueId, targetIds, cardsToDiscard);
                 if (response is Enums.UseJokerResponseTypeEnum.GroupDoesNotExist or Enums.UseJokerResponseTypeEnum.NotEnoughChips)
                 {
                     var message = response switch
@@ -242,7 +243,15 @@ namespace THE.MagicOnion.Client
 
         private async UniTask Disconnect()
         {
-            await client.LeaveRoomAsync();
+            try
+            {
+                await client.LeaveRoomAsync();
+            }
+            catch (ObjectDisposedException)
+            {
+                //we're already disconnected so do nothing
+            }
+            
             await client.DisposeAsync();
             client = null;
             Self = null;
@@ -296,10 +305,10 @@ namespace THE.MagicOnion.Client
             return await client.BuyJoker(Self.Id, jokerId);
         }
         
-        private async UniTask<Enums.UseJokerResponseTypeEnum> CallUseJokerAction(Guid targetId, Guid jokerUniqueId, List<CardEntity> cardsToDiscard)
+        private async UniTask<Enums.UseJokerResponseTypeEnum> CallUseJokerAction(Guid jokerUniqueId, List<Guid> targetIds, List<int> cardsToDiscard)
         {
             Debug.Log("Calling UseJokerAction");
-            return await client.UseJoker(Self.Id, targetId, jokerUniqueId, cardsToDiscard);
+            return await client.UseJoker(Self.Id, jokerUniqueId, targetIds, cardsToDiscard);
         }
         
         #endregion
@@ -358,6 +367,7 @@ namespace THE.MagicOnion.Client
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
             players = playerEntities.Select(p => new PlayerData(p)).ToArray();
+            Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             if (isError)
                 ShowMessage?.Invoke(actionMessage, null);
             else if (winnerList.Count == 1 && winnerList.First().HandRanking == Enums.HandRankingType.Nothing)
@@ -424,9 +434,21 @@ namespace THE.MagicOnion.Client
             Self = new PlayerData(player);
         }
 
-        public void OnUseJoker(PlayerEntity player, PlayerEntity target, JokerEntity joker, string actionMessage)
+        public void OnUseJoker(PlayerEntity jokerUser, List<PlayerEntity> targets, JokerEntity joker, string actionMessage)
         {
+            if (jokerUser.Id == Self.Id)
+                Self = new PlayerData(jokerUser);
+            else if (targets.FirstOrDefault(target => target.Id == Self.Id) != null)
+                Self = new PlayerData(targets.FirstOrDefault(target => target.Id == Self.Id));
             
+            for (int i = 0; i < players.Length; i++)
+            {
+                var target = targets.FirstOrDefault(x => x.Id == players[i].Id);
+                if (target != null)
+                    players[i] = new PlayerData(target);
+            }
+            ShowMessage?.Invoke(actionMessage, null);
+            OnUseJokerAction?.Invoke();
         }
 
         #endregion

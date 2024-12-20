@@ -23,6 +23,13 @@ namespace THE.Player
             cardRank.text = CardData.Rank.GetDescription();
             cover.SetActive(!isOwnCardOrCommunity);
         }
+
+        public void UpdateCard(CardData newCardData)
+        {
+            CardData = newCardData;
+            StartCoroutine(LoadFromResourcesFolder(CardData.Suit));
+            cardRank.text = CardData.Rank.GetDescription();
+        }
         
         public void HighlightCard()
         {

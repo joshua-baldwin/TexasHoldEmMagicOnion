@@ -22,7 +22,7 @@ namespace THE.Player
         private GamingHubReceiver gamingHubReceiver;
         public JokerData JokerData { get; private set; }
         public Func<int, UniTask> BuyJokerAction;
-        public Action<Guid> UseJokerAction;
+        public Action<JokerData> UseJokerAction;
 
         private void Awake()
         {
@@ -75,8 +75,8 @@ namespace THE.Player
         
         private void UseJoker()
         {
-            useButton.interactable = false;
-            UseJokerAction?.Invoke(JokerData.UniqueId);
+            //useButton.interactable = false;
+            UseJokerAction?.Invoke(JokerData);
         }
     }
 }

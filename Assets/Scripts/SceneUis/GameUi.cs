@@ -53,10 +53,12 @@ namespace THE.SceneUis
         [SerializeField] private Button cancelButton;
         [SerializeField] private Text commandText;
         [SerializeField] private JokerListUi jokerListUi;
+        [SerializeField] private JokerConfirmationUi jokerConfirmationUi;
         
         private readonly List<PlayerClass> playerList = new();
         private GamingHubReceiver gamingHubReceiver;
         private Enums.CommandTypeEnum currentAction;
+        private JokerData selectedJoker;
         
         private PopupUi popupUi;
 
@@ -111,6 +113,7 @@ namespace THE.SceneUis
             gamingHubReceiver.UpdateGameUi = UpdateUi;
             gamingHubReceiver.ShowMessage = ShowMessage;
             gamingHubReceiver.OnGameOverAction = OnGameOver;
+            gamingHubReceiver.OnUseJokerAction = OnUseJoker;
         }
 
         public void Initialize()
@@ -308,53 +311,27 @@ namespace THE.SceneUis
             cancelButton.gameObject.SetActive(false);
             await gamingHubReceiver.DoAction(currentAction, OnDisconnect);
         }
-
-        private Guid selectedJokerUniqueId;
-        private void UseJokerAction(Guid jokerUniqueId)
-        {
-            selectedJokerUniqueId = jokerUniqueId;
-            OpenChooseTargetList();
-        }
         
-        private void OpenChooseTargetList()
+        private void UseJokerAction(JokerData joker)
         {
-            
+            selectedJoker = joker;
+            jokerConfirmationUi.ShowUi(gamingHubReceiver, joker);
+            jokerConfirmationUi.OnConfirmAction = OnConfirm;
         }
 
-        private void CloseChooseTargetList()
+        private async UniTaskVoid OnConfirm(List<Guid> selectedTargets, List<int> selectedCards)
         {
-            
+            await gamingHubReceiver.UseJoker(selectedJoker.UniqueId, selectedTargets, selectedCards, OnDisconnect);
         }
 
-        private Guid selectedTarget;
-        private void OnSelectTarget(Guid id)
+        private void OnUseJoker()
         {
-            selectedTarget = id;
-        }
-
-        private void OpenChooseCardList()
-        {
-            
-        }
-
-        private void CloseChooseCardList()
-        {
-            
-        }
-
-        private List<CardEntity> selectedCards;
-
-        private void OnSelectCards(List<CardEntity> cards)
-        {
-            selectedCards = cards;
-        }
-
-        private async UniTask SendAction()
-        {
-            await gamingHubReceiver.UseJoker(selectedJokerUniqueId, selectedTarget, selectedCards, OnDisconnect);
-            selectedJokerUniqueId = Guid.Empty;
-            selectedTarget = Guid.Empty;
-            selectedCards = null;
+            jokerConfirmationUi.HideUi();
+            playerList.ForEach(player =>
+            {
+                var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);
+                player.UpdateHoleCards(data);
+            });
         }
 
         private void CancelBet()

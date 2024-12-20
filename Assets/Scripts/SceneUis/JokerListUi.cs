@@ -51,7 +51,7 @@ namespace THE.SceneUis
             contents.SetActive(true);   
         }
         
-        public void ShowListForGame(IEnumerable<JokerData> jokerDataList, List<PlayerData> players, Action<Guid> useJokerAction, Action onCloseList)
+        public void ShowListForGame(IEnumerable<JokerData> jokerDataList, List<PlayerData> players, Action<JokerData> useJokerAction, Action onCloseList)
         {
             onCloseAction = onCloseList;
             foreach (var jokerData in jokerDataList)

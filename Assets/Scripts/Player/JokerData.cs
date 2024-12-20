@@ -18,6 +18,7 @@ namespace THE.Player
         public List<JokerAbilityEntity> JokerAbilities { get; set; }
         public bool CanUse { get; set; }
         public Enums.JokerTypeEnum JokerType { get; set; }
+        public Enums.TargetTypeEnum TargetType { get; set; }
         
         public JokerData(JokerEntity joker)
         {
@@ -30,6 +31,7 @@ namespace THE.Player
             JokerAbilities = joker.JokerAbilityEntities;
             CanUse = joker.CanUse;
             JokerType = joker.JokerType;
+            TargetType = joker.TargetType;
         }
     }
 }

@@ -67,6 +67,13 @@ namespace THE.Player
             //chipsText.text = ClientUtilityMethods.GetChipText(playerData.Chips);
         }
 
+        public void UpdateHoleCards(PlayerData playerData)
+        {
+            PlayerData = playerData;
+            for (var i = 0; i < cardList.Count; i++)
+                cardList[i].UpdateCard(PlayerData.HoleCards[i]);
+        }
+
         public void ChangeCardVisibility(bool visible)
         {
             cardListRoot.SetActive(visible);
