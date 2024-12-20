@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace THE.SceneUis
 {
-    public class JokerConfirmationUi : MonoBehaviour
+    public class JokerConfirmationUi : BaseLayoutUi
     {
         [SerializeField] private GameObject contents;
         [SerializeField] private Button selectTargetButton;
@@ -74,6 +74,11 @@ namespace THE.SceneUis
 
         private void Confirm()
         {
+            if (jokerData.JokerType == Enums.JokerTypeEnum.Hand && cardSelectionUi.GetSelectedCards.Count == 0)
+            {
+                ShowMessage("Please select a hole card to continue.\nホールカードを選択してください。", null);
+                return;
+            }
             SetButtonsInteractable(false);
             var targets = jokerData.TargetType == Enums.TargetTypeEnum.Self
                 ? new List<Guid> { gamingHubReceiver.Self.Id }

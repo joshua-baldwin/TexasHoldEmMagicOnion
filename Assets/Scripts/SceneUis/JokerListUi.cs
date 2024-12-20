@@ -35,7 +35,7 @@ namespace THE.SceneUis
             foreach (var jokerData in jokerDataList)
             {
                 var joker = Instantiate(jokerPrefab, jokerListRoot.transform).GetComponent<JokerClass>();
-                joker.Initialize(jokerData);
+                joker.Initialize(jokerData, !isAllJokerList);
                 joker.SetBuyButtonActive(isAllJokerList);
                 joker.SetUseButtonActive(false);
 
@@ -57,7 +57,7 @@ namespace THE.SceneUis
             foreach (var jokerData in jokerDataList)
             {
                 var joker = Instantiate(jokerPrefab, jokerListRoot.transform).GetComponent<JokerClass>();
-                joker.Initialize(jokerData);
+                joker.Initialize(jokerData, true);
                 joker.SetBuyButtonActive(false);
                 joker.SetUseButtonActive(true);
                 joker.UseJokerAction = useJokerAction;
@@ -68,12 +68,7 @@ namespace THE.SceneUis
             contents.SetActive(true);
         }
         
-        public void UpdateJokerButton(int jokerId, bool interactable)
-        {
-            jokerList.First(x => x.JokerData.JokerId == jokerId).SetButtonInteractable(interactable);
-        }
-
-        private void HideList()
+        public void HideList()
         {
             foreach (Transform child in jokerListRoot.transform)
                 Destroy(child.gameObject);
@@ -81,6 +76,11 @@ namespace THE.SceneUis
             jokerList.Clear();
             contents.SetActive(false);
             onCloseAction?.Invoke();
+        }
+        
+        public void UpdateJokerButton(int jokerId, bool interactable)
+        {
+            jokerList.First(x => x.JokerData.JokerId == jokerId).SetButtonInteractable(interactable);
         }
     }
 }

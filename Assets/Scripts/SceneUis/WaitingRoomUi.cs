@@ -13,7 +13,7 @@ using UnityEngine.UI;
 
 namespace THE.SceneUis
 {
-    public class WaitingRoomUi : MonoBehaviour
+    public class WaitingRoomUi : BaseLayoutUi
     {
         [SerializeField] private Text userName;
         [SerializeField] private Text roomName;
@@ -28,8 +28,6 @@ namespace THE.SceneUis
         private int playerCount;
         private GamingHubReceiver gamingHubReceiver;
         private bool jokerListIsOpen;
-        
-        private PopupUi popupUi;
 
         private void Awake()
         {
@@ -78,12 +76,6 @@ namespace THE.SceneUis
             currentPlayerCount.text = $"{count}/{Constants.MaxPlayers}";
             playerCount = count;
             startButton.interactable = playerCount >= Constants.MinimumPlayers;
-        }
-        
-        private void ShowMessage(string message, Action onClose)
-        {
-            popupUi = FindFirstObjectByType<PopupUi>();
-            popupUi.ShowMessage(message, onClose);
         }
 
         private async UniTaskVoid StartAction()

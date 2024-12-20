@@ -14,6 +14,7 @@ namespace THE.Player
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI costText;
+        [SerializeField] private TextMeshProUGUI remainingUsesText;
         [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private Button buyButton;
         [SerializeField] private Text buyButtonText;
@@ -35,11 +36,14 @@ namespace THE.Player
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void Initialize(JokerData jokerData)
+        public void Initialize(JokerData jokerData, bool ownedJoker)
         {
             JokerData = jokerData;
             nameText.text = $"{JokerData.JokerType} influence";
             costText.text = $"Cost: {JokerData.BuyCost}";
+            remainingUsesText.text = ownedJoker
+                ? $"Remaining uses: {jokerData.MaxUses - jokerData.CurrentUses}/{jokerData.MaxUses}"
+                : $"Max uses: {jokerData.MaxUses}";
             descriptionText.text = JokerData.JokerAbilities.First().GetDescription();
         }
 

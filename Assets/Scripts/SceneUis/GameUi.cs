@@ -16,7 +16,7 @@ using UnityEngine.UI;
 
 namespace THE.SceneUis
 {
-    public class GameUi : MonoBehaviour
+    public class GameUi : BaseLayoutUi
     {
         private enum ButtonTypeEnum
         {
@@ -59,8 +59,6 @@ namespace THE.SceneUis
         private GamingHubReceiver gamingHubReceiver;
         private Enums.CommandTypeEnum currentAction;
         private JokerData selectedJoker;
-        
-        private PopupUi popupUi;
 
         private void Awake()
         {
@@ -231,21 +229,9 @@ namespace THE.SceneUis
             }
         }
 
-        private void ShowMessage(string message, Action onClose)
-        {
-            popupUi = FindFirstObjectByType<PopupUi>();
-            popupUi.ShowMessage(message, onClose);
-        }
-
-        private async UniTaskVoid ShowConfirmation(string message, Action onConfirm, Action onCancel)
-        {
-            popupUi = FindFirstObjectByType<PopupUi>();
-            popupUi.ShowConfirmation(message, onConfirm, onCancel);
-        }
-
         private async UniTaskVoid OnClickButton(ButtonTypeEnum buttonType)
         {
-            quitButton.interactable = false;
+            //quitButton.interactable = false;
             buttonList.ForEach(x => x.ButtonObject.interactable = false);
             
             if (buttonType == ButtonTypeEnum.Quit)
@@ -321,12 +307,17 @@ namespace THE.SceneUis
 
         private async UniTaskVoid OnConfirm(List<Guid> selectedTargets, List<int> selectedCards)
         {
-            await gamingHubReceiver.UseJoker(selectedJoker.UniqueId, selectedTargets, selectedCards, OnDisconnect);
+            var res = await gamingHubReceiver.UseJoker(selectedJoker.UniqueId, selectedTargets, selectedCards, OnDisconnect);
+            if (res == Enums.UseJokerResponseTypeEnum.Success)
+            {
+                jokerConfirmationUi.HideUi();
+                jokerListUi.HideList();
+            }
         }
 
         private void OnUseJoker()
         {
-            jokerConfirmationUi.HideUi();
+            //jokerConfirmationUi.HideUi();
             playerList.ForEach(player =>
             {
                 var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);
@@ -342,12 +333,6 @@ namespace THE.SceneUis
             confirmAmountButton.gameObject.SetActive(false);
             cancelButton.gameObject.SetActive(false);
             gamingHubReceiver.BetAmount.Value = 0;
-        }
-        
-        private void HighlightCards()
-        {
-            communityCardList.ForEach(card => card.HighlightCard());
-            playerList.First(player => player.PlayerData.Id == gamingHubReceiver.Self.Id).HighlightCards();
         }
 
         private void OnGameStarted(bool isFirstRound)

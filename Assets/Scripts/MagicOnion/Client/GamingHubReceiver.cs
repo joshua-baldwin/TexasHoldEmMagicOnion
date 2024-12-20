@@ -245,14 +245,16 @@ namespace THE.MagicOnion.Client
         {
             try
             {
-                await client.LeaveRoomAsync();
+                if (client != null)
+                    await client.LeaveRoomAsync();
             }
             catch (ObjectDisposedException)
             {
                 //we're already disconnected so do nothing
             }
             
-            await client.DisposeAsync();
+            if (client != null)
+                await client.DisposeAsync();
             client = null;
             Self = null;
             CurrentPlayer = null;

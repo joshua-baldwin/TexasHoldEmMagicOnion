@@ -8,14 +8,13 @@ using UnityEngine.UI;
 
 namespace THE.SceneUis
 {
-    public class StartUi : MonoBehaviour
+    public class StartUi : BaseLayoutUi
     {
         [SerializeField] private InputField userName;
         [SerializeField] private Button joinRoom;
         [SerializeField] private Button cancelJoinRoom;
         
         private GamingHubReceiver gamingHubReceiver;
-        private PopupUi popupUi;
 
         private void Awake()
         {
@@ -63,12 +62,6 @@ namespace THE.SceneUis
         private void SetCancelButton(bool isActive)
         {
             cancelJoinRoom.interactable = isActive;
-        }
-        
-        private void ShowMessage(string message, Action onClose)
-        {
-            popupUi = FindFirstObjectByType<PopupUi>();
-            popupUi.ShowMessage(message, onClose);
         }
     }
 }
