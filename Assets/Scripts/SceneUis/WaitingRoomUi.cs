@@ -103,12 +103,12 @@ namespace THE.SceneUis
 
         private void OpenJokerList()
         {
-            jokerListUi.ShowListForWaitingRoom(gamingHubReceiver.GetJokerList(), gamingHubReceiver.Self.JokerCards, BuyJokerAction, true);
+            jokerListUi.ShowListForWaitingRoom(gamingHubReceiver, BuyJokerAction, true);
         }
         
         private void OpenMyJokerList()
         {
-            jokerListUi.ShowListForWaitingRoom(gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x)), null, null, false);
+            jokerListUi.ShowListForWaitingRoom(gamingHubReceiver, null, false);
         }
         
         private void OnDisconnect(string disconnectMessage)

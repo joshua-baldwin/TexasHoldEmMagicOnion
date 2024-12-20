@@ -33,6 +33,12 @@ namespace THE.SceneUis
             nameText.text = playerData.Name;
         }
 
+        public void Reset()
+        {
+            isSelected = false;
+            selectText.text = "Select";
+        }
+
         private void Select()
         {
             if (isSelected)

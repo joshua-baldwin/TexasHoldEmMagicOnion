@@ -13,23 +13,29 @@ namespace THE.SceneUis
         [SerializeField] private GameObject cardCellPrefab;
         [SerializeField] private GameObject contents;
         [SerializeField] private GameObject cardCellParent;
+        [SerializeField] private Button confirmButton;
         [SerializeField] private Button closeButton;
         
         private List<int> selectedCards = new();
+        private List<CardCellUi> cardCells = new();
 
+        private Action<List<int>> onConfirmAction;
         private Action onCloseAction;
-        
-        public List<int> GetSelectedCards => selectedCards;
 
         private void Awake()
         {
+            confirmButton.OnClickAsAsyncEnumerable()
+                .Subscribe(_ => ConfirmSelection())
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            
             closeButton.OnClickAsAsyncEnumerable()
-                .Subscribe(_ => HideUi())
+                .Subscribe(_ => CancelSelection())
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void ShowUi(List<CardData> cards, Action onClose)
+        public void ShowUi(List<CardData> cards, Action<List<int>> onConfirm, Action onClose)
         {
+            onConfirmAction = onConfirm;
             onCloseAction = onClose;
             var index = 0;
             foreach (var card in cards)
@@ -38,6 +44,7 @@ namespace THE.SceneUis
                 cardCell.Initialize(card, index, selectedCards.Contains(index));
                 cardCell.OnSelectAction = OnSelect;
                 cardCell.OnDeselectAction = OnDeselect;
+                cardCells.Add(cardCell);
                 index++;
             }
             contents.SetActive(true);
@@ -46,6 +53,22 @@ namespace THE.SceneUis
         public void Reset()
         {
             selectedCards.Clear();
+            cardCells.Clear();
+        }
+
+        private void ConfirmSelection()
+        {
+            onConfirmAction?.Invoke(new List<int>(selectedCards));
+            selectedCards.Clear();
+            HideUi();
+        }
+
+        private void CancelSelection()
+        {
+            onCloseAction?.Invoke();
+            selectedCards.Clear();
+            cardCells.ForEach(card => card.Reset());
+            HideUi();
         }
 
         private void HideUi()
@@ -53,8 +76,8 @@ namespace THE.SceneUis
             foreach (Transform child in cardCellParent.transform)
                 Destroy(child.gameObject);
             
+            cardCells.Clear();
             contents.SetActive(false);
-            onCloseAction?.Invoke();
         }
 
         private void OnSelect(int index)

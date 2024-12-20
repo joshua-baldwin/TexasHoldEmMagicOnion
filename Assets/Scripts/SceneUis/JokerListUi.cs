@@ -17,6 +17,7 @@ namespace THE.SceneUis
         [SerializeField] private GameObject jokerPrefab;
         [SerializeField] private GameObject jokerListRoot;
         [SerializeField] private Button closeButton;
+        [SerializeField] private JokerConfirmationUi jokerConfirmationUi;
         
         private List<JokerClass> jokerList = new();
         
@@ -30,8 +31,13 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void ShowListForWaitingRoom(IEnumerable<JokerData> jokerDataList, List<JokerEntity> myJokerDataList, Func<int, UniTask> buyJokerFunc, bool isAllJokerList)
+        public void ShowListForWaitingRoom(GamingHubReceiver receiver, Func<int, UniTask> buyJokerFunc, bool isAllJokerList)
         {
+            gamingHubReceiver = receiver;
+            var jokerDataList = isAllJokerList
+                ? gamingHubReceiver.GetJokerList()
+                : gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x));
+            
             foreach (var jokerData in jokerDataList)
             {
                 var joker = Instantiate(jokerPrefab, jokerListRoot.transform).GetComponent<JokerClass>();
@@ -41,6 +47,7 @@ namespace THE.SceneUis
 
                 if (isAllJokerList)
                 {
+                    var myJokerDataList = gamingHubReceiver.Self.JokerCards;
                     joker.BuyJokerAction = buyJokerFunc;
                     joker.SetButtonInteractable(myJokerDataList.Count == 0 || !myJokerDataList.Select(card => card.JokerId).Contains(joker.JokerData.JokerId));
                 }
@@ -51,8 +58,10 @@ namespace THE.SceneUis
             contents.SetActive(true);   
         }
         
-        public void ShowListForGame(IEnumerable<JokerData> jokerDataList, List<PlayerData> players, Action<JokerData> useJokerAction, Action onCloseList)
+        public void ShowListForGame(GamingHubReceiver receiver, Action<JokerData> useJokerAction, Action onCloseList, Func<List<Guid>, List<int>, UniTaskVoid> onConfirm)
         {
+            gamingHubReceiver = receiver;
+            var jokerDataList = gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x));
             onCloseAction = onCloseList;
             foreach (var jokerData in jokerDataList)
             {
@@ -60,7 +69,12 @@ namespace THE.SceneUis
                 joker.Initialize(jokerData, true);
                 joker.SetBuyButtonActive(false);
                 joker.SetUseButtonActive(true);
-                joker.UseJokerAction = useJokerAction;
+                joker.UseJokerAction = (data) =>
+                {
+                    jokerConfirmationUi.ShowUi(gamingHubReceiver, data);
+                    jokerConfirmationUi.OnConfirmAction = onConfirm;
+                    useJokerAction?.Invoke(data);
+                };
 
                 jokerList.Add(joker);
             }
@@ -70,6 +84,7 @@ namespace THE.SceneUis
         
         public void HideList()
         {
+            jokerConfirmationUi.HideUi();
             foreach (Transform child in jokerListRoot.transform)
                 Destroy(child.gameObject);
             

@@ -45,6 +45,12 @@ namespace THE.SceneUis
                 highlight.SetActive(true);
             }
         }
+
+        public void Reset()
+        {
+            isSelected = false;
+            highlight.SetActive(false);
+        }
         
         private void Select()
         {

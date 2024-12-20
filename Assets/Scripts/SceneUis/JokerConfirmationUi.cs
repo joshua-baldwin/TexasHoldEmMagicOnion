@@ -25,6 +25,10 @@ namespace THE.SceneUis
         private GamingHubReceiver gamingHubReceiver;
         public Func<List<Guid>, List<int>, UniTaskVoid> OnConfirmAction;
         private JokerData jokerData;
+        private bool isOpen;
+        
+        private List<int> selectedCardIndices = new();
+        private List<Guid> selectedTargets = new();
 
         private void Awake()
         {
@@ -52,29 +56,42 @@ namespace THE.SceneUis
             contents.SetActive(true);
             selectTargetButton.interactable = joker.TargetType is Enums.TargetTypeEnum.SinglePlayer or Enums.TargetTypeEnum.MultiPlayers;
             selectCardsButton.interactable = joker.JokerType == Enums.JokerTypeEnum.Hand;
+            isOpen = true;
         }
         
         public void HideUi()
         {
+            if (!isOpen)
+                return;
+            
             SetButtonsInteractable(true);
             contents.SetActive(false);
+            isOpen = false;
         }
 
         private void OpenTargetSelection()
         {
             SetButtonsInteractable(false);
-            targetSelectionUi.ShowUi(gamingHubReceiver.GetPlayerList(), () => SetButtonsInteractable(true));
+            targetSelectionUi.ShowUi(gamingHubReceiver.GetPlayerList(), (targets) =>
+            {
+                selectedTargets = targets;
+                SetButtonsInteractable(true);
+            }, () => SetButtonsInteractable(true));
         }
         
         private void OpenCardSelection()
         {
             SetButtonsInteractable(false);
-            cardSelectionUi.ShowUi(gamingHubReceiver.Self.HoleCards, () => SetButtonsInteractable(true));
+            cardSelectionUi.ShowUi(gamingHubReceiver.Self.HoleCards, (indices) =>
+            {
+                selectedCardIndices = indices;
+                SetButtonsInteractable(true);
+            }, () => SetButtonsInteractable(true));
         }
 
         private void Confirm()
         {
-            if (jokerData.JokerType == Enums.JokerTypeEnum.Hand && cardSelectionUi.GetSelectedCards.Count == 0)
+            if (jokerData.JokerType == Enums.JokerTypeEnum.Hand && selectedCardIndices.Count == 0)
             {
                 ShowMessage("Please select a hole card to continue.\nホールカードを選択してください。", null);
                 return;
@@ -82,8 +99,10 @@ namespace THE.SceneUis
             SetButtonsInteractable(false);
             var targets = jokerData.TargetType == Enums.TargetTypeEnum.Self
                 ? new List<Guid> { gamingHubReceiver.Self.Id }
-                : targetSelectionUi.GetSelectedTargets;
-            OnConfirmAction?.Invoke(targets, cardSelectionUi.GetSelectedCards);
+                : selectedTargets;
+            OnConfirmAction?.Invoke(targets, selectedCardIndices);
+            selectedCardIndices.Clear();
+            selectedTargets.Clear();
             targetSelectionUi.Reset();
             cardSelectionUi.Reset();
             HideUi();

@@ -53,7 +53,6 @@ namespace THE.SceneUis
         [SerializeField] private Button cancelButton;
         [SerializeField] private Text commandText;
         [SerializeField] private JokerListUi jokerListUi;
-        [SerializeField] private JokerConfirmationUi jokerConfirmationUi;
         
         private readonly List<PlayerClass> playerList = new();
         private GamingHubReceiver gamingHubReceiver;
@@ -301,18 +300,13 @@ namespace THE.SceneUis
         private void UseJokerAction(JokerData joker)
         {
             selectedJoker = joker;
-            jokerConfirmationUi.ShowUi(gamingHubReceiver, joker);
-            jokerConfirmationUi.OnConfirmAction = OnConfirm;
         }
 
         private async UniTaskVoid OnConfirm(List<Guid> selectedTargets, List<int> selectedCards)
         {
             var res = await gamingHubReceiver.UseJoker(selectedJoker.UniqueId, selectedTargets, selectedCards, OnDisconnect);
             if (res == Enums.UseJokerResponseTypeEnum.Success)
-            {
-                jokerConfirmationUi.HideUi();
                 jokerListUi.HideList();
-            }
         }
 
         private void OnUseJoker()
@@ -393,11 +387,11 @@ namespace THE.SceneUis
         
         private void OpenMyJokerList()
         {
-            jokerListUi.ShowListForGame(gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x)), gamingHubReceiver.GetPlayerList().ToList(), UseJokerAction, () =>
+            jokerListUi.ShowListForGame(gamingHubReceiver, UseJokerAction, () =>
             {
                 quitButton.interactable = true;
                 buttonList.ForEach(x => x.ButtonObject.interactable = true);
-            });
+            }, OnConfirm);
         }
     }
 }
