@@ -616,7 +616,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(21);
+            writer.WriteArrayHeader(23);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
@@ -638,6 +638,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.AllInAmount);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>>(formatterResolver).Serialize(ref writer, value.JokerCards, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity>>(formatterResolver).Serialize(ref writer, value.ActiveEffects, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.TempHoleCards, options);
+            writer.Write(value.MaxHoleCards);
         }
 
         public global::THE.MagicOnion.Shared.Entities.PlayerEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -671,6 +673,8 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __AllInAmount__ = default(int);
             var __JokerCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>);
             var __ActiveEffects__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity>);
+            var __TempHoleCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
+            var __MaxHoleCards__ = default(int);
 
             for (int i = 0; i < length; i++)
             {
@@ -738,6 +742,12 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         break;
                     case 20:
                         __ActiveEffects__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 21:
+                        __TempHoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 22:
+                        __MaxHoleCards__ = reader.ReadInt32();
                         break;
                     default:
                         reader.Skip();
@@ -854,6 +864,18 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             ____result.ActiveEffects = __ActiveEffects__;
+            if (length <= 21)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.TempHoleCards = __TempHoleCards__;
+            if (length <= 22)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.MaxHoleCards = __MaxHoleCards__;
 
         MEMBER_ASSIGNMENT_END:
             reader.Depth--;

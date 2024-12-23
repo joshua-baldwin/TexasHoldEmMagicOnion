@@ -21,7 +21,8 @@ namespace THE.Player
         public int RaiseAmount { get; }
         public BestHandEntity CurrentBestHand { get; set; }
         public int AllInAmount { get; set; }
-        public List<JokerEntity> JokerCards { get; set; }
+        public List<JokerData> JokerCards { get; set; }
+        public List<CardData> TempHoleCards { get; set; }
         
         public PlayerData(PlayerEntity playerEntity)
         {
@@ -30,8 +31,7 @@ namespace THE.Player
             PlayerRole = playerEntity.PlayerRole;
             RoomId = playerEntity.RoomId;
             IsDealer = playerEntity.IsDealer;
-            if (playerEntity.HoleCards != null)
-                HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();
+            HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();
             Chips = playerEntity.Chips;
             CurrentBet = playerEntity.CurrentBet;
             HasFolded = playerEntity.HasFolded;
@@ -39,7 +39,8 @@ namespace THE.Player
             RaiseAmount = playerEntity.RaiseAmount;
             CurrentBestHand = playerEntity.CurrentBestHand;
             AllInAmount = playerEntity.AllInAmount;
-            JokerCards = playerEntity.JokerCards;
+            JokerCards = playerEntity.JokerCards.Select(j => new JokerData(j)).ToList();
+            TempHoleCards = playerEntity.TempHoleCards.Select(t => new CardData(t)).ToList();
         }
     }
 }

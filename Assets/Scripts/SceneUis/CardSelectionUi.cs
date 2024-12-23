@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using THE.Player;
@@ -16,10 +17,11 @@ namespace THE.SceneUis
         [SerializeField] private Button confirmButton;
         [SerializeField] private Button closeButton;
         
-        private List<int> selectedCards = new();
+        private List<CardData> selectedCards = new();
         private List<CardCellUi> cardCells = new();
 
-        private Action<List<int>> onConfirmAction;
+        private Action<List<CardData>> onConfirmAction;
+        private Action<List<CardData>> onConfirmDiscardAction;
         private Action onCloseAction;
         private int maxSelection;
 
@@ -34,7 +36,7 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void ShowUi(List<CardData> cards, int maxCardsToSelect, Action<List<int>> onConfirm, Action onClose)
+        public void ShowUi(List<CardData> cards, int maxCardsToSelect, Action<List<CardData>> onConfirm, Action onClose)
         {
             maxSelection = maxCardsToSelect;
             onConfirmAction = onConfirm;
@@ -43,7 +45,7 @@ namespace THE.SceneUis
             foreach (var card in cards)
             {
                 var cardCell = Instantiate(cardCellPrefab, cardCellParent.transform).GetComponent<CardCellUi>();
-                cardCell.Initialize(card, index, selectedCards.Contains(index));
+                cardCell.Initialize(card, index, selectedCards.Any(x => x.Rank == card.Rank && x.Suit == card.Suit));
                 cardCell.OnSelectAction = OnSelect;
                 cardCell.OnDeselectAction = OnDeselect;
                 cardCells.Add(cardCell);
@@ -61,7 +63,7 @@ namespace THE.SceneUis
 
         private void ConfirmSelection()
         {
-            onConfirmAction?.Invoke(new List<int>(selectedCards));
+            onConfirmAction?.Invoke(new List<CardData>(selectedCards));
             selectedCards.Clear();
             HideUi();
         }
@@ -83,15 +85,15 @@ namespace THE.SceneUis
             contents.SetActive(false);
         }
 
-        private void OnSelect(int index)
+        private void OnSelect(CardData cardData)
         {
-            selectedCards.Add(index);
+            selectedCards.Add(cardData);
             confirmButton.interactable = selectedCards.Count == maxSelection;
         }
         
-        private void OnDeselect(int index)
+        private void OnDeselect(CardData cardData)
         {
-            selectedCards.Remove(index);
+            selectedCards.Remove(cardData);
             confirmButton.interactable = selectedCards.Count == maxSelection;
         }
     }

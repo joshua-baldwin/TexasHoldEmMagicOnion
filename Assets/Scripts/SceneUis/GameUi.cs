@@ -112,6 +112,7 @@ namespace THE.SceneUis
             gamingHubReceiver.ShowMessage = ShowMessage;
             gamingHubReceiver.OnGameOverAction = OnGameOver;
             gamingHubReceiver.OnUseJokerAction = OnUseJoker;
+            gamingHubReceiver.OnUseJokerDrawAction = OnUseJokerDraw;
         }
 
         public void Initialize()
@@ -308,11 +309,23 @@ namespace THE.SceneUis
             selectedJoker = joker;
         }
 
-        private async UniTaskVoid OnConfirm(List<Guid> selectedTargets, List<int> selectedCards)
+        private async UniTaskVoid UseJokerToDrawAction(JokerData joker)
+        {
+            selectedJoker = joker;
+            await gamingHubReceiver.UseJoker(joker.UniqueId, new List<Guid> { gamingHubReceiver.Self.Id }, new List<CardData>(), OnDisconnect);
+        }
+
+        private async UniTaskVoid OnConfirm(List<Guid> selectedTargets, List<CardData> selectedCards)
         {
             var res = await gamingHubReceiver.UseJoker(selectedJoker.UniqueId, selectedTargets, selectedCards, OnDisconnect);
             if (res == Enums.UseJokerResponseTypeEnum.Success)
                 jokerListUi.HideList();
+        }
+
+        private async UniTaskVoid OnConfirmDiscard(List<Guid> selectedTargets, List<CardData> selectedCards)
+        {
+            await gamingHubReceiver.DiscardHoleCard(gamingHubReceiver.Self.Id, selectedCards, OnDisconnect);
+            jokerListUi.HideList();
         }
 
         private void OnUseJoker()
@@ -322,6 +335,16 @@ namespace THE.SceneUis
                 var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);
                 player.UpdateHoleCards(data);
             });
+        }
+
+        private void OnUseJokerDraw(JokerData joker)
+        {
+            playerList.ForEach(player =>
+            {
+                var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);
+                player.UpdateHoleCards(data);
+            });
+            jokerListUi.ShowJokerConfirmationForDiscard(joker);
         }
 
         private void CancelBet()
@@ -393,11 +416,11 @@ namespace THE.SceneUis
         
         private void OpenMyJokerList()
         {
-            jokerListUi.ShowListForGame(gamingHubReceiver, UseJokerAction, () =>
+            jokerListUi.ShowListForGame(gamingHubReceiver, UseJokerAction, UseJokerToDrawAction, () =>
             {
                 quitButton.interactable = true;
                 buttonList.ForEach(x => x.ButtonObject.interactable = true);
-            }, OnConfirm);
+            }, OnConfirm, OnConfirmDiscard);
         }
     }
 }

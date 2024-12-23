@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
+using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
 using THE.MagicOnion.Shared.Entities;
 using THE.Player;
@@ -36,7 +37,7 @@ namespace THE.SceneUis
             gamingHubReceiver = receiver;
             var jokerDataList = isAllJokerList
                 ? gamingHubReceiver.GetJokerList()
-                : gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x));
+                : gamingHubReceiver.Self.JokerCards;
             
             foreach (var jokerData in jokerDataList)
             {
@@ -58,10 +59,10 @@ namespace THE.SceneUis
             contents.SetActive(true);   
         }
         
-        public void ShowListForGame(GamingHubReceiver receiver, Action<JokerData> useJokerAction, Action onCloseList, Func<List<Guid>, List<int>, UniTaskVoid> onConfirm)
+        public void ShowListForGame(GamingHubReceiver receiver, Action<JokerData> useJokerAction, Func<JokerData, UniTaskVoid> useJokerToDrawAction, Action onCloseList, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirm, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirmDiscard)
         {
             gamingHubReceiver = receiver;
-            var jokerDataList = gamingHubReceiver.Self.JokerCards.Select(x => new JokerData(x));
+            var jokerDataList = gamingHubReceiver.Self.JokerCards;
             onCloseAction = onCloseList;
             foreach (var jokerData in jokerDataList)
             {
@@ -71,9 +72,17 @@ namespace THE.SceneUis
                 joker.SetUseButtonActive(true);
                 joker.UseJokerAction = (data) =>
                 {
-                    jokerConfirmationUi.ShowUi(gamingHubReceiver, data);
-                    jokerConfirmationUi.OnConfirmAction = onConfirm;
-                    useJokerAction?.Invoke(data);
+                    if (data.JokerAbilities.First().AbilityEffects.First().HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
+                    {
+                        jokerConfirmationUi.ShowUi(gamingHubReceiver, data, false);
+                        jokerConfirmationUi.OnConfirmAction = onConfirm;
+                        useJokerAction?.Invoke(data);
+                    }
+                    else
+                    {
+                        jokerConfirmationUi.OnConfirmDiscardAction = onConfirmDiscard;
+                        useJokerToDrawAction?.Invoke(data);
+                    }
                 };
 
                 jokerList.Add(joker);
@@ -96,6 +105,11 @@ namespace THE.SceneUis
         public void UpdateJokerButton(int jokerId, bool interactable)
         {
             jokerList.First(x => x.JokerData.JokerId == jokerId).SetButtonInteractable(interactable);
+        }
+
+        public void ShowJokerConfirmationForDiscard(JokerData jokerData)
+        {
+            jokerConfirmationUi.ShowUi(gamingHubReceiver, jokerData, true);
         }
     }
 }

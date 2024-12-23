@@ -79,7 +79,6 @@ namespace THE.Player
         
         private void UseJoker()
         {
-            //useButton.interactable = false;
             UseJokerAction?.Invoke(JokerData);
         }
     }

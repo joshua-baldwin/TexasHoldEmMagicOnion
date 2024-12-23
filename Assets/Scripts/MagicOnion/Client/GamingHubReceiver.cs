@@ -43,6 +43,7 @@ namespace THE.MagicOnion.Client
         public Action<string, Action> ShowMessage;
         public Action<bool> OnGameOverAction;
         public Action OnUseJokerAction;
+        public Action<JokerData> OnUseJokerDrawAction;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         public List<PlayerData> GetPlayerList() => players.ToList();
@@ -178,7 +179,12 @@ namespace THE.MagicOnion.Client
         {
             try
             {
-                await CallDoAction(commandType, BetAmount.Value);
+                var response = await CallDoAction(commandType, BetAmount.Value);
+                if (response == Enums.DoActionResponseTypeEnum.PlayerHasInvalidCardData)
+                {
+                    await Disconnect();
+                    onDisconnect?.Invoke("The player who used a joker has invalid card data.\nジョーカーを使った人のカードデータに不正データがあります");
+                }
                 BetAmount.Value = 0;
             }
             catch (ObjectDisposedException)
@@ -214,17 +220,18 @@ namespace THE.MagicOnion.Client
             }
         }
         
-        public async UniTask<Enums.UseJokerResponseTypeEnum> UseJoker(Guid jokerUniqueId, List<Guid> targetIds, List<int> cardsToDiscard, Action<string> onDisconnect)
+        public async UniTask<Enums.UseJokerResponseTypeEnum> UseJoker(Guid jokerUniqueId, List<Guid> targetIds, List<CardData> cardsToDiscard, Action<string> onDisconnect)
         {
             try
             {
                 var response = await CallUseJokerAction(jokerUniqueId, targetIds, cardsToDiscard);
-                if (response is Enums.UseJokerResponseTypeEnum.GroupDoesNotExist or Enums.UseJokerResponseTypeEnum.NotEnoughChips)
+                if (response is Enums.UseJokerResponseTypeEnum.GroupDoesNotExist or Enums.UseJokerResponseTypeEnum.NotEnoughChips or Enums.UseJokerResponseTypeEnum.PlayerHasInvalidCardData)
                 {
                     var message = response switch
                     {
                         Enums.UseJokerResponseTypeEnum.NotEnoughChips => "You don't have enough chips.\nチップが足りない。",
-                        Enums.UseJokerResponseTypeEnum.GroupDoesNotExist => "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。"
+                        Enums.UseJokerResponseTypeEnum.GroupDoesNotExist => "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。",
+                        Enums.UseJokerResponseTypeEnum.PlayerHasInvalidCardData => "The player who used a joker has invalid card data.\nジョーカーを使った人のカードデータに不正データがあります",
                     };
 
                     await Disconnect();
@@ -239,7 +246,20 @@ namespace THE.MagicOnion.Client
                 return Enums.UseJokerResponseTypeEnum.Failed;
             }
         }
-        
+
+        public async UniTask DiscardHoleCard(Guid jokerUniqueId, List<CardData> cardsToDiscard, Action<string> onDisconnect)
+        {
+            try
+            {
+                await CallDiscardHoleCard(jokerUniqueId, cardsToDiscard);
+            }
+            catch (ObjectDisposedException)
+            {
+                await Disconnect();
+                onDisconnect?.Invoke("Disconnected from server.");
+            }
+        }
+
         public bool CanPlaceBet() => BetAmount.Value <= Self.Chips;
 
         private async UniTask Disconnect()
@@ -296,10 +316,10 @@ namespace THE.MagicOnion.Client
             await client.CancelStart(Self.Id);
         }
 
-        private async UniTask CallDoAction(Enums.CommandTypeEnum commandType, int chipsBet)
+        private async UniTask<Enums.DoActionResponseTypeEnum> CallDoAction(Enums.CommandTypeEnum commandType, int chipsBet)
         {
             Debug.Log("Calling DoAction");
-            await client.DoAction(commandType, chipsBet);
+            return await client.DoAction(commandType, chipsBet);
         }
 
         private async UniTask<Enums.BuyJokerResponseTypeEnum> CallBuyJokerAction(int jokerId)
@@ -308,10 +328,18 @@ namespace THE.MagicOnion.Client
             return await client.BuyJoker(Self.Id, jokerId);
         }
         
-        private async UniTask<Enums.UseJokerResponseTypeEnum> CallUseJokerAction(Guid jokerUniqueId, List<Guid> targetIds, List<int> cardsToDiscard)
+        private async UniTask<Enums.UseJokerResponseTypeEnum> CallUseJokerAction(Guid jokerUniqueId, List<Guid> targetIds, List<CardData> cardsToDiscard)
         {
             Debug.Log("Calling UseJokerAction");
-            return await client.UseJoker(Self.Id, jokerUniqueId, targetIds, cardsToDiscard);
+            var cardEntities = cardsToDiscard.Select(c => new CardEntity(c.Suit, c.Rank)).ToList();
+            return await client.UseJoker(Self.Id, jokerUniqueId, targetIds, cardEntities);
+        }
+        
+        private async UniTask CallDiscardHoleCard(Guid jokerUniqueId, List<CardData> cardsToDiscard)
+        {
+            Debug.Log("Calling DiscardHoleCard");
+            var cardEntities = cardsToDiscard.Select(c => new CardEntity(c.Suit, c.Rank)).ToList();
+            await client.DiscardHoleCard(jokerUniqueId, cardEntities);
         }
         
         #endregion
@@ -453,6 +481,23 @@ namespace THE.MagicOnion.Client
             }
             ShowMessage?.Invoke(actionMessage, null);
             UpdatePots?.Invoke(pots);
+            if (joker.JokerAbilityEntities.First().AbilityEffects.First().HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
+                OnUseJokerAction?.Invoke();
+            else
+                OnUseJokerDrawAction?.Invoke(new JokerData(joker));
+        }
+
+        public void OnDiscardHoleCard(PlayerEntity jokerUser, List<CardEntity> discardedCards)
+        {
+            if (jokerUser.Id == Self.Id)
+                Self = new PlayerData(jokerUser);
+            
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i].Id == jokerUser.Id)
+                    players[i] = new PlayerData(jokerUser);
+            }
+            
             OnUseJokerAction?.Invoke();
         }
 

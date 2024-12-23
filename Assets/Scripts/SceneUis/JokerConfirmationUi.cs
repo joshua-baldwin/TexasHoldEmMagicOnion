@@ -23,11 +23,12 @@ namespace THE.SceneUis
         [SerializeField] private Button closeButton;
         
         private GamingHubReceiver gamingHubReceiver;
-        public Func<List<Guid>, List<int>, UniTaskVoid> OnConfirmAction;
+        public Func<List<Guid>, List<CardData>, UniTaskVoid> OnConfirmAction;
+        public Func<List<Guid>, List<CardData>, UniTaskVoid> OnConfirmDiscardAction;
         private JokerData jokerData;
         private bool isOpen;
         
-        private List<int> selectedCardIndices = new();
+        private List<CardData> selectedCards = new();
         private List<Guid> selectedTargets = new();
 
         private void Awake()
@@ -49,12 +50,14 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void ShowUi(GamingHubReceiver receiver, JokerData joker)
+        public void ShowUi(GamingHubReceiver receiver, JokerData joker, bool mustDiscard)
         {
             gamingHubReceiver = receiver;
             jokerData = joker;
             contents.SetActive(true);
             SetButtonsInteractable(true);
+            if (mustDiscard)
+                closeButton.interactable = false;
             isOpen = true;
         }
         
@@ -86,20 +89,20 @@ namespace THE.SceneUis
         {
             SetButtonsInteractable(false);
             //TODO assuming only one effect and one ability
-            cardSelectionUi.ShowUi(gamingHubReceiver.Self.HoleCards, jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue, (indices) =>
+            cardSelectionUi.ShowUi(gamingHubReceiver.Self.HoleCards.Concat(gamingHubReceiver.Self.TempHoleCards).ToList(), jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue, (cards) =>
             {
-                selectedCardIndices = indices;
+                selectedCards = cards;
                 SetButtonsInteractable(true);
             }, () =>
             {
-                selectedCardIndices.Clear();
+                selectedCards.Clear();
                 SetButtonsInteractable(true);
             });
         }
 
         private void Confirm()
         {
-            if (jokerData.JokerType == Enums.JokerTypeEnum.Hand && selectedCardIndices.Count == 0)
+            if (jokerData.JokerType == Enums.JokerTypeEnum.Hand && selectedCards.Count == 0)
             {
                 ShowMessage("Please select a hole card to continue.\nホールカードを選択してください。", null);
                 return;
@@ -108,8 +111,11 @@ namespace THE.SceneUis
             var targets = jokerData.TargetType == Enums.TargetTypeEnum.Self
                 ? new List<Guid> { gamingHubReceiver.Self.Id }
                 : selectedTargets;
-            OnConfirmAction?.Invoke(targets, selectedCardIndices);
-            selectedCardIndices.Clear();
+            if (jokerData.JokerAbilities.First().AbilityEffects.First().HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
+                OnConfirmAction?.Invoke(targets, selectedCards);
+            else
+                OnConfirmDiscardAction?.Invoke(targets, selectedCards);
+            selectedCards.Clear();
             selectedTargets.Clear();
             targetSelectionUi.Reset();
             cardSelectionUi.Reset();
@@ -132,7 +138,7 @@ namespace THE.SceneUis
             if (jokerData.JokerType == Enums.JokerTypeEnum.Hand)
             {
                 //TODO assuming one ability
-                confirmButton.interactable = selectedCardIndices.Count == jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue;
+                confirmButton.interactable = selectedCards.Count == jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue;
             }
             else if (jokerData.JokerType == Enums.JokerTypeEnum.Action)
             {

@@ -18,8 +18,8 @@ namespace THE.SceneUis
         [SerializeField] private GameObject highlight;
         
         private (CardData CardData, int HoleCardIndex) card;
-        public Action<int> OnSelectAction;
-        public Action<int> OnDeselectAction;
+        public Action<CardData> OnSelectAction;
+        public Action<CardData> OnDeselectAction;
 
         private bool isSelected;
 
@@ -56,12 +56,12 @@ namespace THE.SceneUis
         {
             if (isSelected)
             {
-                OnDeselectAction?.Invoke(card.HoleCardIndex);
+                OnDeselectAction?.Invoke(card.CardData);
                 highlight.SetActive(false);
             }
             else
             {
-                OnSelectAction?.Invoke(card.HoleCardIndex);
+                OnSelectAction?.Invoke(card.CardData);
                 highlight.SetActive(true);
             }
 
