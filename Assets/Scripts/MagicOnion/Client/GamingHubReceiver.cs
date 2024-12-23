@@ -38,7 +38,8 @@ namespace THE.MagicOnion.Client
         public Action OnRoomConnectFailed;
         public Action OnCancelRoomConnect;
         public Action<int> UpdatePlayerCount;
-        public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<PotEntity>, List<CardData>, bool> UpdateGameUi;
+        public Action<Enums.CommandTypeEnum, bool, Guid, Guid, List<CardData>, bool> UpdateGameUi;
+        public Action<List<PotEntity>> UpdatePots;
         public Action<string, Action> ShowMessage;
         public Action<bool> OnGameOverAction;
         public Action OnUseJokerAction;
@@ -426,7 +427,8 @@ namespace THE.MagicOnion.Client
                     cards.Add(new CardData(card));
             }
 
-            UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, pots, cards, isError);
+            UpdateGameUi?.Invoke(commandType, currentPlayerId == Self.Id, previousPlayerId, currentPlayerId, cards, isError);
+            UpdatePots?.Invoke(pots);
             if (isGameOver)
                 OnGameOverAction?.Invoke(gameOverByFold);
         }
@@ -436,7 +438,7 @@ namespace THE.MagicOnion.Client
             Self = new PlayerData(player);
         }
 
-        public void OnUseJoker(PlayerEntity jokerUser, List<PlayerEntity> targets, JokerEntity joker, string actionMessage)
+        public void OnUseJoker(PlayerEntity jokerUser, List<PlayerEntity> targets, JokerEntity joker, List<PotEntity> pots, string actionMessage)
         {
             if (jokerUser.Id == Self.Id)
                 Self = new PlayerData(jokerUser);
@@ -450,6 +452,7 @@ namespace THE.MagicOnion.Client
                     players[i] = new PlayerData(target);
             }
             ShowMessage?.Invoke(actionMessage, null);
+            UpdatePots?.Invoke(pots);
             OnUseJokerAction?.Invoke();
         }
 
