@@ -23,7 +23,7 @@ namespace THE.MagicOnion.Client
         private CancellationTokenSource shutdownCancellation;
         private GrpcChannel channel;
         private IGamingHub client;
-        private PlayerData[] players;
+        private List<PlayerData> players;
         private List<JokerData> jokers;
         private Action<bool> onFinishStart;
         
@@ -279,8 +279,8 @@ namespace THE.MagicOnion.Client
         {
             Debug.Log("Calling GetAllPlayers");
             var playerEntities = await client.GetAllPlayers();
-            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
-            onFinish?.Invoke(players.Length);
+            players = playerEntities.Select(p => new PlayerData(p)).ToList();
+            onFinish?.Invoke(players.Count);
         }
 
         private async UniTask<Enums.StartResponseTypeEnum> CallStartGame(Action<bool> onFinish, bool isFirstRound)
@@ -341,18 +341,18 @@ namespace THE.MagicOnion.Client
             UpdatePlayerCount?.Invoke(playerCount);
         }
 
-        public void OnGetAllPlayers(PlayerEntity[] playerEntities)
+        public void OnGetAllPlayers(List<PlayerEntity> playerEntities)
         {
-            Debug.Log($"Player count: {playerEntities.Length}");
+            Debug.Log($"Player count: {playerEntities.Count}");
         }
 
-        public void OnGameStart(PlayerEntity[] playerEntities, PlayerEntity currentPlayer, Enums.GameStateEnum gameState, int roundNumber, bool isFirstRound)
+        public void OnGameStart(List<PlayerEntity> playerEntities, PlayerEntity currentPlayer, Enums.GameStateEnum gameState, int roundNumber, bool isFirstRound)
         {
             Debug.Log("Game started");
             GameState = gameState;
             CurrentRound = roundNumber;
             UpdatePlayerCount = null;
-            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
+            players = playerEntities.Select(p => new PlayerData(p)).ToList();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             CurrentPlayer = new PlayerData(currentPlayer);
             onFinishStart?.Invoke(isFirstRound);
@@ -363,13 +363,13 @@ namespace THE.MagicOnion.Client
             Debug.Log("Cancelled");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, PlayerEntity[] playerEntities, Guid previousPlayerId, Guid currentPlayerId, List<PotEntity> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, List<PlayerEntity> playerEntities, Guid previousPlayerId, Guid currentPlayerId, List<PotEntity> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
         {
             var isGameOver = false;
             var gameOverByFold = false;
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
-            players = playerEntities.Select(p => new PlayerData(p)).ToArray();
+            players = playerEntities.Select(p => new PlayerData(p)).ToList();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             if (isError)
                 ShowMessage?.Invoke(actionMessage, null);
@@ -445,7 +445,7 @@ namespace THE.MagicOnion.Client
             else if (targets.FirstOrDefault(target => target.Id == Self.Id) != null)
                 Self = new PlayerData(targets.FirstOrDefault(target => target.Id == Self.Id));
             
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < players.Count; i++)
             {
                 var target = targets.FirstOrDefault(x => x.Id == players[i].Id);
                 if (target != null)
