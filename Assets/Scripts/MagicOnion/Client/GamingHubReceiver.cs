@@ -247,11 +247,11 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public async UniTask DiscardHoleCard(Guid jokerUniqueId, List<CardData> cardsToDiscard, Action<string> onDisconnect)
+        public async UniTask DiscardHoleCard(Guid jokerUserId, Guid selectedJokerUniqueId, List<CardData> cardsToDiscard, Action<string> onDisconnect)
         {
             try
             {
-                await CallDiscardHoleCard(jokerUniqueId, cardsToDiscard);
+                await CallDiscardHoleCard(jokerUserId, selectedJokerUniqueId, cardsToDiscard);
             }
             catch (ObjectDisposedException)
             {
@@ -335,11 +335,11 @@ namespace THE.MagicOnion.Client
             return await client.UseJoker(Self.Id, jokerUniqueId, targetIds, cardEntities);
         }
         
-        private async UniTask CallDiscardHoleCard(Guid jokerUniqueId, List<CardData> cardsToDiscard)
+        private async UniTask CallDiscardHoleCard(Guid jokerUserId, Guid selectedJokerUniqueId, List<CardData> cardsToDiscard)
         {
             Debug.Log("Calling DiscardHoleCard");
             var cardEntities = cardsToDiscard.Select(c => new CardEntity(c.Suit, c.Rank)).ToList();
-            await client.DiscardHoleCard(jokerUniqueId, cardEntities);
+            await client.DiscardHoleCard(jokerUserId, selectedJokerUniqueId, cardEntities);
         }
         
         #endregion
@@ -500,7 +500,7 @@ namespace THE.MagicOnion.Client
             }
         }
 
-        public void OnDiscardHoleCard(PlayerEntity jokerUser, List<CardEntity> discardedCards)
+        public void OnDiscardHoleCard(PlayerEntity jokerUser, List<CardEntity> discardedCards, string message)
         {
             if (jokerUser.Id == Self.Id)
                 Self = new PlayerData(jokerUser);
@@ -511,6 +511,7 @@ namespace THE.MagicOnion.Client
                     players[i] = new PlayerData(jokerUser);
             }
             
+            ShowMessage?.Invoke(message, null);
             OnUseJokerAction?.Invoke();
         }
 

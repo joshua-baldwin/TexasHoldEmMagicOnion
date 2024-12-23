@@ -324,7 +324,7 @@ namespace THE.SceneUis
 
         private async UniTaskVoid OnConfirmDiscard(List<Guid> selectedTargets, List<CardData> selectedCards)
         {
-            await gamingHubReceiver.DiscardHoleCard(gamingHubReceiver.Self.Id, selectedCards, OnDisconnect);
+            await gamingHubReceiver.DiscardHoleCard(gamingHubReceiver.Self.Id, selectedJoker.UniqueId, selectedCards, OnDisconnect);
             jokerListUi.HideList();
         }
 
