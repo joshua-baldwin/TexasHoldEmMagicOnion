@@ -20,6 +20,7 @@ namespace THE.SceneUis
         private List<TargetCellUi> targetCells = new();
         private Action<List<Guid>> onConfirmAction;
         private Action onCloseAction;
+        private int maxSelection;
 
         private void Awake()
         {
@@ -31,8 +32,9 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void ShowUi(List<PlayerData> players, Action<List<Guid>> onConfirm, Action onClose)
+        public void ShowUi(List<PlayerData> players, int maxCardsToSelect, Action<List<Guid>> onConfirm, Action onClose)
         {
+            maxSelection = maxCardsToSelect;
             onConfirmAction = onConfirm;
             onCloseAction = onClose;
             foreach (var player in players)
@@ -44,6 +46,7 @@ namespace THE.SceneUis
                 targetCells.Add(targetCell);
             }
             contents.SetActive(true);
+            confirmButton.interactable = selectedTargetIds.Count == maxSelection;
         }
 
         public void Reset()
@@ -79,11 +82,13 @@ namespace THE.SceneUis
         private void OnSelect(Guid targetId)
         {
             selectedTargetIds.Add(targetId);
+            confirmButton.interactable = selectedTargetIds.Count == maxSelection;
         }
         
         private void OnDeselect(Guid targetId)
         {
             selectedTargetIds.Remove(targetId);
+            confirmButton.interactable = selectedTargetIds.Count == maxSelection;
         }
     }
 }

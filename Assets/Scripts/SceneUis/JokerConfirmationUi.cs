@@ -54,8 +54,7 @@ namespace THE.SceneUis
             gamingHubReceiver = receiver;
             jokerData = joker;
             contents.SetActive(true);
-            selectTargetButton.interactable = joker.TargetType is Enums.TargetTypeEnum.SinglePlayer or Enums.TargetTypeEnum.MultiPlayers;
-            selectCardsButton.interactable = joker.JokerType == Enums.JokerTypeEnum.Hand;
+            SetButtonsInteractable(true);
             isOpen = true;
         }
         
@@ -72,21 +71,30 @@ namespace THE.SceneUis
         private void OpenTargetSelection()
         {
             SetButtonsInteractable(false);
-            targetSelectionUi.ShowUi(gamingHubReceiver.GetPlayerList(), (targets) =>
+            targetSelectionUi.ShowUi(gamingHubReceiver.GetPlayerList(), jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue, (targets) =>
             {
                 selectedTargets = targets;
                 SetButtonsInteractable(true);
-            }, () => SetButtonsInteractable(true));
+            }, () =>
+            {
+                selectedTargets.Clear();
+                SetButtonsInteractable(true);
+            });
         }
         
         private void OpenCardSelection()
         {
             SetButtonsInteractable(false);
-            cardSelectionUi.ShowUi(gamingHubReceiver.Self.HoleCards, (indices) =>
+            //TODO assuming only one effect and one ability
+            cardSelectionUi.ShowUi(gamingHubReceiver.Self.HoleCards, jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue, (indices) =>
             {
                 selectedCardIndices = indices;
                 SetButtonsInteractable(true);
-            }, () => SetButtonsInteractable(true));
+            }, () =>
+            {
+                selectedCardIndices.Clear();
+                SetButtonsInteractable(true);
+            });
         }
 
         private void Confirm()
@@ -121,7 +129,23 @@ namespace THE.SceneUis
                 selectCardsButton.interactable = false;
             }
 
-            confirmButton.interactable = interactable;
+            if (jokerData.JokerType == Enums.JokerTypeEnum.Hand)
+            {
+                //TODO assuming one ability
+                confirmButton.interactable = selectedCardIndices.Count == jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue;
+            }
+            else if (jokerData.JokerType == Enums.JokerTypeEnum.Action)
+            {
+                confirmButton.interactable = selectedTargets.Count == jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue;
+            }
+            else if (jokerData.JokerType == Enums.JokerTypeEnum.Info)
+            {
+                confirmButton.interactable = true;
+            }
+            else
+            {
+                confirmButton.interactable = true;
+            }
         }
     }
 }

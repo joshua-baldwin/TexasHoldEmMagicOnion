@@ -21,6 +21,7 @@ namespace THE.SceneUis
 
         private Action<List<int>> onConfirmAction;
         private Action onCloseAction;
+        private int maxSelection;
 
         private void Awake()
         {
@@ -33,8 +34,9 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void ShowUi(List<CardData> cards, Action<List<int>> onConfirm, Action onClose)
+        public void ShowUi(List<CardData> cards, int maxCardsToSelect, Action<List<int>> onConfirm, Action onClose)
         {
+            maxSelection = maxCardsToSelect;
             onConfirmAction = onConfirm;
             onCloseAction = onClose;
             var index = 0;
@@ -48,6 +50,7 @@ namespace THE.SceneUis
                 index++;
             }
             contents.SetActive(true);
+            confirmButton.interactable = selectedCards.Count == maxSelection;
         }
 
         public void Reset()
@@ -83,11 +86,13 @@ namespace THE.SceneUis
         private void OnSelect(int index)
         {
             selectedCards.Add(index);
+            confirmButton.interactable = selectedCards.Count == maxSelection;
         }
         
         private void OnDeselect(int index)
         {
             selectedCards.Remove(index);
+            confirmButton.interactable = selectedCards.Count == maxSelection;
         }
     }
 }
