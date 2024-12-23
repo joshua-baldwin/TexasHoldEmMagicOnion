@@ -491,6 +491,7 @@ namespace THE.MagicOnion.Client
                 var effect = joker.JokerAbilityEntities.First().AbilityEffects.First();
                 sb.AppendLine();
                 sb.Append($"Choose {effect.EffectValue} hole card to discard.\n{effect.EffectValue}枚のカードを捨てるので選んでください。");
+                ShowMessage?.Invoke(sb.ToString(), null);
                 OnUseJokerDrawAction?.Invoke(new JokerData(joker));
             }
         }
