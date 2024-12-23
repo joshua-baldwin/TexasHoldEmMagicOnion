@@ -54,7 +54,7 @@ namespace THE.SceneUis
 
         private void ConfirmSelection()
         {
-            onConfirmAction?.Invoke(selectedTargetIds);
+            onConfirmAction?.Invoke(new List<Guid>(selectedTargetIds));
             selectedTargetIds.Clear();
             HideUi();
         }
