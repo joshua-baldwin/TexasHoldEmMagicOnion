@@ -317,7 +317,6 @@ namespace THE.SceneUis
 
         private void OnUseJoker()
         {
-            //jokerConfirmationUi.HideUi();
             playerList.ForEach(player =>
             {
                 var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TexasHoldEmShared.Enums;
@@ -33,7 +32,6 @@ namespace THE.Player
             PlayerData = player;
             nameText.text = player.Name;
             chipsText.text = $"Chips: {player.Chips}";
-            //chipsText.text = ClientUtilityMethods.GetChipText(player.Chips);
             dealer.gameObject.SetActive(player.IsDealer);
             role.gameObject.SetActive(player.PlayerRole != Enums.PlayerRoleEnum.None);
             foldCover.SetActive(false);
@@ -64,14 +62,19 @@ namespace THE.Player
             chipsText.text = $"Chips: {playerData.Chips}";
             if (PlayerData.HasFolded)
                 foldCover.SetActive(true);
-            //chipsText.text = ClientUtilityMethods.GetChipText(playerData.Chips);
         }
 
         public void UpdateHoleCards(PlayerData playerData)
         {
             PlayerData = playerData;
-            for (var i = 0; i < cardList.Count; i++)
-                cardList[i].UpdateCard(PlayerData.HoleCards[i]);
+            var isSelf = PlayerData.Id == gamingHubReceiver.Self.Id;
+            for (var i = 0; i < playerData.HoleCards.Count; i++)
+            {
+                if (cardList[i].CardData != null)
+                    cardList[i].UpdateCard(PlayerData.HoleCards[i]);
+                else
+                    cardList[i].Initialize(PlayerData.HoleCards[i], isSelf);
+            }
         }
 
         public void ChangeCardVisibility(bool visible)
