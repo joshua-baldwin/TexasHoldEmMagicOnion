@@ -16,10 +16,12 @@ namespace THE.SceneUis
         [SerializeField] private GameObject contents;
         [SerializeField] private Button selectTargetButton;
         [SerializeField] private Button selectCardsButton;
+        [SerializeField] private Button selectNewPositionButton;
         [SerializeField] private Button confirmButton;
         [SerializeField] private GameObject buttonRoot;
         [SerializeField] private TargetSelectionUi targetSelectionUi;
         [SerializeField] private CardSelectionUi cardSelectionUi;
+        [SerializeField] private PositionSelectionUi positionSelectionUi;
         [SerializeField] private Button closeButton;
         
         private GamingHubReceiver gamingHubReceiver;
