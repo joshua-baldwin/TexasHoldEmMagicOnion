@@ -501,7 +501,7 @@ namespace THE.MagicOnion.Client
                 OnUseJokerAction?.Invoke();
             }
             
-            UpdateGameUi?.Invoke(Enums.CommandTypeEnum.None, true, Guid.Empty, jokerUser.Id, null, true);
+            UpdateGameUi?.Invoke(Enums.CommandTypeEnum.None, jokerUser.Id == Self.Id, Guid.Empty, jokerUser.Id, null, true);
         }
 
         public void OnDiscardHoleCard(PlayerEntity jokerUser, List<CardEntity> discardedCards, string message)
