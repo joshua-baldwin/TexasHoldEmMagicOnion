@@ -480,7 +480,8 @@ namespace THE.MagicOnion.Client
                     players[i] = new PlayerData(target);
             }
             UpdatePots?.Invoke(pots);
-            if (joker.JokerAbilityEntities.First().AbilityEffects.First().HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
+            var effect = joker.JokerAbilityEntities.First().AbilityEffects.First();
+            if (effect.HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
             {
                 ShowMessage?.Invoke(actionMessage, null);
                 OnUseJokerAction?.Invoke();
@@ -490,7 +491,6 @@ namespace THE.MagicOnion.Client
                 var sb = new StringBuilder(actionMessage);
                 if (jokerUser.Id == Self.Id)
                 {
-                    var effect = joker.JokerAbilityEntities.First().AbilityEffects.First();
                     sb.AppendLine();
                     sb.Append($"Choose {effect.EffectValue} hole card to discard.\n{effect.EffectValue}枚のカードを捨てるので選んでください。");
                 }

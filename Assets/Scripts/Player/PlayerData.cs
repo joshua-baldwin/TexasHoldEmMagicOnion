@@ -11,6 +11,7 @@ namespace THE.Player
         public string Name { get; private set; }
         public Guid Id { get; private set; }
         public Enums.PlayerRoleEnum PlayerRole { get; set; }
+        public int OrderInQueue { get; set; }
         public Guid RoomId { get; set; }
         public bool IsDealer { get; set; }
         public List<CardData> HoleCards { get; set; }
@@ -29,6 +30,7 @@ namespace THE.Player
             Name = playerEntity.Name;
             Id = playerEntity.Id;
             PlayerRole = playerEntity.PlayerRole;
+            OrderInQueue = playerEntity.OrderInQueue;
             RoomId = playerEntity.RoomId;
             IsDealer = playerEntity.IsDealer;
             HoleCards = playerEntity.HoleCards.Select(c => new CardData(c)).ToList();

@@ -102,16 +102,26 @@ namespace THE.SceneUis
 
         private void Confirm()
         {
+            var effect = jokerData.JokerAbilities.First().AbilityEffects.First();
             if (jokerData.JokerType == Enums.JokerTypeEnum.Hand && selectedCards.Count == 0)
             {
                 ShowMessage("Please select a hole card to continue.\nホールカードを選択してください。", null);
                 return;
             }
+
+            if (jokerData.JokerType == Enums.JokerTypeEnum.Action &&
+                effect.ActionInfluenceType is Enums.ActionInfluenceTypeEnum.Force or Enums.ActionInfluenceTypeEnum.Prevent &&
+                selectedTargets.Count == 0)
+            {
+                ShowMessage("Please select a target to continue.\nターゲットを選択してください。", null);
+                return;
+            }
+            
             SetButtonsInteractable(false);
             var targets = jokerData.TargetType == Enums.TargetTypeEnum.Self
                 ? new List<Guid> { gamingHubReceiver.Self.Id }
                 : selectedTargets;
-            if (jokerData.JokerAbilities.First().AbilityEffects.First().HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
+            if (effect.HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
                 OnConfirmAction?.Invoke(targets, selectedCards);
             else
                 OnConfirmDiscardAction?.Invoke(targets, selectedCards);
@@ -124,6 +134,7 @@ namespace THE.SceneUis
 
         private void SetButtonsInteractable(bool interactable)
         {
+            var effect = jokerData.JokerAbilities.First().AbilityEffects.First();
             if (interactable)
             {
                 selectTargetButton.interactable = jokerData.TargetType is Enums.TargetTypeEnum.SinglePlayer or Enums.TargetTypeEnum.MultiPlayers;
@@ -138,13 +149,17 @@ namespace THE.SceneUis
             if (jokerData.JokerType == Enums.JokerTypeEnum.Hand)
             {
                 //TODO assuming one ability
-                confirmButton.interactable = selectedCards.Count == jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue;
+                confirmButton.interactable = selectedCards.Count == effect.EffectValue;
             }
             else if (jokerData.JokerType == Enums.JokerTypeEnum.Action)
             {
-                confirmButton.interactable = selectedTargets.Count == jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue;
+                confirmButton.interactable = selectedCards.Count == effect.EffectValue;
             }
             else if (jokerData.JokerType == Enums.JokerTypeEnum.Info)
+            {
+                confirmButton.interactable = true;
+            }
+            else if (jokerData.JokerType == Enums.JokerTypeEnum.Board)
             {
                 confirmButton.interactable = true;
             }

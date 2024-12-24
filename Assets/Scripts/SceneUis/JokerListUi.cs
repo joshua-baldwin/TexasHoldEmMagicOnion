@@ -72,16 +72,16 @@ namespace THE.SceneUis
                 joker.SetUseButtonActive(true);
                 joker.UseJokerAction = (data) =>
                 {
-                    if (data.JokerAbilities.First().AbilityEffects.First().HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
+                    if (data.JokerAbilities.First().AbilityEffects.First().HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
+                    {
+                        jokerConfirmationUi.OnConfirmDiscardAction = onConfirmDiscard;
+                        useJokerToDrawAction?.Invoke(data);
+                    }
+                    else
                     {
                         jokerConfirmationUi.ShowUi(gamingHubReceiver, data, false);
                         jokerConfirmationUi.OnConfirmAction = onConfirm;
                         useJokerAction?.Invoke(data);
-                    }
-                    else
-                    {
-                        jokerConfirmationUi.OnConfirmDiscardAction = onConfirmDiscard;
-                        useJokerToDrawAction?.Invoke(data);
                     }
                 };
 
