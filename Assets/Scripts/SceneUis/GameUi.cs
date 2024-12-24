@@ -164,36 +164,52 @@ namespace THE.SceneUis
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.AllIn));
                     buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(players.All(x => x.LastCommand != Enums.CommandTypeEnum.Call && x.LastCommand != Enums.CommandTypeEnum.Raise && x.LastCommand != Enums.CommandTypeEnum.AllIn));
-                    communityCardList[0].gameObject.SetActive(true);
-                    communityCardList[0].Initialize(communityCards[0], true);
-                    communityCardList[1].gameObject.SetActive(true);
-                    communityCardList[1].Initialize(communityCards[1], true);
-                    communityCardList[2].gameObject.SetActive(true);
-                    communityCardList[2].Initialize(communityCards[2], true);
+                    if (communityCards != null)
+                    {
+                        communityCardList[0].gameObject.SetActive(true);
+                        communityCardList[0].Initialize(communityCards[0], true);
+                        communityCardList[1].gameObject.SetActive(true);
+                        communityCardList[1].Initialize(communityCards[1], true);
+                        communityCardList[2].gameObject.SetActive(true);
+                        communityCardList[2].Initialize(communityCards[2], true);
+                    }
+
                     break;
                 case Enums.GameStateEnum.TheTurn:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.AllIn));
                     buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(players.All(x => x.LastCommand != Enums.CommandTypeEnum.Call && x.LastCommand != Enums.CommandTypeEnum.Raise && x.LastCommand != Enums.CommandTypeEnum.AllIn));
-                    communityCardList[3].gameObject.SetActive(true);
-                    communityCardList[3].Initialize(communityCards[3], true);
+                    if (communityCards != null)
+                    {
+                        communityCardList[3].gameObject.SetActive(true);
+                        communityCardList[3].Initialize(communityCards[3], true);
+                    }
+
                     break;
                 case Enums.GameStateEnum.TheRiver:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(x.ButtonType != ButtonTypeEnum.Bet));
                     buttonList.First(x => x.ButtonType == ButtonTypeEnum.Call).ButtonObject.gameObject.SetActive(players.Any(x => x.LastCommand is Enums.CommandTypeEnum.Raise or Enums.CommandTypeEnum.AllIn));
                     buttonList.First(x => x.ButtonType == ButtonTypeEnum.Check).ButtonObject.gameObject.SetActive(players.All(x => x.LastCommand != Enums.CommandTypeEnum.Call && x.LastCommand != Enums.CommandTypeEnum.Raise && x.LastCommand != Enums.CommandTypeEnum.AllIn));
-                    communityCardList[4].gameObject.SetActive(true);
-                    communityCardList[4].Initialize(communityCards[4], true);
+                    if (communityCards != null)
+                    {
+                        communityCardList[4].gameObject.SetActive(true);
+                        communityCardList[4].Initialize(communityCards[4], true);
+                    }
+
                     break;
                 case Enums.GameStateEnum.Showdown:
                     buttonList.ForEach(x => x.ButtonObject.gameObject.SetActive(false));
-                    for (var i = 0; i < communityCardList.Count; i++)
+                    if (communityCards != null)
                     {
-                        if (communityCardList[i].gameObject.activeSelf)
-                            continue;
-                        communityCardList[i].gameObject.SetActive(true);
-                        communityCardList[i].Initialize(communityCards[i], true);
+                        for (var i = 0; i < communityCardList.Count; i++)
+                        {
+                            if (communityCardList[i].gameObject.activeSelf)
+                                continue;
+                            communityCardList[i].gameObject.SetActive(true);
+                            communityCardList[i].Initialize(communityCards[i], true);
+                        }
                     }
+
                     break;
                 case Enums.GameStateEnum.GameOver:
                     break;
@@ -205,7 +221,7 @@ namespace THE.SceneUis
 
             
             currentTurnText.text = $"Current player: {currentPlayer.Name}";
-            if (previousPlayerEntityId != Guid.Empty)
+            if (previousPlayerEntityId != Guid.Empty || isError)
                 UpdatePlayers();
         }
 
@@ -335,6 +351,7 @@ namespace THE.SceneUis
                 var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);
                 player.UpdateHoleCards(data);
             });
+            UpdatePlayers();
         }
 
         private void OnUseJokerDraw(JokerData joker)

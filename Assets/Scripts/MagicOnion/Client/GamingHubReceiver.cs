@@ -466,27 +466,24 @@ namespace THE.MagicOnion.Client
             Self = new PlayerData(player);
         }
 
-        public void OnUseJoker(PlayerEntity jokerUser, List<PlayerEntity> targets, JokerEntity joker, List<PotEntity> pots, string actionMessage)
+        public void OnUseJoker(List<PlayerEntity> playerEntities, PlayerEntity jokerUser, List<PlayerEntity> targets, JokerEntity joker, List<PotEntity> pots, bool isError, string actionMessage)
         {
+            if (isError)
+            {
+                ShowMessage?.Invoke(actionMessage, null);
+                UpdateGameUi?.Invoke(Enums.CommandTypeEnum.None, true, Guid.Empty, jokerUser.Id, null, true);
+                return;
+            }
+            
             if (jokerUser.Id == Self.Id)
                 Self = new PlayerData(jokerUser);
             else if (targets.FirstOrDefault(target => target.Id == Self.Id) != null)
                 Self = new PlayerData(targets.FirstOrDefault(target => target.Id == Self.Id));
             
-            for (int i = 0; i < players.Count; i++)
-            {
-                var target = targets.FirstOrDefault(x => x.Id == players[i].Id);
-                if (target != null)
-                    players[i] = new PlayerData(target);
-            }
+            players = playerEntities.Select(p => new PlayerData(p)).ToList();
             UpdatePots?.Invoke(pots);
             var effect = joker.JokerAbilityEntities.First().AbilityEffects.First();
-            if (effect.HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
-            {
-                ShowMessage?.Invoke(actionMessage, null);
-                OnUseJokerAction?.Invoke();
-            }
-            else
+            if (effect.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
             {
                 var sb = new StringBuilder(actionMessage);
                 if (jokerUser.Id == Self.Id)
@@ -498,6 +495,13 @@ namespace THE.MagicOnion.Client
                 ShowMessage?.Invoke(sb.ToString(), null);
                 OnUseJokerDrawAction?.Invoke(new JokerData(joker));
             }
+            else
+            {
+                ShowMessage?.Invoke(actionMessage, null);
+                OnUseJokerAction?.Invoke();
+            }
+            
+            UpdateGameUi?.Invoke(Enums.CommandTypeEnum.None, true, Guid.Empty, jokerUser.Id, null, true);
         }
 
         public void OnDiscardHoleCard(PlayerEntity jokerUser, List<CardEntity> discardedCards, string message)
