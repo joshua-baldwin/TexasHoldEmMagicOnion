@@ -32,9 +32,9 @@ namespace THE.SceneUis
                 .AddTo(this.GetCancellationTokenOnDestroy());
         }
 
-        public void ShowUi(List<PlayerData> players, int maxCardsToSelect, Action<List<Guid>> onConfirm, Action onClose)
+        public void ShowUi(List<PlayerData> players, int maxTargetsToSelect, Action<List<Guid>> onConfirm, Action onClose)
         {
-            maxSelection = maxCardsToSelect;
+            maxSelection = maxTargetsToSelect;
             onConfirmAction = onConfirm;
             onCloseAction = onClose;
             foreach (var player in players)

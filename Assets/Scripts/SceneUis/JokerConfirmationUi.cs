@@ -76,7 +76,7 @@ namespace THE.SceneUis
         private void OpenTargetSelection()
         {
             SetButtonsInteractable(false);
-            targetSelectionUi.ShowUi(gamingHubReceiver.GetPlayerList(), jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue, (targets) =>
+            targetSelectionUi.ShowUi(gamingHubReceiver.GetPlayerList().Where(x => x.Id != gamingHubReceiver.Self.Id).ToList(), jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue, (targets) =>
             {
                 selectedTargets = targets;
                 SetButtonsInteractable(true);
@@ -123,10 +123,10 @@ namespace THE.SceneUis
             var targets = jokerData.TargetType == Enums.TargetTypeEnum.Self
                 ? new List<Guid> { gamingHubReceiver.Self.Id }
                 : selectedTargets;
-            if (effect.HandInfluenceType == Enums.HandInfluenceTypeEnum.DiscardThenDraw)
-                OnConfirmAction?.Invoke(targets, selectedCards);
-            else
+            if (effect.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
                 OnConfirmDiscardAction?.Invoke(targets, selectedCards);
+            else
+                OnConfirmAction?.Invoke(targets, selectedCards);
             selectedCards.Clear();
             selectedTargets.Clear();
             targetSelectionUi.Reset();
@@ -155,7 +155,7 @@ namespace THE.SceneUis
             }
             else if (jokerData.JokerType == Enums.JokerTypeEnum.Action)
             {
-                confirmButton.interactable = selectedCards.Count == effect.EffectValue;
+                confirmButton.interactable = selectedTargets.Count == effect.EffectValue;
             }
             else if (jokerData.JokerType == Enums.JokerTypeEnum.Info)
             {
