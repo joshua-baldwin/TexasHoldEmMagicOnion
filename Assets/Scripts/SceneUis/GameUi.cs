@@ -199,7 +199,7 @@ namespace THE.SceneUis
                     break;
             }
 
-            buttonList.First(button => button.ButtonType == ButtonTypeEnum.UseJoker).ButtonObject.gameObject.SetActive(true);
+            buttonList.First(button => button.ButtonType == ButtonTypeEnum.UseJoker).ButtonObject.gameObject.SetActive(gamingHubReceiver.GameState != Enums.GameStateEnum.BlindBet);
             foreach (var button in buttonList)
                 button.ButtonObject.interactable = isMyTurn;
 
