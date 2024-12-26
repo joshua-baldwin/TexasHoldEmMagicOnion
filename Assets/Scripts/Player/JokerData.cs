@@ -18,6 +18,10 @@ namespace THE.Player
         public List<JokerAbilityEntity> JokerAbilities { get; set; }
         public bool CanUse { get; set; }
         public Enums.JokerTypeEnum JokerType { get; set; }
+        public Enums.HandInfluenceTypeEnum HandInfluenceType { get; set; }
+        public Enums.ActionInfluenceTypeEnum ActionInfluenceType { get; set; }
+        public Enums.InfoInfluenceTypeEnum InfoInfluenceType { get; set; }
+        public Enums.BoardInfluenceTypeEnum BoardInfluenceType { get; set; }
         public Enums.TargetTypeEnum TargetType { get; set; }
         
         public JokerData(JokerEntity joker)
@@ -31,6 +35,10 @@ namespace THE.Player
             JokerAbilities = joker.JokerAbilityEntities;
             CanUse = joker.CanUse;
             JokerType = joker.JokerType;
+            HandInfluenceType = joker.HandInfluenceType;
+            ActionInfluenceType = joker.ActionInfluenceType;
+            InfoInfluenceType = joker.InfoInfluenceType;
+            BoardInfluenceType = joker.BoardInfluenceType;
             TargetType = joker.TargetType;
         }
     }

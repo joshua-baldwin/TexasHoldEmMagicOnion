@@ -72,7 +72,7 @@ namespace THE.SceneUis
                 joker.SetUseButtonActive(true);
                 joker.UseJokerAction = (data) =>
                 {
-                    if (data.JokerAbilities.First().AbilityEffects.First().HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
+                    if (data.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
                     {
                         jokerConfirmationUi.OnConfirmDiscardAction = onConfirmDiscard;
                         useJokerToDrawAction?.Invoke(data);

@@ -112,7 +112,7 @@ namespace THE.SceneUis
             }
 
             if (jokerData.JokerType == Enums.JokerTypeEnum.Action &&
-                effect.ActionInfluenceType is Enums.ActionInfluenceTypeEnum.Force or Enums.ActionInfluenceTypeEnum.Prevent &&
+                jokerData.ActionInfluenceType is Enums.ActionInfluenceTypeEnum.Force or Enums.ActionInfluenceTypeEnum.Prevent &&
                 selectedTargets.Count == 0)
             {
                 ShowMessage("Please select a target to continue.\nターゲットを選択してください。", null);
@@ -123,7 +123,7 @@ namespace THE.SceneUis
             var targets = jokerData.TargetType == Enums.TargetTypeEnum.Self
                 ? new List<Guid> { gamingHubReceiver.Self.Id }
                 : selectedTargets;
-            if (effect.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
+            if (jokerData.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
                 OnConfirmDiscardAction?.Invoke(targets, selectedCards);
             else
                 OnConfirmAction?.Invoke(targets, selectedCards);

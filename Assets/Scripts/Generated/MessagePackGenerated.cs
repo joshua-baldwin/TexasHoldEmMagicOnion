@@ -47,30 +47,34 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(22)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(26)
             {
                 { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity>), 0 },
-                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>), 1 },
-                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity>), 2 },
-                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>), 3 },
-                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>), 4 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum), 5 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 6 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 7 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum), 8 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum), 9 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.HandRankingType), 10 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum), 11 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 12 },
-                { typeof(global::TexasHoldEmShared.Enums.Enums.TargetTypeEnum), 13 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity), 14 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.BestHandEntity), 15 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 16 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity), 17 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.JokerEntity), 18 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 19 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.PotEntity), 20 },
-                { typeof(global::THE.MagicOnion.Shared.Entities.WinningHandEntity), 21 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity>), 1 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>), 2 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity>), 3 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>), 4 },
+                { typeof(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.PlayerEntity>), 5 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum), 6 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum), 7 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardRankEnum), 8 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CardSuitEnum), 9 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum), 10 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum), 11 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.HandRankingType), 12 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum), 13 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum), 14 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum), 15 },
+                { typeof(global::TexasHoldEmShared.Enums.Enums.TargetTypeEnum), 16 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity), 17 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity), 18 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.BestHandEntity), 19 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.CardEntity), 20 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity), 21 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.JokerEntity), 22 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PlayerEntity), 23 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.PotEntity), 24 },
+                { typeof(global::THE.MagicOnion.Shared.Entities.WinningHandEntity), 25 },
             };
         }
 
@@ -85,27 +89,31 @@ namespace MessagePack.Resolvers
             switch (key)
             {
                 case 0: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity>();
-                case 1: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
-                case 2: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity>();
-                case 3: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.JokerEntity>();
-                case 4: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.PlayerEntity>();
-                case 5: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_ActionInfluenceTypeEnumFormatter();
-                case 6: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
-                case 7: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
-                case 8: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CommandTypeEnumFormatter();
-                case 9: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandInfluenceTypeEnumFormatter();
-                case 10: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandRankingTypeFormatter();
-                case 11: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_JokerTypeEnumFormatter();
-                case 12: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
-                case 13: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_TargetTypeEnumFormatter();
-                case 14: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.AbilityEffectEntityFormatter();
-                case 15: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.BestHandEntityFormatter();
-                case 16: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
-                case 17: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.JokerAbilityEntityFormatter();
-                case 18: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.JokerEntityFormatter();
-                case 19: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
-                case 20: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PotEntityFormatter();
-                case 21: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.WinningHandEntityFormatter();
+                case 1: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity>();
+                case 2: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.CardEntity>();
+                case 3: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity>();
+                case 4: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.JokerEntity>();
+                case 5: return new global::MessagePack.Formatters.ListFormatter<global::THE.MagicOnion.Shared.Entities.PlayerEntity>();
+                case 6: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_ActionInfluenceTypeEnumFormatter();
+                case 7: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_BoardInfluenceTypeEnumFormatter();
+                case 8: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardRankEnumFormatter();
+                case 9: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CardSuitEnumFormatter();
+                case 10: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_CommandTypeEnumFormatter();
+                case 11: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandInfluenceTypeEnumFormatter();
+                case 12: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_HandRankingTypeFormatter();
+                case 13: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_InfoInfluenceTypeEnumFormatter();
+                case 14: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_JokerTypeEnumFormatter();
+                case 15: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_PlayerRoleEnumFormatter();
+                case 16: return new MessagePack.Formatters.TexasHoldEmShared.Enums.Enums_TargetTypeEnumFormatter();
+                case 17: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.AbilityEffectEntityFormatter();
+                case 18: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntityFormatter();
+                case 19: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.BestHandEntityFormatter();
+                case 20: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.CardEntityFormatter();
+                case 21: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.JokerAbilityEntityFormatter();
+                case 22: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.JokerEntityFormatter();
+                case 23: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PlayerEntityFormatter();
+                case 24: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.PotEntityFormatter();
+                case 25: return new MessagePack.Formatters.THE.MagicOnion.Shared.Entities.WinningHandEntityFormatter();
                 default: return null;
             }
         }
@@ -147,6 +155,19 @@ namespace MessagePack.Formatters.TexasHoldEmShared.Enums
         public global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             return (global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum)reader.ReadInt32();
+        }
+    }
+
+    public sealed class Enums_BoardInfluenceTypeEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum>
+    {
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            writer.Write((global::System.Int32)value);
+        }
+
+        public global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            return (global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum)reader.ReadInt32();
         }
     }
 
@@ -212,6 +233,19 @@ namespace MessagePack.Formatters.TexasHoldEmShared.Enums
         public global::TexasHoldEmShared.Enums.Enums.HandRankingType Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             return (global::TexasHoldEmShared.Enums.Enums.HandRankingType)reader.ReadInt32();
+        }
+    }
+
+    public sealed class Enums_InfoInfluenceTypeEnumFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum>
+    {
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            writer.Write((global::System.Int32)value);
+        }
+
+        public global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            return (global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum)reader.ReadInt32();
         }
     }
 
@@ -295,13 +329,11 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(7);
+            writer.WriteArrayHeader(5);
             writer.Write(value.Id);
             writer.Write(value.AbilityId);
             writer.Write(value.EffectValue);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Serialize(ref writer, value.CommandType, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.HandInfluenceType, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.ActionInfluenceType, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Description, options);
         }
 
@@ -319,8 +351,6 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __AbilityId__ = default(int);
             var __EffectValue__ = default(int);
             var __CommandType__ = default(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum);
-            var __HandInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum);
-            var __ActionInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum);
             var __Description__ = default(string);
 
             for (int i = 0; i < length; i++)
@@ -340,12 +370,6 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __CommandType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 4:
-                        __HandInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
-                        break;
-                    case 5:
-                        __ActionInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
-                        break;
-                    case 6:
                         __Description__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
@@ -354,7 +378,94 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 }
             }
 
-            var ____result = new global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity(__Id__, __AbilityId__, __EffectValue__, __CommandType__, __HandInfluenceType__, __ActionInfluenceType__, __Description__);
+            var ____result = new global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity(__Id__, __AbilityId__, __EffectValue__, __CommandType__, __Description__);
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class ActiveJokerEffectEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(9);
+            writer.Write(value.JokerId);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum>(formatterResolver).Serialize(ref writer, value.JokerType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.HandInfluenceType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.ActionInfluenceType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.InfoInfluenceType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.BoardInfluenceType, options);
+            writer.Write(value.EffectId);
+            writer.Write(value.EffectValue);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Serialize(ref writer, value.CommandType, options);
+        }
+
+        public global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var __JokerId__ = default(int);
+            var __JokerType__ = default(global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum);
+            var __HandInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum);
+            var __ActionInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum);
+            var __InfoInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum);
+            var __BoardInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum);
+            var __EffectId__ = default(int);
+            var __EffectValue__ = default(int);
+            var __CommandType__ = default(global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum);
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        __JokerId__ = reader.ReadInt32();
+                        break;
+                    case 1:
+                        __JokerType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 2:
+                        __HandInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 3:
+                        __ActionInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 4:
+                        __InfoInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 5:
+                        __BoardInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 6:
+                        __EffectId__ = reader.ReadInt32();
+                        break;
+                    case 7:
+                        __EffectValue__ = reader.ReadInt32();
+                        break;
+                    case 8:
+                        __CommandType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.CommandTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            var ____result = new global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity(__JokerId__, __JokerType__, __HandInfluenceType__, __ActionInfluenceType__, __InfoInfluenceType__, __BoardInfluenceType__, __EffectId__, __EffectValue__, __CommandType__);
             reader.Depth--;
             return ____result;
         }
@@ -544,7 +655,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(10);
+            writer.WriteArrayHeader(14);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.UniqueId, options);
             writer.Write(value.JokerId);
             writer.Write(value.BuyCost);
@@ -554,6 +665,10 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity>>(formatterResolver).Serialize(ref writer, value.JokerAbilityEntities, options);
             writer.Write(value.CanUse);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum>(formatterResolver).Serialize(ref writer, value.JokerType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.HandInfluenceType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.ActionInfluenceType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.InfoInfluenceType, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum>(formatterResolver).Serialize(ref writer, value.BoardInfluenceType, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.TargetTypeEnum>(formatterResolver).Serialize(ref writer, value.TargetType, options);
         }
 
@@ -576,6 +691,10 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __JokerAbilityEntities__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerAbilityEntity>);
             var __CanUse__ = default(bool);
             var __JokerType__ = default(global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum);
+            var __HandInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum);
+            var __ActionInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum);
+            var __InfoInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum);
+            var __BoardInfluenceType__ = default(global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum);
             var __TargetType__ = default(global::TexasHoldEmShared.Enums.Enums.TargetTypeEnum);
 
             for (int i = 0; i < length; i++)
@@ -610,6 +729,18 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __JokerType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.JokerTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 9:
+                        __HandInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.HandInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 10:
+                        __ActionInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.ActionInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 11:
+                        __InfoInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.InfoInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 12:
+                        __BoardInfluenceType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.BoardInfluenceTypeEnum>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 13:
                         __TargetType__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.TargetTypeEnum>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
@@ -618,7 +749,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 }
             }
 
-            var ____result = new global::THE.MagicOnion.Shared.Entities.JokerEntity(__UniqueId__, __JokerId__, __BuyCost__, __UseCost__, __MaxUses__, __CurrentUses__, __JokerAbilityEntities__, __CanUse__, __JokerType__, __TargetType__);
+            var ____result = new global::THE.MagicOnion.Shared.Entities.JokerEntity(__UniqueId__, __JokerId__, __BuyCost__, __UseCost__, __MaxUses__, __CurrentUses__, __JokerAbilityEntities__, __CanUse__, __JokerType__, __HandInfluenceType__, __ActionInfluenceType__, __InfoInfluenceType__, __BoardInfluenceType__, __TargetType__);
             reader.Depth--;
             return ____result;
         }
@@ -658,7 +789,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Serialize(ref writer, value.CurrentBestHand, options);
             writer.Write(value.AllInAmount);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>>(formatterResolver).Serialize(ref writer, value.JokerCards, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity>>(formatterResolver).Serialize(ref writer, value.ActiveEffects, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity>>(formatterResolver).Serialize(ref writer, value.ActiveEffects, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Serialize(ref writer, value.TempHoleCards, options);
             writer.Write(value.MaxHoleCards);
         }
@@ -694,7 +825,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __CurrentBestHand__ = default(global::THE.MagicOnion.Shared.Entities.BestHandEntity);
             var __AllInAmount__ = default(int);
             var __JokerCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>);
-            var __ActiveEffects__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity>);
+            var __ActiveEffects__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity>);
             var __TempHoleCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>);
             var __MaxHoleCards__ = default(int);
 
@@ -766,7 +897,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __JokerCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 21:
-                        __ActiveEffects__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.AbilityEffectEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        __ActiveEffects__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 22:
                         __TempHoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);

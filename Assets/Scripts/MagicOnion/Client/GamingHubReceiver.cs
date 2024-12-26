@@ -483,7 +483,7 @@ namespace THE.MagicOnion.Client
             players = playerEntities.Select(p => new PlayerData(p)).ToList();
             UpdatePots?.Invoke(pots);
             var effect = joker.JokerAbilityEntities.First().AbilityEffects.First();
-            if (effect.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
+            if (joker.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
             {
                 var sb = new StringBuilder(actionMessage);
                 if (jokerUser.Id == Self.Id)
