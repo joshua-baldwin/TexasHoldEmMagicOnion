@@ -232,6 +232,7 @@ namespace THE.MagicOnion.Client
                         Enums.UseJokerResponseTypeEnum.NotEnoughChips => "You don't have enough chips.\nチップが足りない。",
                         Enums.UseJokerResponseTypeEnum.GroupDoesNotExist => "Room does not exist. Disconnecting.\nルームは存在していないのでプレイできません。接続切ります。",
                         Enums.UseJokerResponseTypeEnum.PlayerHasInvalidCardData => "The player who used a joker has invalid card data.\nジョーカーを使った人のカードデータに不正データがあります",
+                        _ => throw new ArgumentOutOfRangeException()
                     };
 
                     await Disconnect();
