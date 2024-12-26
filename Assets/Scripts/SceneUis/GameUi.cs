@@ -209,7 +209,6 @@ namespace THE.SceneUis
                             communityCardList[i].Initialize(communityCards[i], true);
                         }
                     }
-
                     break;
                 case Enums.GameStateEnum.GameOver:
                     break;
@@ -330,6 +329,14 @@ namespace THE.SceneUis
             selectedJoker = joker;
             await gamingHubReceiver.UseJoker(joker.UniqueId, new List<Guid> { gamingHubReceiver.Self.Id }, new List<CardData>(), OnDisconnect);
         }
+        
+        private async UniTaskVoid UseJokerToChangePosition(JokerData joker)
+        {
+            selectedJoker = joker;
+            var res = await gamingHubReceiver.UseJoker(selectedJoker.UniqueId, new List<Guid> { gamingHubReceiver.Self.Id }, new List<CardData>(), OnDisconnect);
+            if (res == Enums.UseJokerResponseTypeEnum.Success)
+                jokerListUi.HideList();
+        }
 
         private async UniTaskVoid OnConfirm(List<Guid> selectedTargets, List<CardData> selectedCards)
         {
@@ -344,13 +351,30 @@ namespace THE.SceneUis
             jokerListUi.HideList();
         }
 
-        private void OnUseJoker()
+        private void OnUseJoker(bool positionsChanged)
         {
-            playerList.ForEach(player =>
+            if (positionsChanged)
             {
-                var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);
-                player.UpdateHoleCards(data);
-            });
+                foreach (Transform child in playerRoot.transform)
+                    Destroy(child.gameObject);
+                
+                playerList.Clear();
+                foreach (var player in gamingHubReceiver.GetPlayerList())
+                {
+                    var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
+                    playerObject.Initialize(player);
+                    playerList.Add(playerObject);
+                }
+                UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, null, false);
+            }
+            else
+            {
+                playerList.ForEach(player =>
+                {
+                    var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);
+                    player.UpdateHoleCards(data);
+                });
+            }
             UpdatePlayers();
         }
 
@@ -433,10 +457,10 @@ namespace THE.SceneUis
         
         private void OpenMyJokerList()
         {
-            jokerListUi.ShowListForGame(gamingHubReceiver, UseJokerAction, UseJokerToDrawAction, () =>
+            jokerListUi.ShowListForGame(gamingHubReceiver, UseJokerAction, UseJokerToDrawAction, UseJokerToChangePosition, () =>
             {
                 quitButton.interactable = true;
-                buttonList.ForEach(x => x.ButtonObject.interactable = true);
+                buttonList.ForEach(x => x.ButtonObject.interactable = gamingHubReceiver.IsMyTurn);
             }, OnConfirm, OnConfirmDiscard);
         }
     }

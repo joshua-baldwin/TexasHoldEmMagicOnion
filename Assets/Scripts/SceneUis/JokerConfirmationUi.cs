@@ -16,12 +16,10 @@ namespace THE.SceneUis
         [SerializeField] private GameObject contents;
         [SerializeField] private Button selectTargetButton;
         [SerializeField] private Button selectCardsButton;
-        [SerializeField] private Button selectNewPositionButton;
         [SerializeField] private Button confirmButton;
         [SerializeField] private GameObject buttonRoot;
         [SerializeField] private TargetSelectionUi targetSelectionUi;
         [SerializeField] private CardSelectionUi cardSelectionUi;
-        [SerializeField] private PositionSelectionUi positionSelectionUi;
         [SerializeField] private Button closeButton;
         
         private GamingHubReceiver gamingHubReceiver;
@@ -104,7 +102,6 @@ namespace THE.SceneUis
 
         private void Confirm()
         {
-            var effect = jokerData.JokerAbilities.First().AbilityEffects.First();
             if (jokerData.JokerType == Enums.JokerTypeEnum.Hand && selectedCards.Count == 0)
             {
                 ShowMessage("Please select a hole card to continue.\nホールカードを選択してください。", null);
@@ -149,26 +146,15 @@ namespace THE.SceneUis
             }
 
             if (jokerData.JokerType == Enums.JokerTypeEnum.Hand)
-            {
-                //TODO assuming one ability
                 confirmButton.interactable = selectedCards.Count == effect.EffectValue;
-            }
             else if (jokerData.JokerType == Enums.JokerTypeEnum.Action)
-            {
                 confirmButton.interactable = selectedTargets.Count == effect.EffectValue;
-            }
             else if (jokerData.JokerType == Enums.JokerTypeEnum.Info)
-            {
                 confirmButton.interactable = true;
-            }
             else if (jokerData.JokerType == Enums.JokerTypeEnum.Board)
-            {
                 confirmButton.interactable = true;
-            }
             else
-            {
                 confirmButton.interactable = true;
-            }
         }
     }
 }

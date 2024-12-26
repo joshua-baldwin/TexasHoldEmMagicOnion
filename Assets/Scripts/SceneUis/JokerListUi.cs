@@ -5,7 +5,6 @@ using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using TexasHoldEmShared.Enums;
 using THE.MagicOnion.Client;
-using THE.MagicOnion.Shared.Entities;
 using THE.Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,7 +58,7 @@ namespace THE.SceneUis
             contents.SetActive(true);   
         }
         
-        public void ShowListForGame(GamingHubReceiver receiver, Action<JokerData> useJokerAction, Func<JokerData, UniTaskVoid> useJokerToDrawAction, Action onCloseList, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirm, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirmDiscard)
+        public void ShowListForGame(GamingHubReceiver receiver, Action<JokerData> useJokerAction, Func<JokerData, UniTaskVoid> useJokerToDrawAction, Func<JokerData, UniTaskVoid> useJokerToChangePosition, Action onCloseList, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirm, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirmDiscard)
         {
             gamingHubReceiver = receiver;
             var jokerDataList = gamingHubReceiver.Self.JokerCards;
@@ -77,6 +76,8 @@ namespace THE.SceneUis
                         jokerConfirmationUi.OnConfirmDiscardAction = onConfirmDiscard;
                         useJokerToDrawAction?.Invoke(data);
                     }
+                    else if (data.ActionInfluenceType == Enums.ActionInfluenceTypeEnum.ChangePosition)
+                        useJokerToChangePosition?.Invoke(data);
                     else
                     {
                         jokerConfirmationUi.ShowUi(gamingHubReceiver, data, false);

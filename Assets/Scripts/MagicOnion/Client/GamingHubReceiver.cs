@@ -42,7 +42,7 @@ namespace THE.MagicOnion.Client
         public Action<List<PotEntity>> UpdatePots;
         public Action<string, Action> ShowMessage;
         public Action<bool> OnGameOverAction;
-        public Action OnUseJokerAction;
+        public Action<bool> OnUseJokerAction;
         public Action<JokerData> OnUseJokerDrawAction;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
@@ -399,6 +399,7 @@ namespace THE.MagicOnion.Client
             GameState = gameState;
             players = playerEntities.Select(p => new PlayerData(p)).ToList();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
+            CurrentPlayer = new PlayerData(playerEntities.First(x => x.Id == currentPlayerId));
             if (isError)
                 ShowMessage?.Invoke(actionMessage, null);
             else if (winnerList.Count == 1 && winnerList.First().HandRanking == Enums.HandRankingType.Nothing)
@@ -466,7 +467,7 @@ namespace THE.MagicOnion.Client
             Self = new PlayerData(player);
         }
 
-        public void OnUseJoker(List<PlayerEntity> playerEntities, PlayerEntity jokerUser, List<PlayerEntity> targets, JokerEntity joker, List<PotEntity> pots, bool isError, string actionMessage)
+        public void OnUseJoker(List<PlayerEntity> playerEntities, PlayerEntity jokerUser, List<PlayerEntity> targets, JokerEntity joker, Guid currentPlayerId, List<PotEntity> pots, bool isError, string actionMessage)
         {
             if (isError)
             {
@@ -481,6 +482,7 @@ namespace THE.MagicOnion.Client
                 Self = new PlayerData(targets.FirstOrDefault(target => target.Id == Self.Id));
             
             players = playerEntities.Select(p => new PlayerData(p)).ToList();
+            CurrentPlayer = new PlayerData(playerEntities.First(x => x.Id == currentPlayerId));
             UpdatePots?.Invoke(pots);
             var effect = joker.JokerAbilityEntities.First().AbilityEffects.First();
             if (joker.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
@@ -498,10 +500,10 @@ namespace THE.MagicOnion.Client
             else
             {
                 ShowMessage?.Invoke(actionMessage, null);
-                OnUseJokerAction?.Invoke();
+                OnUseJokerAction?.Invoke(joker.ActionInfluenceType == Enums.ActionInfluenceTypeEnum.ChangePosition);
             }
-            
-            UpdateGameUi?.Invoke(Enums.CommandTypeEnum.None, jokerUser.Id == Self.Id, Guid.Empty, jokerUser.Id, null, true);
+            if (joker.ActionInfluenceType != Enums.ActionInfluenceTypeEnum.ChangePosition)
+                UpdateGameUi?.Invoke(Enums.CommandTypeEnum.None, jokerUser.Id == Self.Id, Guid.Empty, jokerUser.Id, null, true);
         }
 
         public void OnDiscardHoleCard(PlayerEntity jokerUser, List<CardEntity> discardedCards, string message)
@@ -516,7 +518,7 @@ namespace THE.MagicOnion.Client
             }
             
             ShowMessage?.Invoke(message, null);
-            OnUseJokerAction?.Invoke();
+            OnUseJokerAction?.Invoke(false);
         }
 
         #endregion
