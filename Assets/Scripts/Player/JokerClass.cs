@@ -43,7 +43,7 @@ namespace THE.Player
             remainingUsesText.text = ownedJoker
                 ? $"Remaining uses: {jokerData.MaxUses - jokerData.CurrentUses}/{jokerData.MaxUses}"
                 : $"Max uses: {jokerData.MaxUses}";
-            descriptionText.text = JokerData.JokerAbilities.First().GetDescription();
+            descriptionText.text = JokerData.JokerAbility.GetDescription();
         }
 
         public void SetBuyButtonActive(bool isActive)

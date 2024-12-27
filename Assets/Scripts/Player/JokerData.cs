@@ -15,7 +15,7 @@ namespace THE.Player
         public int UseCost { get; set; }
         public int MaxUses { get; set; }
         public int CurrentUses { get; set; }
-        public List<JokerAbilityEntity> JokerAbilities { get; set; }
+        public JokerAbilityEntity JokerAbility { get; set; }
         public bool CanUse { get; set; }
         public Enums.JokerTypeEnum JokerType { get; set; }
         public Enums.HandInfluenceTypeEnum HandInfluenceType { get; set; }
@@ -32,7 +32,7 @@ namespace THE.Player
             UseCost = joker.UseCost;
             MaxUses = joker.MaxUses;
             CurrentUses = joker.CurrentUses;
-            JokerAbilities = joker.JokerAbilityEntities;
+            JokerAbility = joker.JokerAbilityEntity;
             CanUse = joker.CanUse;
             JokerType = joker.JokerType;
             HandInfluenceType = joker.HandInfluenceType;

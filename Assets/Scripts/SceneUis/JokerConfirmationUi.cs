@@ -74,7 +74,7 @@ namespace THE.SceneUis
         private void OpenTargetSelection()
         {
             SetButtonsInteractable(false);
-            targetSelectionUi.ShowUi(gamingHubReceiver.GetPlayerList().Where(x => x.Id != gamingHubReceiver.Self.Id).ToList(), jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue, (targets) =>
+            targetSelectionUi.ShowUi(gamingHubReceiver.GetPlayerList().Where(x => x.Id != gamingHubReceiver.Self.Id).ToList(), jokerData.JokerAbility.AbilityEffects.First().EffectValue, (targets) =>
             {
                 selectedTargets = targets;
                 SetButtonsInteractable(true);
@@ -89,7 +89,7 @@ namespace THE.SceneUis
         {
             SetButtonsInteractable(false);
             //TODO assuming only one effect and one ability
-            cardSelectionUi.ShowUi(gamingHubReceiver.Self.HoleCards.Concat(gamingHubReceiver.Self.TempHoleCards).ToList(), jokerData.JokerAbilities.First().AbilityEffects.First().EffectValue, (cards) =>
+            cardSelectionUi.ShowUi(gamingHubReceiver.Self.HoleCards.Concat(gamingHubReceiver.Self.TempHoleCards).ToList(), jokerData.JokerAbility.AbilityEffects.First().EffectValue, (cards) =>
             {
                 selectedCards = cards;
                 SetButtonsInteractable(true);
@@ -133,7 +133,7 @@ namespace THE.SceneUis
 
         private void SetButtonsInteractable(bool interactable)
         {
-            var effect = jokerData.JokerAbilities.First().AbilityEffects.First();
+            var effect = jokerData.JokerAbility.AbilityEffects.First();
             if (interactable)
             {
                 selectTargetButton.interactable = jokerData.TargetType is Enums.TargetTypeEnum.SinglePlayer or Enums.TargetTypeEnum.MultiPlayers;
