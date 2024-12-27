@@ -378,14 +378,15 @@ namespace THE.SceneUis
             UpdatePlayers();
         }
 
-        private void OnUseJokerDraw(JokerData joker)
+        private void OnUseJokerDraw(JokerData joker, bool isSelf)
         {
             playerList.ForEach(player =>
             {
                 var data = gamingHubReceiver.GetPlayerList().First(x => x.Id == player.PlayerData.Id);
                 player.UpdateHoleCards(data);
             });
-            jokerListUi.ShowJokerConfirmationForDiscard(joker);
+            if (isSelf)
+                jokerListUi.ShowJokerConfirmationForDiscard(joker);
         }
 
         private void CancelBet()

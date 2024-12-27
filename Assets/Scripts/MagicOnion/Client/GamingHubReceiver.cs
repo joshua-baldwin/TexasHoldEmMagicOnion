@@ -43,7 +43,7 @@ namespace THE.MagicOnion.Client
         public Action<string, Action> ShowMessage;
         public Action<bool> OnGameOverAction;
         public Action<bool> OnUseJokerAction;
-        public Action<JokerData> OnUseJokerDrawAction;
+        public Action<JokerData, bool> OnUseJokerDrawAction;
         
         public bool IsMyTurn => CurrentPlayer.Id == Self.Id;
         public List<PlayerData> GetPlayerList() => players.ToList();
@@ -496,7 +496,7 @@ namespace THE.MagicOnion.Client
                 }
 
                 ShowMessage?.Invoke(sb.ToString(), null);
-                OnUseJokerDrawAction?.Invoke(new JokerData(joker));
+                OnUseJokerDrawAction?.Invoke(new JokerData(joker), jokerUser.Id == Self.Id);
             }
             else
             {
