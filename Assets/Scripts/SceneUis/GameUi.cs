@@ -365,6 +365,7 @@ namespace THE.SceneUis
                 {
                     var playerObject = Instantiate(playerPrefab, playerRoot.transform).GetComponent<PlayerClass>();
                     playerObject.Initialize(player);
+                    playerObject.InitializeCards();
                     playerList.Add(playerObject);
                 }
                 UpdateUi(0, gamingHubReceiver.IsMyTurn, Guid.Empty, gamingHubReceiver.CurrentPlayer.Id, null, false);
