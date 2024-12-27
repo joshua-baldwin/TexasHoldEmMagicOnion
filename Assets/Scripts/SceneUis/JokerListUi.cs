@@ -25,7 +25,7 @@ namespace THE.SceneUis
         private GamingHubReceiver gamingHubReceiver;
         private Action<JokerData> useJokerAction;
         private Func<JokerData,UniTaskVoid> useJokerToDrawFunc;
-        private Func<JokerData,UniTaskVoid> useJokerToChangePositionFunc;
+        private Func<JokerData,UniTaskVoid> useJokerWithoutConfirmationFunc;
         private Func<List<Guid>,List<CardData>,UniTaskVoid> onConfirmFunc;
         private Func<List<Guid>,List<CardData>,UniTaskVoid> onConfirmDiscardFunc;
 
@@ -63,14 +63,14 @@ namespace THE.SceneUis
             contents.SetActive(true);   
         }
         
-        public void ShowListForGame(GamingHubReceiver receiver, Action<JokerData> useJoker, Func<JokerData, UniTaskVoid> useJokerToDraw, Func<JokerData, UniTaskVoid> useJokerToChangePosition, Action onCloseList, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirm, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirmDiscard)
+        public void ShowListForGame(GamingHubReceiver receiver, Action<JokerData> useJoker, Func<JokerData, UniTaskVoid> useJokerToDraw, Func<JokerData, UniTaskVoid> useJokerWithoutConfirmation, Action onCloseList, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirm, Func<List<Guid>, List<CardData>, UniTaskVoid> onConfirmDiscard)
         {
             gamingHubReceiver = receiver;
             var jokerDataList = gamingHubReceiver.Self.JokerCards;
             onCloseAction = onCloseList;
             useJokerAction = useJoker;
             useJokerToDrawFunc = useJokerToDraw;
-            useJokerToChangePositionFunc = useJokerToChangePosition;
+            useJokerWithoutConfirmationFunc = useJokerWithoutConfirmation;
             onConfirmFunc = onConfirm;
             onConfirmDiscardFunc = onConfirmDiscard;
             foreach (var jokerData in jokerDataList)
@@ -118,8 +118,9 @@ namespace THE.SceneUis
                     jokerConfirmationUi.OnConfirmDiscardAction = onConfirmDiscardFunc;
                     useJokerToDrawFunc?.Invoke(jokerData);
                 }
-                else if (jokerData.ActionInfluenceType == Enums.ActionInfluenceTypeEnum.ChangePosition)
-                    useJokerToChangePositionFunc?.Invoke(jokerData);
+                else if (jokerData.ActionInfluenceType == Enums.ActionInfluenceTypeEnum.ChangePosition ||
+                         jokerData.ActionInfluenceType == Enums.ActionInfluenceTypeEnum.IncreaseBettingRounds)
+                    useJokerWithoutConfirmationFunc?.Invoke(jokerData);
                 else
                 {
                     jokerConfirmationUi.ShowUi(gamingHubReceiver, jokerData, false);

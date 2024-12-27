@@ -133,7 +133,9 @@ namespace THE.SceneUis
             quitButton.interactable = true;
             var players = gamingHubReceiver.GetPlayerList();
             var currentPlayer = players.First(x => x.Id == currentPlayerEntityId);
-            gameStateText.text = $"Current state: {gamingHubReceiver.GameState}";
+            gameStateText.text = gamingHubReceiver.CurrentExtraBettingRound > 0
+                ? $"Current state: {gamingHubReceiver.GameState} +{gamingHubReceiver.CurrentExtraBettingRound}"
+                : $"Current state: {gamingHubReceiver.GameState}";
             if (previousPlayerEntityId != Guid.Empty && !isError)
             {
                 var previousPlayer = players.First(x => x.Id == previousPlayerEntityId);
@@ -327,10 +329,10 @@ namespace THE.SceneUis
         private async UniTaskVoid UseJokerToDrawAction(JokerData joker)
         {
             selectedJoker = joker;
-            await gamingHubReceiver.UseJoker(joker.UniqueId, new List<Guid> { gamingHubReceiver.Self.Id }, new List<CardData>(), OnDisconnect);
+            await gamingHubReceiver.UseJoker(selectedJoker.UniqueId, new List<Guid> { gamingHubReceiver.Self.Id }, new List<CardData>(), OnDisconnect);
         }
         
-        private async UniTaskVoid UseJokerToChangePosition(JokerData joker)
+        private async UniTaskVoid UseJokerWithoutConfirmation(JokerData joker)
         {
             selectedJoker = joker;
             var res = await gamingHubReceiver.UseJoker(selectedJoker.UniqueId, new List<Guid> { gamingHubReceiver.Self.Id }, new List<CardData>(), OnDisconnect);
@@ -458,7 +460,7 @@ namespace THE.SceneUis
         
         private void OpenMyJokerList()
         {
-            jokerListUi.ShowListForGame(gamingHubReceiver, UseJokerAction, UseJokerToDrawAction, UseJokerToChangePosition, () =>
+            jokerListUi.ShowListForGame(gamingHubReceiver, UseJokerAction, UseJokerToDrawAction, UseJokerWithoutConfirmation, () =>
             {
                 quitButton.interactable = true;
                 buttonList.ForEach(x => x.ButtonObject.interactable = gamingHubReceiver.IsMyTurn);

@@ -32,6 +32,7 @@ namespace THE.MagicOnion.Client
         public PlayerData Self { get; private set; }
         public PlayerData CurrentPlayer { get; private set; }
         public Enums.GameStateEnum GameState { get; private set; }
+        public int CurrentExtraBettingRound { get; private set; }
         public int CurrentRound { get; private set; }
         
         public Action OnRoomConnectSuccess;
@@ -392,12 +393,13 @@ namespace THE.MagicOnion.Client
             Debug.Log("Cancelled");
         }
 
-        public void OnDoAction(Enums.CommandTypeEnum commandType, List<PlayerEntity> playerEntities, Guid previousPlayerId, Guid currentPlayerId, List<PotEntity> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
+        public void OnDoAction(Enums.CommandTypeEnum commandType, List<PlayerEntity> playerEntities, Guid previousPlayerId, Guid currentPlayerId, List<PotEntity> pots, List<CardEntity> communityCards, Enums.GameStateEnum gameState, int currentExtraBettingRound, bool isError, string actionMessage, List<WinningHandEntity> winnerList)
         {
             var isGameOver = false;
             var gameOverByFold = false;
             Debug.Log($"Doing action {commandType}");
             GameState = gameState;
+            CurrentExtraBettingRound = currentExtraBettingRound;
             players = playerEntities.Select(p => new PlayerData(p)).ToList();
             Self = new PlayerData(playerEntities.First(x => x.Id == Self.Id));
             CurrentPlayer = new PlayerData(playerEntities.First(x => x.Id == currentPlayerId));
