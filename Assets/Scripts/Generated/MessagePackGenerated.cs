@@ -767,7 +767,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(24);
+            writer.WriteArrayHeader(25);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Guid>(formatterResolver).Serialize(ref writer, value.Id, options);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::TexasHoldEmShared.Enums.Enums.PlayerRoleEnum>(formatterResolver).Serialize(ref writer, value.PlayerRole, options);
@@ -786,6 +786,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             writer.Write(value.IsAllIn);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Serialize(ref writer, value.BestHand, options);
             writer.Write(value.RaiseAmount);
+            writer.Write(value.HasHighestRaise);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Serialize(ref writer, value.CurrentBestHand, options);
             writer.Write(value.AllInAmount);
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>>(formatterResolver).Serialize(ref writer, value.JokerCards, options);
@@ -822,6 +823,7 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
             var __IsAllIn__ = default(bool);
             var __BestHand__ = default(global::THE.MagicOnion.Shared.Entities.BestHandEntity);
             var __RaiseAmount__ = default(int);
+            var __HasHighestRaise__ = default(bool);
             var __CurrentBestHand__ = default(global::THE.MagicOnion.Shared.Entities.BestHandEntity);
             var __AllInAmount__ = default(int);
             var __JokerCards__ = default(global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>);
@@ -888,21 +890,24 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                         __RaiseAmount__ = reader.ReadInt32();
                         break;
                     case 18:
-                        __CurrentBestHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Deserialize(ref reader, options);
+                        __HasHighestRaise__ = reader.ReadBoolean();
                         break;
                     case 19:
-                        __AllInAmount__ = reader.ReadInt32();
+                        __CurrentBestHand__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::THE.MagicOnion.Shared.Entities.BestHandEntity>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 20:
-                        __JokerCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        __AllInAmount__ = reader.ReadInt32();
                         break;
                     case 21:
-                        __ActiveEffects__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        __JokerCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.JokerEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 22:
-                        __TempHoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        __ActiveEffects__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.ActiveJokerEffectEntity>>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     case 23:
+                        __TempHoleCards__ = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::THE.MagicOnion.Shared.Entities.CardEntity>>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 24:
                         __MaxHoleCards__ = reader.ReadInt32();
                         break;
                     default:
@@ -1007,32 +1012,38 @@ namespace MessagePack.Formatters.THE.MagicOnion.Shared.Entities
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.CurrentBestHand = __CurrentBestHand__;
+            ____result.HasHighestRaise = __HasHighestRaise__;
             if (length <= 19)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.AllInAmount = __AllInAmount__;
+            ____result.CurrentBestHand = __CurrentBestHand__;
             if (length <= 20)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.JokerCards = __JokerCards__;
+            ____result.AllInAmount = __AllInAmount__;
             if (length <= 21)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.ActiveEffects = __ActiveEffects__;
+            ____result.JokerCards = __JokerCards__;
             if (length <= 22)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
 
-            ____result.TempHoleCards = __TempHoleCards__;
+            ____result.ActiveEffects = __ActiveEffects__;
             if (length <= 23)
+            {
+                goto MEMBER_ASSIGNMENT_END;
+            }
+
+            ____result.TempHoleCards = __TempHoleCards__;
+            if (length <= 24)
             {
                 goto MEMBER_ASSIGNMENT_END;
             }
