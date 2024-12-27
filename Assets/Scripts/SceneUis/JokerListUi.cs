@@ -109,12 +109,8 @@ namespace THE.SceneUis
 
         private void UseJoker(JokerData jokerData)
         {
-            if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop &&
-                (jokerData.JokerType == Enums.JokerTypeEnum.Hand ||
-                jokerData.ActionInfluenceType == Enums.ActionInfluenceTypeEnum.ChangePosition))
-            {
+            if (gamingHubReceiver.GameState == Enums.GameStateEnum.PreFlop && jokerData.ActionInfluenceType == Enums.ActionInfluenceTypeEnum.ChangePosition)
                 ShowMessage("Can't use this joker during pre-flop.\n Pre-flopの時にこのジョーカー使えない。", null);
-            }
             else
             {
                 if (jokerData.HandInfluenceType == Enums.HandInfluenceTypeEnum.DrawThenDiscard)
